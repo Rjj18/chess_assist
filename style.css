@@ -1,0 +1,9 @@
+/* Remover o reset total do tabuleiro para não anular o CSS do chessboard.js */
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #eee;
+}
