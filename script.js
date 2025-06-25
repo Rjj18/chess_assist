@@ -1,9 +1,11 @@
 import {BORDER_TYPE, Chessboard, COLOR, FEN, INPUT_EVENT_TYPE} from "./cm-chessboard-master/src/Chessboard.js"
 import {Chess} from "https://cdn.jsdelivr.net/npm/chess.mjs@1/src/chess.mjs/Chess.js"
+import {BlackPlayerController} from "./modules/BlackPlayerController.js"
 
 
 
 const chess = new Chess();
+const blackPlayerController = new BlackPlayerController(chess, null); // board será definido depois
 
 const board = new Chessboard(document.getElementById("board"), {
     position: chess.fen(),
@@ -11,6 +13,9 @@ const board = new Chessboard(document.getElementById("board"), {
     style: {borderType: BORDER_TYPE.none, pieces: {file: "pieces/staunty.svg"}, animationDuration: 300},
     assetsUrl: "./cm-chessboard-master/assets/"
 });
+
+// Configura o tabuleiro no controlador das pretas
+blackPlayerController.setBoard(board);
 
 function inputHandler(event) {
     console.log("Input Event:", event);
@@ -71,10 +76,8 @@ function inputHandler(event) {
             // Desabilita input do usuário temporariamente
             board.disableMoveInput();
             
-            // Faz movimento automático das pretas após um pequeno delay
-            setTimeout(() => {
-                makeRandomBlackMove();
-            }, 800); // Aumentei o delay para 800ms
+            // Faz movimento automático das pretas usando o módulo
+            makeBlackMove();
         } else {
             // É a vez das brancas (jogador humano)
             console.log("É a vez das brancas - habilitando input");
@@ -98,61 +101,42 @@ resetButton.addEventListener("click", () => {
     console.log("Jogo resetado");
 });
 
-// Função para fazer movimento aleatório das pretas
-function makeRandomBlackMove() {
-    console.log("makeRandomBlackMove chamada. Turno atual:", chess.turn());
-    
-    if (chess.turn() !== 'b') {
-        console.log("Não é a vez das pretas, retornando");
-        return; // Não é a vez das pretas
-    }
-    
-    // Obtém todos os movimentos legais possíveis
-    const possibleMoves = chess.moves();
-    console.log("Movimentos possíveis para as pretas:", possibleMoves.length);
-    
-    if (possibleMoves.length === 0) {
-        console.log("Não há movimentos possíveis para as pretas");
-        return;
-    }
-    
-    // Seleciona um movimento aleatório
-    const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-    const randomMove = possibleMoves[randomIndex];
-    console.log("Movimento escolhido:", randomMove);
-    
-    // Executa o movimento
-    const moveResult = chess.move(randomMove);
-    
-    if (moveResult) {
-        console.log("Movimento das pretas executado:", moveResult);
+// Função para fazer movimento das pretas usando o módulo BlackPlayerController
+async function makeBlackMove() {
+    try {
+        const moveResult = await blackPlayerController.makeAutomaticMove();
         
-        // Atualiza o tabuleiro visual com animação
-        board.setPosition(chess.fen());
-        
-        // Verifica se o jogo terminou após o movimento das pretas
-        if (chess.game_over()) {
-            if (chess.in_checkmate()) {
-                alert("Xeque-mate! As pretas venceram!");
-            } else if (chess.in_draw()) {
-                alert("Empate!");
-            } else if (chess.in_stalemate()) {
-                alert("Afogamento! Empate!");
+        if (moveResult) {
+            // Verifica o estado do jogo após o movimento das pretas
+            const gameState = blackPlayerController.checkGameState();
+            
+            if (gameState.isGameOver) {
+                if (gameState.isCheckmate) {
+                    alert("Xeque-mate! As pretas venceram!");
+                } else if (gameState.isDraw) {
+                    alert("Empate!");
+                } else if (gameState.isStalemate) {
+                    alert("Afogamento! Empate!");
+                }
+                return;
             }
-            return;
+            
+            // Verifica se as brancas estão em xeque
+            if (gameState.isCheck) {
+                console.log("Brancas estão em xeque!");
+            }
+            
+            // Habilita movimento para as brancas novamente
+            console.log("Habilitando movimento para as brancas");
+            board.enableMoveInput(inputHandler, COLOR.white);
+        } else {
+            console.log("Erro ao executar movimento das pretas");
+            // Se por algum motivo o movimento falhou, reabilita as brancas
+            board.enableMoveInput(inputHandler, COLOR.white);
         }
-        
-        // Verifica se as brancas estão em xeque
-        if (chess.in_check()) {
-            console.log("Brancas estão em xeque!");
-        }
-        
-        // Habilita movimento para as brancas novamente
-        console.log("Habilitando movimento para as brancas");
-        board.enableMoveInput(inputHandler, COLOR.white);
-    } else {
-        console.log("Erro ao executar movimento das pretas");
-        // Se por algum motivo o movimento falhou, reabilita as brancas
+    } catch (error) {
+        console.error("Erro no movimento das pretas:", error);
+        // Em caso de erro, reabilita as brancas
         board.enableMoveInput(inputHandler, COLOR.white);
     }
 }
@@ -186,4 +170,4 @@ function undoMove() {
 // Exportar funções úteis (se necessário)
 window.getGameInfo = getGameInfo;
 window.undoMove = undoMove;
-window.makeRandomBlackMove = makeRandomBlackMove;
+window.makeBlackMove = makeBlackMove;
