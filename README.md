@@ -2,7 +2,7 @@
 
 A modern, modular chess assistant web application built with ES2024 standards. Play chess against an AI opponent with a clean, responsive interface featuring live move notation.
 
-🎮 **[Play Online](https://your-username.github.io/chess-assist/)** 
+🎮 **[Play Online](https://rjj18.github.io/chess-assist/)** 
 
 ## Features
 
@@ -16,7 +16,7 @@ A modern, modular chess assistant web application built with ES2024 standards. P
 ## Quick Start
 
 ### Option 1: Play Online (Recommended)
-Simply visit: [https://your-username.github.io/chess-assist/](https://your-username.github.io/chess-assist/)
+Simply visit: [https://rjj18.github.io/chess-assist/](https://your-username.github.io/chess-assist/)
 
 ### Option 2: Run Locally
 
@@ -24,7 +24,6 @@ Simply visit: [https://your-username.github.io/chess-assist/](https://your-usern
    ```bash
    git clone https://github.com/your-username/chess-assist.git
    cd chess-assist
-   cd chess_assist
    ```
 
 2. **Serve the application**
