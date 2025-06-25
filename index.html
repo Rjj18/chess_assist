@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Assist</title>
     <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Treinando posições</h1>
-    <div id="board" style="width: 400px"></div>
-    <button id="resetButton">Resetar Posição</button>
+    <h1>Assistente de Xadrez</h1>
+    <div id="board"></div>
+    
+    <div class="controls margin-top">
+        <h3>Controles do Jogo</h3>
+        <button id="resetButton">Resetar Posição</button>
+        <button id="undoButton">Desfazer Movimento</button>
+        <button id="forceBlackMoveButton">Movimento das Pretas</button>
+        
+        <h3>Informações do Jogo</h3>
+        <button id="gameInfoButton">Mostrar Info do Jogo</button>
+        <div id="gameInfoDisplay" class="hidden">
+            <pre id="gameInfoContent"></pre>
+        </div>
+    </div>
   <script type="module" src="./script.js"></script>
 </body>
 </html>

@@ -3,9 +3,9 @@
  * @module BlackPlayerController
  */
 
-export class BlackPlayerController {
-    #chess;
-    #board;
+import { PlayerController } from './PlayerController.js';
+
+export class BlackPlayerController extends PlayerController {
     #moveDelay;
 
     /**
@@ -14,28 +14,8 @@ export class BlackPlayerController {
      * @param {number} moveDelay - Delay em ms antes de fazer o movimento (padrão: 800ms)
      */
     constructor(chess, board, moveDelay = 800) {
-        this.#chess = chess;
-        this.#board = board;
+        super(chess, board, 'b'); // 'b' para pretas
         this.#moveDelay = moveDelay;
-    }
-
-    /**
-     * Verifica se é a vez das pretas
-     * @returns {boolean}
-     */
-    isBlackTurn() {
-        return this.#chess.turn() === 'b';
-    }
-
-    /**
-     * Obtém todos os movimentos legais possíveis para as pretas
-     * @returns {string[]} Array com os movimentos em notação SAN
-     */
-    getPossibleMoves() {
-        if (!this.isBlackTurn()) {
-            return [];
-        }
-        return this.#chess.moves();
     }
 
     /**
@@ -55,27 +35,12 @@ export class BlackPlayerController {
     }
 
     /**
-     * Executa um movimento específico
-     * @param {string} move - Movimento em notação SAN
-     * @returns {object|null} Resultado do movimento ou null se inválido
+     * Implementação do método abstrato da classe pai
+     * Faz um movimento automático aleatório das pretas
+     * @returns {Promise<object|null>} Promise que resolve com o resultado do movimento
      */
-    executeMove(move) {
-        if (!this.isBlackTurn()) {
-            console.log("Não é a vez das pretas");
-            return null;
-        }
-
-        const moveResult = this.#chess.move(move);
-        
-        if (moveResult) {
-            console.log("Movimento das pretas executado:", moveResult);
-            // Atualiza o tabuleiro visual com animação
-            this.#board.setPosition(this.#chess.fen());
-            return moveResult;
-        } else {
-            console.log("Erro ao executar movimento das pretas:", move);
-            return null;
-        }
+    async makeMove() {
+        return this.makeAutomaticMove();
     }
 
     /**
@@ -83,12 +48,12 @@ export class BlackPlayerController {
      * @returns {Promise<object|null>} Promise que resolve com o resultado do movimento
      */
     async makeAutomaticMove() {
-        if (!this.isBlackTurn()) {
+        if (!this.isPlayerTurn()) {
             console.log("Não é a vez das pretas, retornando");
             return null;
         }
 
-        console.log("makeAutomaticMove chamada. Turno atual:", this.#chess.turn());
+        console.log("makeAutomaticMove chamada. Turno atual:", this.chess.turn());
         
         const possibleMoves = this.getPossibleMoves();
         console.log("Movimentos possíveis para as pretas:", possibleMoves.length);
@@ -107,21 +72,6 @@ export class BlackPlayerController {
     }
 
     /**
-     * Verifica o estado do jogo após o movimento das pretas
-     * @returns {object} Objeto com informações sobre o estado do jogo
-     */
-    checkGameState() {
-        return {
-            isGameOver: this.#chess.game_over(),
-            isCheckmate: this.#chess.in_checkmate(),
-            isDraw: this.#chess.in_draw(),
-            isStalemate: this.#chess.in_stalemate(),
-            isCheck: this.#chess.in_check(),
-            turn: this.#chess.turn()
-        };
-    }
-
-    /**
      * Altera o delay dos movimentos
      * @param {number} delay - Novo delay em ms
      */
@@ -135,21 +85,5 @@ export class BlackPlayerController {
      */
     getMoveDelay() {
         return this.#moveDelay;
-    }
-
-    /**
-     * Define a instância do tabuleiro
-     * @param {Chessboard} board - Instância do tabuleiro
-     */
-    setBoard(board) {
-        this.#board = board;
-    }
-
-    /**
-     * Obtém a instância do tabuleiro
-     * @returns {Chessboard} Instância do tabuleiro
-     */
-    getBoard() {
-        return this.#board;
     }
 }
