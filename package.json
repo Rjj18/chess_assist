@@ -1,0 +1,32 @@
+{
+  "name": "chess-assist",
+  "version": "1.0.0",
+  "description": "A modern, modular chess assistant web application built with ES2024 standards",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8080",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "chess",
+    "game",
+    "ai",
+    "web-app",
+    "javascript",
+    "es2024"
+  ],
+  "author": "Roger Aparecido Silva",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/chess-assist.git"
+  },
+  "homepage": "https://your-username.github.io/chess-assist/",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
