@@ -1,5 +1,5 @@
 /**
- * Módulo para controlar o fluxo geral do jogo de xadrez
+ * Module for controlling the general chess game flow
  * @module GameController
  */
 
@@ -10,22 +10,25 @@ export class GameController {
     #chess;
     #board;
     #blackPlayerController;
+    #movesTableController;
 
     /**
-     * @param {Chess} chess - Instância do chess.js
-     * @param {Chessboard} board - Instância do tabuleiro visual
+     * @param {Chess} chess - Chess.js instance
+     * @param {Chessboard} board - Visual board instance
+     * @param {MovesTableController} movesTableController - Moves table controller
      */
-    constructor(chess, board) {
+    constructor(chess, board, movesTableController = null) {
         this.#chess = chess;
         this.#board = board;
-        // Cria internamente o controlador das pretas
-        this.#blackPlayerController = new BlackPlayerController(chess, board);
+        this.#movesTableController = movesTableController;
+        // Creates the black player controller internally
+        this.#blackPlayerController = new BlackPlayerController(chess, board, 800, movesTableController);
     }
 
     /**
-     * Handler principal para eventos de input do tabuleiro
-     * @param {object} event - Evento do tabuleiro
-     * @returns {boolean} Se o evento deve ser processado
+     * Main handler for board input events
+     * @param {object} event - Board event
+     * @returns {boolean} Whether the event should be processed
      */
     handleInput(event) {
         console.log("Input Event:", event);
@@ -46,183 +49,136 @@ export class GameController {
     }
 
     /**
-     * Manipula o início de um movimento
-     * @param {object} event - Evento do tabuleiro
+     * Handles the start of a move
+     * @param {object} event - Board event
      * @returns {boolean}
      * @private
      */
     #handleMoveStarted(event) {
-        // Permite iniciar o movimento
+        // Allow move to start
         return true;
     }
 
     /**
-     * Valida se um movimento é legal
-     * @param {object} event - Evento do tabuleiro
-     * @returns {boolean} Se o movimento é válido
+     * Validates if a move is legal
+     * @param {object} event - Board event
+     * @returns {boolean} Whether the move is valid
      * @private
      */
     #handleMoveValidation(event) {
         const move = {
             from: event.squareFrom,
             to: event.squareTo,
-            promotion: event.promotion || 'q' // Promoção padrão para rainha
+            promotion: event.promotion || 'q' // Default promotion to queen
         };
         
-        // Tenta fazer o movimento no objeto chess
+        // Try to make the move in the chess object
         const moveResult = this.#chess.move(move);
         
         if (moveResult) {
-            console.log("Movimento legal:", moveResult);
+            console.log("Legal move:", moveResult);
+            
+            // Add move to table if controller is available
+            if (this.#movesTableController) {
+                const color = moveResult.color === 'w' ? 'white' : 'black';
+                this.#movesTableController.addMove(moveResult.san, color);
+            }
+            
             return true;
         } else {
-            console.log("Movimento ilegal:", move);
+            console.log("Illegal move:", move);
             return false;
         }
     }
 
     /**
-     * Processa a finalização de um movimento
-     * @param {object} event - Evento do tabuleiro
+     * Processes move completion
+     * @param {object} event - Board event
      * @returns {boolean}
      * @private
      */
     #handleMoveFinished(event) {
-        console.log("Movimento finalizado. Turno atual:", this.#chess.turn());
+        console.log("Move finished. Current turn:", this.#chess.turn());
         
-        // Atualiza a posição do tabuleiro visual
+        // Update visual board position
         this.#board.setPosition(this.#chess.fen());
         
-        // Verifica se o jogo terminou
+        // Check if game ended
         if (this.#checkGameEnd()) {
             return true;
         }
         
-        // Verifica se há xeque
-        this.#checkForCheck();
-        
-        // Gerencia alternância de turnos
-        this.#handleTurnChange();
+        // If it's black's turn, trigger automatic move
+        if (this.#chess.turn() === 'b') {
+            setTimeout(() => {
+                this.#blackPlayerController.makeAutomaticMove().then((result) => {
+                    if (result) {
+                        console.log("Black move executed:", result);
+                        // Check game end again after black move
+                        this.#checkGameEnd();
+                    }
+                });
+            }, 100);
+        }
         
         return true;
     }
 
     /**
-     * Verifica se o jogo terminou
-     * @returns {boolean} Se o jogo terminou
+     * Checks if the game has ended and handles end conditions
+     * @returns {boolean} Whether the game has ended
      * @private
      */
     #checkGameEnd() {
-        if (this.#chess.game_over()) {
-            if (this.#chess.in_checkmate()) {
-                const winner = this.#chess.turn() === 'w' ? 'Pretas' : 'Brancas';
-                alert(`Xeque-mate! ${winner} venceram!`);
-            } else if (this.#chess.in_draw()) {
-                alert('Empate!');
-            } else if (this.#chess.in_stalemate()) {
-                alert('Afogamento! Empate!');
-            }
+        if (this.#chess.in_checkmate()) {
+            const winner = this.#chess.turn() === 'w' ? 'Black' : 'White';
+            console.log(`Game over - Checkmate! ${winner} wins!`);
+            this.#board.disableMoveInput();
             return true;
         }
+        
+        if (this.#chess.in_draw()) {
+            console.log("Game over - Draw!");
+            this.#board.disableMoveInput();
+            return true;
+        }
+        
+        if (this.#chess.in_stalemate()) {
+            console.log("Game over - Stalemate!");
+            this.#board.disableMoveInput();
+            return true;
+        }
+        
         return false;
     }
 
     /**
-     * Verifica se há xeque e notifica
-     * @private
-     */
-    #checkForCheck() {
-        if (this.#chess.in_check()) {
-            const player = this.#chess.turn() === 'w' ? 'Brancas' : 'Pretas';
-            console.log(`${player} estão em xeque!`);
-        }
-    }
-
-    /**
-     * Gerencia a alternância de turnos
-     * @private
-     */
-    #handleTurnChange() {
-        if (this.#chess.turn() === 'b') {
-            // Vez das pretas (computador)
-            console.log("É a vez das pretas - fazendo movimento automático");
-            this.#board.disableMoveInput();
-            this.#makeBlackMove();
-        } else {
-            // Vez das brancas (jogador humano)
-            console.log("É a vez das brancas - habilitando input");
-            this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
-        }
-    }
-
-    /**
-     * Executa movimento das pretas usando o controlador
-     * @private
-     */
-    async #makeBlackMove() {
-        try {
-            const moveResult = await this.#blackPlayerController.makeAutomaticMove();
-            
-            if (moveResult) {
-                const gameState = this.#blackPlayerController.checkGameState();
-                
-                if (gameState.isGameOver) {
-                    this.#handleGameEnd(gameState);
-                    return;
-                }
-                
-                if (gameState.isCheck) {
-                    console.log("Brancas estão em xeque!");
-                }
-                
-                // Habilita movimento para as brancas
-                console.log("Habilitando movimento para as brancas");
-                this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
-            } else {
-                console.log("Erro ao executar movimento das pretas");
-                this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
-            }
-        } catch (error) {
-            console.error("Erro no movimento das pretas:", error);
-            this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
-        }
-    }
-
-    /**
-     * Manipula o fim do jogo
-     * @param {object} gameState - Estado atual do jogo
-     * @private
-     */
-    #handleGameEnd(gameState) {
-        if (gameState.isCheckmate) {
-            alert("Xeque-mate! As pretas venceram!");
-        } else if (gameState.isDraw) {
-            alert("Empate!");
-        } else if (gameState.isStalemate) {
-            alert("Afogamento! Empate!");
-        }
-    }
-
-    /**
-     * Inicia o jogo permitindo movimento das brancas
+     * Starts the game
      */
     startGame() {
+        console.log("Starting new game");
         this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
     }
 
     /**
-     * Reseta o jogo para o estado inicial
+     * Resets the game to initial state
      */
     resetGame() {
         this.#chess.reset();
         this.#board.setPosition(FEN.start);
         this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
-        console.log("Jogo resetado");
+        
+        // Clear moves table
+        if (this.#movesTableController) {
+            this.#movesTableController.clearMoves();
+        }
+        
+        console.log("Game reset");
     }
 
     /**
-     * Desfaz o último movimento
-     * @returns {boolean} Se o movimento foi desfeito com sucesso
+     * Undoes the last move
+     * @returns {boolean} Whether the move was successfully undone
      */
     undoMove() {
         const move = this.#chess.undo();
@@ -230,15 +186,21 @@ export class GameController {
             this.#board.setPosition(this.#chess.fen());
             const currentPlayer = this.#chess.turn() === 'w' ? COLOR.white : COLOR.black;
             this.#board.enableMoveInput(this.handleInput.bind(this), currentPlayer);
-            console.log("Movimento desfeito:", move);
+            
+            // Remove move from table
+            if (this.#movesTableController) {
+                this.#movesTableController.removeLastMove();
+            }
+            
+            console.log("Move undone:", move);
             return true;
         }
         return false;
     }
 
     /**
-     * Obtém informações atuais do jogo
-     * @returns {object} Informações do estado do jogo
+     * Gets current game information
+     * @returns {object} Game state information
      */
     getGameInfo() {
         return {
@@ -248,13 +210,14 @@ export class GameController {
             isDraw: this.#chess.in_draw(),
             isStalemate: this.#chess.in_stalemate(),
             fen: this.#chess.fen(),
-            pgn: this.#chess.pgn()
+            history: this.#chess.history(),
+            ascii: this.#chess.ascii()
         };
     }
 
     /**
-     * Obtém o controlador das peças pretas
-     * @returns {BlackPlayerController} Instância do controlador das pretas
+     * Gets the black player controller instance
+     * @returns {BlackPlayerController} The black player controller
      */
     getBlackPlayerController() {
         return this.#blackPlayerController;

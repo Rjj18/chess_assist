@@ -3,37 +3,40 @@ import {Chess} from "https://cdn.jsdelivr.net/npm/chess.mjs@1/src/chess.mjs/Ches
 import {GameController} from "./modules/GameController.js"
 import {BoardManager} from "./modules/BoardManager.js"
 import {UIController} from "./modules/UIController.js"
+import {MovesTableController} from "./modules/MovesTableController.js"
 
 
 
-// Inicialização dos módulos principais
+// Main module initialization
 const chess = new Chess();
+const movesTableController = new MovesTableController();
 
-// Cria o gerenciador do tabuleiro com configuração customizada
+// Create board manager with custom configuration
 const boardManager = new BoardManager("board", {
     position: chess.fen(),
+    assetsUrl: "./cm-chessboard-master/assets/",
     style: {
         pieces: { file: "pieces/staunty.svg" },
         animationDuration: 300,
-        showCoordinates: true,    // Exibe coordenadas a-h, 1-8
-        borderType: "thin"        // Borda fina com coordenadas inline
+        showCoordinates: true,    // Display coordinates a-h, 1-8
+        borderType: "thin"        // Thin border with inline coordinates
     }
 });
 
-// Cria o GameController que internamente gerencia o BlackPlayerController
-const gameController = new GameController(chess, boardManager.getBoard());
+// Create GameController that internally manages BlackPlayerController
+const gameController = new GameController(chess, boardManager.getBoard(), movesTableController);
 
-// Cria o controlador da UI
+// Create UI controller and initialize interface
 const uiController = new UIController(gameController);
 
-// Inicia o jogo
+// Start the game
 gameController.startGame();
 
-// Exporta funções para uso global (console, HTML, etc.)
+// Export functions for global use (console, HTML, etc.)
 uiController.exposeGlobalFunctions();
 
-// Exporta boardManager para uso interno
+// Export boardManager for internal use
 window.boardManager = boardManager;
 
-// Inicializa a interface após carregar tudo
+// Initialize interface after loading everything
 uiController.initializeUI();

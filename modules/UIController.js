@@ -1,5 +1,5 @@
 /**
- * Módulo para controlar a interface do usuário
+ * Module for controlling the user interface
  * @module UIController
  */
 
@@ -8,7 +8,7 @@ export class UIController {
     #elements;
 
     /**
-     * @param {GameController} gameController - Instância do controlador do jogo
+     * @param {GameController} gameController - Game controller instance
      */
     constructor(gameController) {
         this.#gameController = gameController;
@@ -18,31 +18,26 @@ export class UIController {
     }
 
     /**
-     * Inicializa referências aos elementos DOM
+     * Initializes DOM element references
      * @private
      */
     #initializeElements() {
         this.#elements = {
-            // Controles do jogo
+            // Game controls
             resetButton: document.getElementById("resetButton"),
             undoButton: document.getElementById("undoButton"),
             forceBlackMoveButton: document.getElementById("forceBlackMoveButton"),
             
-            // Informações do jogo
-            gameInfoButton: document.getElementById("gameInfoButton"),
-            gameInfoDisplay: document.getElementById("gameInfoDisplay"),
-            gameInfoContent: document.getElementById("gameInfoContent"),
-            
-            // Elemento principal
+            // Main element
             board: document.getElementById("board")
         };
 
-        // Verifica se todos os elementos obrigatórios existem
+        // Check if all required elements exist
         this.#validateElements();
     }
 
     /**
-     * Valida se todos os elementos DOM necessários existem
+     * Validates that required DOM elements exist
      * @private
      */
     #validateElements() {
@@ -50,190 +45,116 @@ export class UIController {
         
         for (const elementName of requiredElements) {
             if (!this.#elements[elementName]) {
-                throw new Error(`Elemento obrigatório não encontrado: ${elementName}`);
+                throw new Error(`Required element not found: ${elementName}`);
             }
         }
         
-        // Avisa sobre elementos opcionais não encontrados
+        // Warn about optional elements not found
         const optionalElements = [
-            'undoButton', 'forceBlackMoveButton',
-            'gameInfoButton', 'gameInfoDisplay', 'gameInfoContent'
+            'undoButton', 'forceBlackMoveButton'
         ];
         
         for (const elementName of optionalElements) {
             if (!this.#elements[elementName]) {
-                console.warn(`Elemento opcional não encontrado: ${elementName}`);
+                console.warn(`Optional element not found: ${elementName}`);
             }
         }
     }
 
     /**
-     * Configura todos os event listeners da interface
+     * Sets up all interface event listeners
      * @private
      */
     #setupEventListeners() {
         this.#setupGameControls();
-        this.#setupInfoControls();
     }
 
     /**
-     * Configura controles do jogo (reset, undo, etc.)
+     * Sets up game controls (reset, undo, etc.)
      * @private
      */
     #setupGameControls() {
-        // Botão de reset
+        // Reset button
         if (this.#elements.resetButton) {
             this.#elements.resetButton.addEventListener("click", () => {
                 this.#handleResetGame();
             });
         }
 
-        // Botão de desfazer movimento
+        // Undo move button
         if (this.#elements.undoButton) {
             this.#elements.undoButton.addEventListener("click", () => {
                 this.#handleUndoMove();
             });
         }
 
-        // Botão para forçar movimento das pretas
+        // Force black move button
         if (this.#elements.forceBlackMoveButton) {
             this.#elements.forceBlackMoveButton.addEventListener("click", () => {
                 this.#handleForceBlackMove();
             });
         }
-
-
     }
 
     /**
-     * Configura controles de informações
-     * @private
-     */
-    #setupInfoControls() {
-        if (this.#elements.gameInfoButton) {
-            this.#elements.gameInfoButton.addEventListener("click", () => {
-                this.#handleToggleGameInfo();
-            });
-        }
-    }
-
-    /**
-     * Manipula o evento de reset do jogo
+     * Handles game reset event
      * @private
      */
     #handleResetGame() {
         try {
             this.#gameController.resetGame();
-            this.#showMessage("Jogo resetado com sucesso!", "success");
+            this.#showMessage("Game reset successfully!", "success");
         } catch (error) {
-            console.error("Erro ao resetar o jogo:", error);
-            this.#showMessage("Erro ao resetar o jogo", "error");
+            console.error("Error resetting game:", error);
+            this.#showMessage("Error resetting game", "error");
         }
     }
 
     /**
-     * Manipula o evento de desfazer movimento
+     * Handles undo move event
      * @private
      */
     #handleUndoMove() {
         try {
             const success = this.#gameController.undoMove();
             if (success) {
-                this.#showMessage("Movimento desfeito com sucesso!", "success");
+                this.#showMessage("Move undone successfully!", "success");
             } else {
-                this.#showMessage("Não há movimentos para desfazer", "warning");
+                this.#showMessage("No moves to undo", "warning");
             }
         } catch (error) {
-            console.error("Erro ao desfazer movimento:", error);
-            this.#showMessage("Erro ao desfazer movimento", "error");
+            console.error("Error undoing move:", error);
+            this.#showMessage("Error undoing move", "error");
         }
     }
 
     /**
-     * Manipula o evento de forçar movimento das pretas
+     * Handles force black move event
      * @private
      */
-    async #handleForceBlackMove() {
+    #handleForceBlackMove() {
         try {
-            this.#showMessage("Fazendo movimento das pretas...", "info");
-            const moveResult = await this.#gameController.getBlackPlayerController().makeAutomaticMove();
-            
-            if (moveResult) {
-                this.#showMessage("Movimento das pretas executado!", "success");
-            } else {
-                this.#showMessage("Não foi possível executar movimento das pretas", "warning");
-            }
+            this.#gameController.getBlackPlayerController().makeAutomaticMove().then((result) => {
+                if (result) {
+                    this.#showMessage("Black move executed!", "success");
+                } else {
+                    this.#showMessage("Could not execute black move", "warning");
+                }
+            });
         } catch (error) {
-            console.error("Erro ao forçar movimento das pretas:", error);
-            this.#showMessage("Erro ao executar movimento das pretas", "error");
-        }
-    }
-
-
-
-    /**
-     * Manipula mudança de estilo de coordenadas
-     * @param {string} style - Estilo a ser aplicado
-     * @private
-     */
-    #handleSetCoordinateStyle(style) {
-        if (!window.boardManager) {
-            this.#showMessage("BoardManager não disponível", "error");
-            return;
-        }
-
-        try {
-            window.boardManager.setCoordinateStyle(style);
-            const styleNames = {
-                'none': 'Sem bordas',
-                'thin': 'Bordas finas',
-                'frame': 'Bordas com moldura'
-            };
-            this.#showMessage(`Estilo alterado para: ${styleNames[style]}`, "success");
-        } catch (error) {
-            console.error("Erro ao alterar estilo:", error);
-            this.#showMessage("Erro ao alterar estilo", "error");
+            console.error("Error forcing black move:", error);
+            this.#showMessage("Error executing black move", "error");
         }
     }
 
     /**
-     * Manipula o evento de mostrar/esconder informações do jogo
-     * @private
-     */
-    #handleToggleGameInfo() {
-        if (!this.#elements.gameInfoDisplay || !this.#elements.gameInfoContent) {
-            this.#showMessage("Elementos de informação não encontrados", "error");
-            return;
-        }
-
-        try {
-            const isVisible = !this.#elements.gameInfoDisplay.classList.contains('hidden');
-            
-            if (isVisible) {
-                this.#elements.gameInfoDisplay.classList.add('hidden');
-                this.#elements.gameInfoButton.textContent = 'Mostrar Info do Jogo';
-            } else {
-                const gameInfo = this.#gameController.getGameInfo();
-                this.#elements.gameInfoContent.textContent = JSON.stringify(gameInfo, null, 2);
-                this.#elements.gameInfoDisplay.classList.remove('hidden');
-                this.#elements.gameInfoButton.textContent = 'Esconder Info do Jogo';
-            }
-        } catch (error) {
-            console.error("Erro ao mostrar informações:", error);
-            this.#showMessage("Erro ao mostrar informações", "error");
-        }
-    }
-
-
-
-    /**
-     * Exibe uma mensagem para o usuário
-     * @param {string} message - Mensagem a ser exibida
-     * @param {string} type - Tipo da mensagem ('success', 'error', 'info', 'warning')
+     * Displays a message to the user
+     * @param {string} message - Message to display
+     * @param {string} type - Message type ('success', 'error', 'info', 'warning')
      * @private
      */
     #showMessage(message, type = 'info') {
-        // Por enquanto usa console, mas pode ser expandido para toast notifications
+        // Currently uses console, but can be expanded to toast notifications
         const styles = {
             success: 'color: green; font-weight: bold;',
             error: 'color: red; font-weight: bold;',
@@ -243,112 +164,76 @@ export class UIController {
 
         console.log(`%c${message}`, styles[type] || styles.info);
         
-        // Futuro: implementar toast notifications ou modal
+        // Future: implement toast notifications or modal
         // this.#showToast(message, type);
     }
 
     /**
-     * Atualiza o estado visual da interface baseado no estado do jogo
-     * @param {object} gameInfo - Informações atuais do jogo
+     * Updates interface visual state based on game state
+     * @param {object} gameInfo - Current game information
      */
     updateGameState(gameInfo) {
-        // Atualiza elementos da UI baseado no estado do jogo
-        this.#updateTurnIndicator(gameInfo.turn);
-        this.#updateGameStatus(gameInfo);
-    }
+        // Update button states based on game info
+        if (this.#elements.undoButton && gameInfo.history) {
+            this.#elements.undoButton.disabled = gameInfo.history.length === 0;
+        }
 
-    /**
-     * Atualiza indicador de turno
-     * @param {string} turn - Turno atual ('w' ou 'b')
-     * @private
-     */
-    #updateTurnIndicator(turn) {
-        const currentPlayer = turn === 'w' ? 'Brancas' : 'Pretas';
-        console.log(`%cTurno atual: ${currentPlayer}`, 'color: purple; font-weight: bold;');
-        
-        // Futuro: atualizar elemento visual de turno
-        // this.#elements.turnIndicator.textContent = `Turno: ${currentPlayer}`;
-    }
+        // Update force black move button
+        if (this.#elements.forceBlackMoveButton) {
+            this.#elements.forceBlackMoveButton.disabled = gameInfo.turn !== 'b';
+        }
 
-    /**
-     * Atualiza status do jogo (xeque, xeque-mate, etc.)
-     * @param {object} gameInfo - Informações do jogo
-     * @private
-     */
-    #updateGameStatus(gameInfo) {
+        // Show game status messages
         if (gameInfo.isCheckmate) {
-            const winner = gameInfo.turn === 'w' ? 'Pretas' : 'Brancas';
-            this.#showMessage(`Xeque-mate! ${winner} venceram!`, 'success');
-        } else if (gameInfo.isDraw) {
-            this.#showMessage('Empate!', 'info');
-        } else if (gameInfo.isStalemate) {
-            this.#showMessage('Afogamento! Empate!', 'info');
+            const winner = gameInfo.turn === 'w' ? 'Black' : 'White';
+            this.#showMessage(`Checkmate! ${winner} wins!`, "info");
         } else if (gameInfo.isCheck) {
-            const player = gameInfo.turn === 'w' ? 'Brancas' : 'Pretas';
-            this.#showMessage(`${player} estão em xeque!`, 'warning');
+            this.#showMessage("Check!", "warning");
+        } else if (gameInfo.isDraw) {
+            this.#showMessage("Game is a draw!", "info");
+        } else if (gameInfo.isStalemate) {
+            this.#showMessage("Stalemate!", "info");
         }
     }
 
     /**
-     * Habilita ou desabilita controles da interface
-     * @param {boolean} enabled - Se os controles devem estar habilitados
+     * Handles coordinate style change
+     * @param {string} style - Style to apply
+     * @private
      */
-    setControlsEnabled(enabled) {
-        this.#elements.resetButton.disabled = !enabled;
-        
-        // Futuro: controlar outros botões
-        // this.#elements.undoButton.disabled = !enabled;
-        // this.#elements.hintButton.disabled = !enabled;
-    }
+    #handleCoordinateStyleChange(style) {
+        if (!window.boardManager) {
+            this.#showMessage("BoardManager not available", "error");
+            return;
+        }
 
-    /**
-     * Adiciona botões dinâmicos à interface
-     * @param {string} id - ID do botão
-     * @param {string} text - Texto do botão
-     * @param {Function} clickHandler - Função a ser chamada no click
-     * @param {string} containerSelector - Seletor do container onde adicionar o botão
-     */
-    addButton(id, text, clickHandler, containerSelector = 'body') {
-        const button = document.createElement('button');
-        button.id = id;
-        button.textContent = text;
-        button.addEventListener('click', clickHandler);
-        
-        const container = document.querySelector(containerSelector);
-        if (container) {
-            container.appendChild(button);
-            this.#elements[id] = button;
-        } else {
-            console.warn(`Container não encontrado: ${containerSelector}`);
+        try {
+            window.boardManager.setCoordinateStyle(style);
+            const styleNames = {
+                'none': 'No borders',
+                'thin': 'Thin borders',
+                'frame': 'Frame borders'
+            };
+            this.#showMessage(`Style changed to: ${styleNames[style]}`, "success");
+        } catch (error) {
+            console.error("Error changing style:", error);
+            this.#showMessage("Error changing style", "error");
         }
     }
 
     /**
-     * Remove um botão da interface
-     * @param {string} id - ID do botão a ser removido
+     * Gets the game controller instance
+     * @returns {GameController} Game controller instance
      */
-    removeButton(id) {
-        const button = this.#elements[id];
-        if (button && button.parentNode) {
-            button.parentNode.removeChild(button);
-            delete this.#elements[id];
-        }
+    getGameController() {
+        return this.#gameController;
     }
 
     /**
-     * Obtém referência a um elemento da interface
-     * @param {string} elementName - Nome do elemento
-     * @returns {HTMLElement|null} Elemento DOM ou null se não encontrado
-     */
-    getElement(elementName) {
-        return this.#elements[elementName] || null;
-    }
-
-    /**
-     * Exporta funções para o objeto window (compatibilidade)
+     * Exposes global functions that can be called from anywhere
      */
     exposeGlobalFunctions() {
-        // Funções que podem ser chamadas globalmente
+        // Functions that can be called globally
         window.getGameInfo = () => this.#gameController.getGameInfo();
         window.undoMove = () => this.#gameController.undoMove();
         window.makeBlackMove = () => this.#gameController.getBlackPlayerController().makeAutomaticMove();
@@ -356,9 +241,9 @@ export class UIController {
     }
 
     /**
-     * Inicializa o estado visual da interface
+     * Initializes the interface visual state
      */
     initializeUI() {
-        this.#showMessage("Interface inicializada com sucesso!", "success");
+        this.#showMessage("Interface initialized successfully!", "success");
     }
 }

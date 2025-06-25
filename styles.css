@@ -1,15 +1,33 @@
-/* Chess Assist - Estilos principais */
+/* Chess Assist - Main Styles */
 
-/* Reset e configurações básicas */
+/* Reset and basic settings */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
     background-color: #f5f5f5;
 }
 
-/* Container dos controles */
+/* Main layout - board and moves side by side */
+.game-container {
+    display: flex;
+    gap: 30px;
+    max-width: 1000px;
+    align-items: flex-start;
+}
+
+.board-section {
+    flex-shrink: 0;
+}
+
+.moves-section {
+    flex-grow: 1;
+    min-width: 300px;
+}
+
+/* Controls container */
 .controls {
-    max-width: 600px;
+    max-width: 400px;
+    margin-top: 15px;
 }
 
 .controls h3 {
@@ -19,7 +37,89 @@ body {
     padding-bottom: 5px;
 }
 
-/* Estilos dos botões */
+/* Moves section */
+.moves-section h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    font-size: 18px;
+}
+
+.moves-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.moves-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.moves-table thead {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.moves-table th {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
+    color: #333;
+}
+
+.moves-table th:first-child {
+    width: 50px;
+    text-align: center;
+}
+
+.moves-table th:nth-child(2),
+.moves-table th:nth-child(3) {
+    width: calc((100% - 50px) / 2);
+}
+
+.moves-table td {
+    padding: 6px 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+.moves-table td:first-child {
+    text-align: center;
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+.moves-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.moves-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.moves-table tbody tr:nth-child(even):hover {
+    background-color: #f0f0f0;
+}
+
+.moves-table tbody tr.highlighted {
+    background-color: #e3f2fd !important;
+    border-left: 3px solid #2196f3;
+}
+
+.moves-table tbody tr.highlighted:hover {
+    background-color: #bbdefb !important;
+}
+
+/* Button styles */
 button {
     background-color: #4CAF50;
     border: none;
@@ -47,28 +147,14 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* Área de informações do jogo */
-#gameInfoDisplay {
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    display: block; /* Override para quando não estiver hidden */
-}
-
-/* Tabuleiro de xadrez */
+/* Chess board */
 #board {
     width: 400px;
     margin: 20px 0;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Classes utilitárias */
+/* Utility classes */
 .hidden {
     display: none;
 }
@@ -81,10 +167,15 @@ button:disabled {
     margin-top: 20px;
 }
 
-/* Responsividade */
+/* Responsiveness */
 @media (max-width: 768px) {
     body {
         margin: 10px;
+    }
+    
+    .game-container {
+        flex-direction: column;
+        gap: 20px;
     }
     
     #board {
@@ -96,9 +187,17 @@ button:disabled {
         max-width: 100%;
     }
     
-    button {
+    .controls button {
         display: block;
         width: 100%;
         margin: 5px 0;
+    }
+    
+    .moves-section {
+        min-width: auto;
+    }
+    
+    .moves-table-container {
+        max-height: 300px;
     }
 }
