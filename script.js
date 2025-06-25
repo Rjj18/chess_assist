@@ -1,4 +1,3 @@
-import {COLOR, FEN} from "./cm-chessboard-master/src/Chessboard.js"
 import {Chess} from "https://cdn.jsdelivr.net/npm/chess.mjs@1/src/chess.mjs/Chess.js"
 import {GameController} from "./modules/GameController.js"
 import {BoardManager} from "./modules/BoardManager.js"
