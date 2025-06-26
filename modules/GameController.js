@@ -164,13 +164,20 @@ export class GameController {
      * Resets the game to initial state
      */
     resetGame() {
+        console.log("GameController.resetGame() called");
         this.#chess.reset();
         this.#board.setPosition(FEN.start);
+        
+        // Disable move input first, then re-enable it
+        this.#board.disableMoveInput();
         this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
         
         // Clear moves table
         if (this.#movesTableController) {
+            console.log("Calling movesTableController.clearMoves()");
             this.#movesTableController.clearMoves();
+        } else {
+            console.error("MovesTableController not found when resetting game");
         }
         
         console.log("Game reset");
@@ -181,19 +188,28 @@ export class GameController {
      * @returns {boolean} Whether the move was successfully undone
      */
     undoMove() {
+        console.log("GameController.undoMove() called");
         const move = this.#chess.undo();
         if (move) {
             this.#board.setPosition(this.#chess.fen());
+            
+            // Disable move input first, then re-enable it for the correct player
+            this.#board.disableMoveInput();
             const currentPlayer = this.#chess.turn() === 'w' ? COLOR.white : COLOR.black;
             this.#board.enableMoveInput(this.handleInput.bind(this), currentPlayer);
             
             // Remove move from table
             if (this.#movesTableController) {
+                console.log("Calling movesTableController.removeLastMove()");
                 this.#movesTableController.removeLastMove();
+            } else {
+                console.error("MovesTableController not found when undoing move");
             }
             
             console.log("Move undone:", move);
             return true;
+        } else {
+            console.log("No move to undo");
         }
         return false;
     }
