@@ -3,8 +3,12 @@ import {GameController} from "./modules/GameController.js"
 import {BoardManager} from "./modules/BoardManager.js"
 import {UIController} from "./modules/UIController.js"
 import {MovesTableController} from "./modules/MovesTableController.js"
+import {ThemeManager} from "./modules/ThemeManager.js"
 
 
+
+// Initialize theme manager first for proper visual initialization
+const themeManager = new ThemeManager();
 
 // Main module initialization
 const chess = new Chess();
@@ -34,8 +38,15 @@ gameController.startGame();
 // Export functions for global use (console, HTML, etc.)
 uiController.exposeGlobalFunctions();
 
-// Export boardManager for internal use
+// Export modules for global use
 window.boardManager = boardManager;
+window.themeManager = themeManager;
 
 // Initialize interface after loading everything
 uiController.initializeUI();
+
+// Listen for theme changes to update any theme-dependent components
+document.addEventListener('themechange', (event) => {
+    console.log(`Theme changed to: ${event.detail.theme}`);
+    // Here we could update chessboard themes or other components if needed
+});
