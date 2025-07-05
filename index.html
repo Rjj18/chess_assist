@@ -24,30 +24,44 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Chess Assistant</h1>
+    <div class="header">
+        <h1>Chess Assistant</h1>
+        <div class="theme-toggle">
+            <span class="theme-toggle-label">🌙</span>
+            <button 
+                class="theme-toggle-switch" 
+                id="themeToggle" 
+                aria-label="Toggle between light and dark theme"
+                role="switch"
+                aria-checked="false"
+            >
+            </button>
+            <span class="theme-toggle-label">☀️</span>
+        </div>
+    </div>
     
-    <div class="game-container">
+    <div class="game-container fade-in">
         <div class="board-section">
             <div id="board"></div>
             <div class="controls">
-                <button id="resetButton">Reset Position</button>
+                <button id="resetButton" class="secondary">Reset Position</button>
                 <button id="undoButton">Undo Move</button>
                 <button id="forceBlackMoveButton">Black Move</button>
             </div>
         </div>
         
-        <div class="moves-section">
+        <div class="moves-section slide-up">
             <h3>Game Moves</h3>
             <div class="moves-table-container">
-                <table id="movesTable" class="moves-table">
+                <table id="movesTable" class="moves-table" role="grid" aria-label="Chess game moves">
                     <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>White</th>
-                            <th>Black</th>
+                        <tr role="row">
+                            <th role="columnheader" aria-sort="none">#</th>
+                            <th role="columnheader" aria-sort="none">White</th>
+                            <th role="columnheader" aria-sort="none">Black</th>
                         </tr>
                     </thead>
-                    <tbody id="movesTableBody">
+                    <tbody id="movesTableBody" role="rowgroup">
                         <!-- Moves will be added here dynamically -->
                     </tbody>
                 </table>
@@ -55,5 +69,6 @@
         </div>
     </div>
   <script type="module" src="./script.js"></script>
+  <script type="module" src="./tests.js"></script>
 </body>
 </html>
