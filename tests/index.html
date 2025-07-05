@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Assist Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        #test-output {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            min-height: 200px;
+            margin-top: 20px;
+        }
+        
+        pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
+        .info {
+            color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Chess Assist Test Suite</h1>
+        
+        <div class="controls">
+            <button onclick="runTests()">🔍 Run Tests</button>
+            <button onclick="clearOutput()">🗑️ Clear Output</button>
+        </div>
+        
+        <div id="test-output">
+            <p class="info">Click "Run Tests" to start the test suite...</p>
+        </div>
+    </div>
+    
+    <script type="module">
+        import './chess-tests.js';
+        
+        window.runTests = async () => {
+            const output = document.getElementById('test-output');
+            const originalLog = console.log;
+            const originalError = console.error;
+            
+            output.innerHTML = '<pre>';
+            
+            console.log = (...args) => {
+                const message = args.join(' ');
+                let className = '';
+                
+                if (message.includes('✓')) {
+                    className = 'success';
+                } else if (message.includes('✗')) {
+                    className = 'error';
+                } else if (message.includes('Running') || message.includes('Results')) {
+                    className = 'info';
+                }
+                
+                output.innerHTML += `<span class="${className}">${message}</span>\n`;
+                originalLog(...args);
+            };
+            
+            console.error = (...args) => {
+                const message = args.join(' ');
+                output.innerHTML += `<span class="error">${message}</span>\n`;
+                originalError(...args);
+            };
+            
+            try {
+                await window.runChessTests();
+            } catch (error) {
+                console.error('Test execution failed:', error.message);
+            }
+            
+            output.innerHTML += '</pre>';
+            console.log = originalLog;
+            console.error = originalError;
+        };
+        
+        window.clearOutput = () => {
+            document.getElementById('test-output').innerHTML = '<p class="info">Click "Run Tests" to start the test suite...</p>';
+        };
+    </script>
+</body>
+</html>

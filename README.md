@@ -105,13 +105,52 @@ chess-assist/
 - ✅ Safari 15+
 - ✅ Edge 91+
 
+## Testing
+
+This project includes basic test infrastructure:
+
+### Running Tests
+
+1. **Browser Tests**: Run `npm test` and open `http://localhost:8080/tests/` in your browser
+2. **Development**: Use the browser console to run `runChessTests()`
+
+### Test Coverage
+
+- Chess game initialization
+- Valid move acceptance
+- Invalid move rejection
+- Module loading validation
+
 ## Dependencies
 
 - [cm-chessboard](https://github.com/shaack/cm-chessboard) - Interactive chess board
 - [chess.mjs](https://github.com/jhlywa/chess.js) - Chess game logic (via CDN)
 
+## 🤖 AI-Powered Issue Resolution
+
+This repository features **automated issue resolution** using GitHub Copilot! When you create an issue, our AI assistant will:
+
+- 🔍 **Analyze** your issue description
+- 💡 **Generate** a potential solution
+- 🧪 **Test** the changes automatically
+- 📝 **Create** a pull request for review
+
+### How to Use
+1. Create a detailed issue with clear description
+2. Use keywords like "bug", "feature", "test", or "UI" 
+3. Wait for the Copilot assistant to analyze and respond
+4. Review the auto-generated pull request
+
+📖 **[Learn more about the automation](docs/COPILOT_AUTOMATION.md)**
+
 ## Contributing
 
+### Automated Contributions
+- Create an issue and let the AI assistant propose a solution
+- Review and test auto-generated pull requests
+- Provide feedback to improve automation
+
+### Manual Contributions
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature-name`
 3. Commit your changes: `git commit -am 'Add some feature'`

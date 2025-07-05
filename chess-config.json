@@ -1,0 +1,28 @@
+{
+  "name": "chess-assist",
+  "version": "1.0.0",
+  "features": {
+    "aiPlayer": true,
+    "moveHistory": true,
+    "boardCoordinates": true,
+    "responsiveDesign": true,
+    "automatedIssueResolution": true
+  },
+  "settings": {
+    "animationDuration": 300,
+    "showCoordinates": true,
+    "pieceTheme": "staunty"
+  },
+  "testing": {
+    "enabled": true,
+    "autoRun": false,
+    "reportLevel": "detailed",
+    "testSuite": "tests/chess-tests.js"
+  },
+  "automation": {
+    "copilotIntegration": true,
+    "issueToPR": true,
+    "autoValidation": true,
+    "supportedIssueTypes": ["bug", "feature", "test", "ui", "documentation"]
+  }
+}

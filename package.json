@@ -7,7 +7,9 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "dev": "python -m http.server 8080",
-    "serve": "python -m http.server 8000"
+    "serve": "python -m http.server 8000",
+    "test": "python -m http.server 8080 & echo 'Tests available at http://localhost:8080/tests/ - Press Ctrl+C to stop server'",
+    "test:open": "python -m http.server 8080 & sleep 2 && echo 'Opening tests in browser...' && (command -v open >/dev/null && open http://localhost:8080/tests/) || (command -v xdg-open >/dev/null && xdg-open http://localhost:8080/tests/) || echo 'Open http://localhost:8080/tests/ in your browser'"
   },
   "keywords": [
     "chess",
