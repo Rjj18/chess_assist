@@ -2,6 +2,8 @@
 
 A modern, modular chess assistant web application built with ES2024 standards. Play chess against an AI opponent with a clean, responsive interface featuring live move notation.
 
+![Chess Assist Demo](./demo.gif)
+
 🎮 **[Play Online](https://rjj18.github.io/chess_assist)** 
 
 ## Features
