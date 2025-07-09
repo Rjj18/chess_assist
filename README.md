@@ -25,6 +25,9 @@ A standard game of chess where you play as white against an AI opponent playing 
 ### 2. King Escape Mode
 A puzzle mode where the board is set up with a white king on e1 and a few black pieces. The goal is to move the king to any square on the 8th rank without being captured.
 
+### 3. Pawn Race Mode (Under Development)
+A game mode where you race your pawns to the other side of the board. The first player to get a pawn to the opposite end wins.
+
 ## Quick Start
 
 ### Option 1: Play Online (Recommended)
