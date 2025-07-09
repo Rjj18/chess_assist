@@ -312,6 +312,46 @@ body {
     opacity: 0.9;
 }
 
+/* Check indicator styling */
+.check-indicator {
+    color: #e74c3c;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    margin-left: var(--spacing-sm);
+    display: inline-block;
+}
+
+/* Dark theme check indicator */
+[data-theme="dark"] .check-indicator {
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.15);
+    border-color: rgba(255, 107, 107, 0.4);
+}
+
+/* Check warning row styling */
+.check-warning-row {
+    background-color: rgba(231, 76, 60, 0.05) !important;
+    border-left: 3px solid #e74c3c !important;
+}
+
+.check-warning-row:hover {
+    background-color: rgba(231, 76, 60, 0.1) !important;
+}
+
+/* Dark theme check warning row */
+[data-theme="dark"] .check-warning-row {
+    background-color: rgba(255, 107, 107, 0.08) !important;
+    border-left-color: #ff6b6b !important;
+}
+
+[data-theme="dark"] .check-warning-row:hover {
+    background-color: rgba(255, 107, 107, 0.15) !important;
+}
+
 /* Modern Button styles */
 button {
     background-color: var(--btn-primary-bg);
