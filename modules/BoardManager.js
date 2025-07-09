@@ -117,10 +117,11 @@ export class BoardManager {
     /**
      * Sets a new position on the board
      * @param {string} fen - FEN notation of the position
+     * @param {boolean} animated - Whether to animate the position change (default: true)
      */
-    setPosition(fen) {
+    setPosition(fen, animated = true) {
         if (this.#board) {
-            this.#board.setPosition(fen);
+            this.#board.setPosition(fen, animated);
         }
     }
 

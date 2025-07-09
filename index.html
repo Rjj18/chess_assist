@@ -3,24 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Assist - Play Chess Online</title>
-    <meta name="description" content="Modern chess assistant web application. Play against AI with interactive board and live move notation.">
-    <meta name="keywords" content="chess, game, AI, online chess, chess assistant">
-    <meta name="author" content="Roger Aparecido Silva">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://your-username.github.io/chess-assist/">
-    <meta property="og:title" content="Chess Assist - Play Chess Online">
-    <meta property="og:description" content="Modern chess assistant web application. Play against AI with interactive board and live move notation.">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://your-username.github.io/chess-assist/">
-    <meta property="twitter:title" content="Chess Assist - Play Chess Online">
-    <meta property="twitter:description" content="Modern chess assistant web application. Play against AI with interactive board and live move notation.">
-    
-    <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
+    <title>Chess Assist - Home</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -39,36 +22,14 @@
             <span class="theme-toggle-label">☀️</span>
         </div>
     </div>
-    
-    <div class="game-container fade-in">
-        <div class="board-section">
-            <div id="board"></div>
-            <div class="controls">
-                <button id="resetButton" class="secondary">Reset Position</button>
-                <button id="undoButton">Undo Move</button>
-                <button id="forceBlackMoveButton">Black Move</button>
-            </div>
-        </div>
-        
-        <div class="moves-section slide-up">
-            <h3>Game Moves</h3>
-            <div class="moves-table-container">
-                <table id="movesTable" class="moves-table" role="grid" aria-label="Chess game moves">
-                    <thead>
-                        <tr role="row">
-                            <th role="columnheader" aria-sort="none">#</th>
-                            <th role="columnheader" aria-sort="none">White</th>
-                            <th role="columnheader" aria-sort="none">Black</th>
-                        </tr>
-                    </thead>
-                    <tbody id="movesTableBody" role="rowgroup">
-                        <!-- Moves will be added here dynamically -->
-                    </tbody>
-                </table>
-            </div>
+    <div class="container">
+        <h2>Welcome to Chess Assist!</h2>
+        <p>Choose a mode to get started:</p>
+        <div class="home-buttons">
+            <a href="play.html" class="button">Play Against AI</a>
+            <a href="escape.html" class="button">King Escape Mode</a>
         </div>
     </div>
-  <script type="module" src="./script.js"></script>
-  <script type="module" src="./tests.js"></script>
+    <script type="module" src="modules/home-script.js"></script>
 </body>
 </html>
