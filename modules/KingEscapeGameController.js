@@ -4,11 +4,13 @@
  */
 
 import { INPUT_EVENT_TYPE, COLOR } from "../cm-chessboard-master/src/Chessboard.js";
+import { FenGenerator } from "./FenGenerator.js";
 
 export class KingEscapeGameController {
     #chess;
     #board;
     #movesTableController;
+    #fenGenerator; // Add this line
 
     /**
      * @param {Chess} chess - The chess.js instance.
@@ -19,60 +21,14 @@ export class KingEscapeGameController {
         this.#chess = chess;
         this.#board = board;
         this.#movesTableController = movesTableController;
-    }
-
-    /**
-     * Generates a random FEN for the King Escape puzzle.
-     * @returns {string} A FEN string for the new puzzle.
-     * @private
-     */
-    #generateRandomFen() {
-        const occupied = new Set(["e1"]);
-        const pieces = { n: 1 }; // Black pieces to place, just a knight for this version
-        const fenArr = Array(8).fill(null).map(() => Array(8).fill(null));
-
-        fenArr[7][4] = 'K'; // White King on e1
-
-        // Place black pieces randomly on ranks 2-8
-        for (const piece in pieces) {
-            let square, rank, file;
-            do {
-                const files = 'abcdefgh';
-                const ranks = '2345678';
-                square = files[Math.floor(Math.random() * files.length)] + ranks[Math.floor(Math.random() * ranks.length)];
-            } while (occupied.has(square));
-
-            occupied.add(square);
-            rank = 8 - parseInt(square[1], 10);
-            file = square.charCodeAt(0) - 'a'.charCodeAt(0);
-            fenArr[rank][file] = piece;
-        }
-
-        // Convert array to FEN string
-        return fenArr.map(row => {
-            let empty = 0;
-            let fenRow = '';
-            for (const cell of row) {
-                if (cell === null) {
-                    empty++;
-                } else {
-                    if (empty > 0) {
-                        fenRow += empty;
-                        empty = 0;
-                    }
-                    fenRow += cell;
-                }
-            }
-            if (empty > 0) fenRow += empty;
-            return fenRow;
-        }).join('/') + ' w - - 0 1';
+        this.#fenGenerator = new FenGenerator(); // Add this line
     }
 
     /**
      * Sets up a new puzzle.
      */
     setupNewGame() {
-        const fen = this.#generateRandomFen();
+        const fen = this.#fenGenerator.generateKingEscapeFen();
         console.log("Generated FEN for King Escape:", fen);
         
         // First disable any existing move input
