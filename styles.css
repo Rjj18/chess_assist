@@ -127,6 +127,21 @@ body {
     color: var(--primary-text);
 }
 
+/* Navigation link styles */
+.nav-link {
+    color: var(--primary-text);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-medium);
+    transition: var(--transition-fast);
+}
+
+.nav-link:hover {
+    background-color: var(--secondary-bg);
+    color: var(--accent-primary);
+}
+
 .theme-toggle {
     display: flex;
     align-items: center;
@@ -365,6 +380,86 @@ button.secondary:active {
 
 #board:hover {
     box-shadow: 0 12px 32px var(--shadow-dark);
+}
+
+/* Home Page Styles */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    text-align: center;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow-light);
+}
+
+.container h2 {
+    color: var(--primary-text);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.container p {
+    color: var(--secondary-text);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.home-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.home-buttons .button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--btn-primary-bg);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition-medium);
+    min-width: 180px;
+}
+
+.home-buttons .button:hover {
+    background: var(--btn-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.home-buttons .button:active {
+    background: var(--btn-primary-active);
+    transform: translateY(0);
+}
+
+/* Dark theme styles for home page */
+[data-theme="dark"] .container {
+    background: var(--secondary-bg);
+    box-shadow: var(--shadow-medium);
+}
+
+[data-theme="dark"] .container h2 {
+    color: var(--primary-text);
+}
+
+[data-theme="dark"] .container p {
+    color: var(--secondary-text);
+}
+
+[data-theme="dark"] .home-buttons .button {
+    background: var(--btn-primary-bg);
+}
+
+[data-theme="dark"] .home-buttons .button:hover {
+    background: var(--btn-primary-hover);
+}
+
+[data-theme="dark"] .home-buttons .button:active {
+    background: var(--btn-primary-active);
 }
 
 /* Utility classes */
