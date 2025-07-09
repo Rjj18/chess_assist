@@ -13,7 +13,7 @@ export class KingEscapeGameController {
     /**
      * @param {Chess} chess - The chess.js instance.
      * @param {Chessboard} board - The visual board instance.
-     * @param {KingEscapeMovesTableController} movesTableController - The moves table controller.
+     * @param {KingEscapeGameController} movesTableController - The moves table controller.
      */
     constructor(chess, board, movesTableController) {
         this.#chess = chess;

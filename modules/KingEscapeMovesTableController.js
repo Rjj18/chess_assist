@@ -31,7 +31,7 @@ export class KingEscapeMovesTableController {
         
         let moveDisplay = move.san;
         if (isInCheck) {
-            moveDisplay += ' <span class="check-indicator">Check!</span>';
+            moveDisplay += ' <span class="illegal-indicator">Check!</span>';
         }
         
         row.innerHTML = `<td>${this.#moveCounter}</td><td>${moveDisplay}</td>`;
@@ -51,10 +51,10 @@ export class KingEscapeMovesTableController {
         this.#moveCounter++;
         const row = document.createElement("tr");
         row.id = `king-move-${this.#moveCounter}`;
-        row.className = "check-warning-row";
+        row.className = "illegal-warning-row";
         
         const moveAttempt = `${fromSquare}-${toSquare}`;
-        const checkMessage = `<span class="check-indicator">Check! Cannot move to ${toSquare}</span>`;
+        const checkMessage = `<span class="illegal-indicator"> Illegal Move! Cannot move to ${toSquare}</span>`;
         
         row.innerHTML = `<td>${this.#moveCounter}</td><td>${checkMessage}</td>`;
         this.#tableBody.appendChild(row);
