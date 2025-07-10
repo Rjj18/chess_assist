@@ -651,3 +651,22 @@ button:focus,
         transition-duration: 0.01ms !important;
     }
 }
+
+/* Win message styles */
+.white-message {
+    color: #2196f3;
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    display: inline-block;
+}
+
+.black-message {
+    color: #222;
+    background: #ffe082;
+    border: 1px solid #ffb300;
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    display: inline-block;
+}
