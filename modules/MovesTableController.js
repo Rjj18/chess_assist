@@ -18,9 +18,9 @@ export class MovesTableController {
      * @private
      */
     #initializeElements() {
-        this.#tableBody = document.getElementById('movesTableBody');
+        this.#tableBody = document.getElementById('pawnRaceMovesTableBody');
         if (!this.#tableBody) {
-            console.error('Element movesTableBody not found');
+            console.error('Element pawnRaceMovesTableBody not found');
         }
     }
 
