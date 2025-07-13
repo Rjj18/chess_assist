@@ -56,3 +56,8 @@ bower_components
 # Temporary folders
 tmp/
 temp/
+
+# Miscellaneous
+GEMINI.md
+class_diagram.md
+class-refactor-notes.md
