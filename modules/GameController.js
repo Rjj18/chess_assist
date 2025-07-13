@@ -5,12 +5,10 @@
 
 import { COLOR, INPUT_EVENT_TYPE, FEN } from "../cm-chessboard-master/src/Chessboard.js";
 import { BlackPlayerController } from "./BlackPlayerController.js";
+import { BaseGameController } from "./BaseGameController.js";
 
-export class GameController {
-    #chess;
-    #board;
+export class GameController extends BaseGameController {
     #blackPlayerController;
-    #movesTableController;
 
     /**
      * @param {Chess} chess - Chess.js instance
@@ -18,10 +16,7 @@ export class GameController {
      * @param {MovesTableController} movesTableController - Moves table controller
      */
     constructor(chess, board, movesTableController = null) {
-        this.#chess = chess;
-        this.#board = board;
-        this.#movesTableController = movesTableController;
-        // Creates the black player controller internally
+        super(chess, board, movesTableController);
         this.#blackPlayerController = new BlackPlayerController(chess, board, 800, movesTableController);
     }
 
@@ -73,15 +68,15 @@ export class GameController {
         };
         
         // Try to make the move in the chess object
-        const moveResult = this.#chess.move(move);
+        const moveResult = this.chess.move(move);
         
         if (moveResult) {
             console.log("Legal move:", moveResult);
             
             // Add move to table if controller is available
-            if (this.#movesTableController) {
+            if (this.movesTableController) {
                 const color = moveResult.color === 'w' ? 'white' : 'black';
-                this.#movesTableController.addMove(moveResult.san, color);
+                this.movesTableController.addMove(moveResult.san, color);
             }
             
             return true;
@@ -98,10 +93,10 @@ export class GameController {
      * @private
      */
     #handleMoveFinished(event) {
-        console.log("Move finished. Current turn:", this.#chess.turn());
+        console.log("Move finished. Current turn:", this.chess.turn());
         
         // Update visual board position
-        this.#board.setPosition(this.#chess.fen());
+        this.board.setPosition(this.chess.fen());
         
         // Check if game ended
         if (this.#checkGameEnd()) {
@@ -109,7 +104,7 @@ export class GameController {
         }
         
         // If it's black's turn, trigger automatic move
-        if (this.#chess.turn() === 'b') {
+        if (this.chess.turn() === 'b') {
             setTimeout(() => {
                 this.#blackPlayerController.makeAutomaticMove().then((result) => {
                     if (result) {
@@ -130,22 +125,22 @@ export class GameController {
      * @private
      */
     #checkGameEnd() {
-        if (this.#chess.in_checkmate()) {
-            const winner = this.#chess.turn() === 'w' ? 'Black' : 'White';
+        if (this.chess.in_checkmate()) {
+            const winner = this.chess.turn() === 'w' ? 'Black' : 'White';
             console.log(`Game over - Checkmate! ${winner} wins!`);
-            this.#board.disableMoveInput();
+            this.board.disableMoveInput();
             return true;
         }
         
-        if (this.#chess.in_draw()) {
+        if (this.chess.in_draw()) {
             console.log("Game over - Draw!");
-            this.#board.disableMoveInput();
+            this.board.disableMoveInput();
             return true;
         }
         
-        if (this.#chess.in_stalemate()) {
+        if (this.chess.in_stalemate()) {
             console.log("Game over - Stalemate!");
-            this.#board.disableMoveInput();
+            this.board.disableMoveInput();
             return true;
         }
         
@@ -155,32 +150,16 @@ export class GameController {
     /**
      * Starts the game
      */
-    startGame() {
-        console.log("Starting new game");
-        this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
-    }
-
-    /**
-     * Resets the game to initial state
-     */
-    resetGame() {
-        console.log("GameController.resetGame() called");
-        this.#chess.reset();
-        this.#board.setPosition(FEN.start);
-        
-        // Disable move input first, then re-enable it
-        this.#board.disableMoveInput();
-        this.#board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
-        
-        // Clear moves table
-        if (this.#movesTableController) {
-            console.log("Calling movesTableController.clearMoves()");
-            this.#movesTableController.clearMoves();
-        } else {
-            console.error("MovesTableController not found when resetting game");
+    setupNewGame() {
+        console.log("Setting up new game...");
+        // Always disable move input before attempting to re-enable it.
+        this.board.disableMoveInput();
+        this.chess.reset();
+        this.board.setPosition(FEN.start, false);
+        this.board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
+        if (this.movesTableController) {
+            this.movesTableController.clearMoves();
         }
-        
-        console.log("Game reset");
     }
 
     /**
@@ -189,19 +168,19 @@ export class GameController {
      */
     undoMove() {
         console.log("GameController.undoMove() called");
-        const move = this.#chess.undo();
+        const move = this.chess.undo();
         if (move) {
-            this.#board.setPosition(this.#chess.fen());
+            this.board.setPosition(this.chess.fen());
             
             // Disable move input first, then re-enable it for the correct player
-            this.#board.disableMoveInput();
-            const currentPlayer = this.#chess.turn() === 'w' ? COLOR.white : COLOR.black;
-            this.#board.enableMoveInput(this.handleInput.bind(this), currentPlayer);
+            this.board.disableMoveInput();
+            const currentPlayer = this.chess.turn() === 'w' ? COLOR.white : COLOR.black;
+            this.board.enableMoveInput(this.handleInput.bind(this), currentPlayer);
             
             // Remove move from table
-            if (this.#movesTableController) {
+            if (this.movesTableController) {
                 console.log("Calling movesTableController.removeLastMove()");
-                this.#movesTableController.removeLastMove();
+                this.movesTableController.removeLastMove();
             } else {
                 console.error("MovesTableController not found when undoing move");
             }
@@ -220,14 +199,14 @@ export class GameController {
      */
     getGameInfo() {
         return {
-            turn: this.#chess.turn(),
-            isCheck: this.#chess.in_check(),
-            isCheckmate: this.#chess.in_checkmate(),
-            isDraw: this.#chess.in_draw(),
-            isStalemate: this.#chess.in_stalemate(),
-            fen: this.#chess.fen(),
-            history: this.#chess.history(),
-            ascii: this.#chess.ascii()
+            turn: this.chess.turn(),
+            isCheck: this.chess.in_check(),
+            isCheckmate: this.chess.in_checkmate(),
+            isDraw: this.chess.in_draw(),
+            isStalemate: this.chess.in_stalemate(),
+            fen: this.chess.fen(),
+            history: this.chess.history(),
+            ascii: this.chess.ascii()
         };
     }
 
@@ -237,5 +216,23 @@ export class GameController {
      */
     getBlackPlayerController() {
         return this.#blackPlayerController;
+    }
+
+    /**
+     * Forces the black player to make a move and ensures the board
+     * is correctly configured for white's turn afterward.
+     */
+    async forceBlackMove() {
+        const blackPlayer = this.getBlackPlayerController();
+        if (blackPlayer && blackPlayer.isPlayerTurn()) {
+            const moveResult = await blackPlayer.makeAutomaticMove();
+            if (moveResult) {
+                // After the move, it is white's turn. Re-enable input for white.
+                this.board.disableMoveInput();
+                this.board.enableMoveInput(this.handleInput.bind(this), COLOR.white);
+            }
+        } else {
+            console.log("Not black's turn or black player not available.");
+        }
     }
 }
