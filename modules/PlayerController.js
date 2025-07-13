@@ -12,6 +12,7 @@ export class PlayerController {
     #board;
     #color;
     #movesTableController;
+    #onMoveMadeCallback = null;
 
     /**
      * @param {Chess} chess - Chess.js instance
@@ -102,12 +103,25 @@ export class PlayerController {
                 const color = moveResult.color === 'w' ? 'white' : 'black';
                 this.#movesTableController.addMove(moveResult.san, color);
             }
+
+            // Call the callback if it exists
+            if (this.#onMoveMadeCallback) {
+                this.#onMoveMadeCallback(moveResult);
+            }
             
             return moveResult;
         } else {
             console.log(`Error executing move by ${this.#color === 'w' ? 'white' : 'black'}:`, move);
             return null;
         }
+    }
+
+    /**
+     * Sets a callback function to be executed after a move is made.
+     * @param {function(object): void} callback - The callback function.
+     */
+    setOnMoveMade(callback) {
+        this.#onMoveMadeCallback = callback;
     }
 
     /**

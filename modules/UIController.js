@@ -42,12 +42,7 @@ export class UIController {
      * @private
      */
     async #handleForceBlackMove() {
-        const blackPlayer = this.#gameController.getBlackPlayerController();
-        if (blackPlayer && blackPlayer.isPlayerTurn()) {
-            await blackPlayer.makeAutomaticMove();
-        } else {
-            console.log("Not black's turn or black player not available.");
-        }
+        await this.#gameController.forceBlackMove();
     }
 
     /**

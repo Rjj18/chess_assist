@@ -14,7 +14,8 @@ export class PawnRaceGameController {
         this.#board = board;
         this.#movesTableController = movesTableController;
         this.#fenGenerator = new FenGenerator();
-        this.#blackPlayerController = new BlackPlayerController(chess, board, this.onBlackMoved.bind(this));
+        this.#blackPlayerController = new BlackPlayerController(this.#chess, this.#board);
+        this.#blackPlayerController.setOnMoveMade(this.onBlackMoved.bind(this));
     }
 
     startGame() {
