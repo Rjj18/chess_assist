@@ -18,9 +18,9 @@ export class MovesTableController {
      * @private
      */
     #initializeElements() {
-        this.#tableBody = document.getElementById('movesTable');
+        this.#tableBody = document.getElementById('movesTableBody');
         if (!this.#tableBody) {
-            console.error('Element movesTable not found');
+            console.error('Element movesTableBody not found');
         }
     }
 

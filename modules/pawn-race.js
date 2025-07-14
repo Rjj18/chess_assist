@@ -26,7 +26,7 @@ const boardManager = new BoardManager("pawn-race-board", {
 });
 
 // Use the correct table body ID from your HTML
-const movesTableController = new MovesTableController('pawnRaceMovesTableBody');
+const movesTableController = new MovesTableController();
 
 // Create and start the game controller
 const gameController = new PawnRaceGameController(chess, boardManager, movesTableController);

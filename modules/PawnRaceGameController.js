@@ -56,7 +56,9 @@ export class PawnRaceGameController {
                 const move = this.#chess.move({ from: event.squareFrom, to: event.squareTo, promotion: 'q' });
                 if (move && move.flags.includes('p')) {
                     this.#board.setPosition(this.#chess.fen());
-                    this.#movesTableController.addMove(move, false); // false for white
+        if (move && move.san) {
+            this.#movesTableController.addMove(move, false); // false for white
+        }
                     this.#showWinMessage('White');
                     this.#board.disableMoveInput();
                     return false;
@@ -67,7 +69,9 @@ export class PawnRaceGameController {
                 const move = this.#chess.move({ from: event.squareFrom, to: event.squareTo, promotion: 'q' });
                 if (move && move.flags.includes('p')) {
                     this.#board.setPosition(this.#chess.fen());
-                    this.#movesTableController.addMove(move, true); // true for black
+        if (move && move.san) {
+            this.#movesTableController.addMove(move, true); // true for black
+        }
                     this.#showWinMessage('Black');
                     this.#board.disableMoveInput();
                     return false;
@@ -77,7 +81,9 @@ export class PawnRaceGameController {
             const move = this.#chess.move({ from: event.squareFrom, to: event.squareTo });
             if (move) {
                 this.#board.setPosition(this.#chess.fen());
-                this.#movesTableController.addMove(move, this.#chess.turn() === 'b');
+                if (move && move.san) {
+                    this.#movesTableController.addMove(move, this.#chess.turn() === 'b');
+                }
                 // End the game if a pawn reaches the last rank without promotion (shouldn't happen, but for safety)
                 if (move.piece === 'p' && ((move.color === 'w' && move.to[1] === '8') || (move.color === 'b' && move.to[1] === '1'))) {
                     this.#showWinMessage(move.color === 'w' ? 'White' : 'Black');
@@ -93,7 +99,9 @@ export class PawnRaceGameController {
     }
 
     onBlackMoved(move) {
-        this.#movesTableController.addMove(move, true);
+        if (move && move.san) {
+            this.#movesTableController.addMove(move, true);
+        }
         // Debug: log move details for black
         if (move.piece === 'p' && move.color === 'b') {
             console.log('[DEBUG] Black pawn move:', move);
