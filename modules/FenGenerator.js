@@ -2,6 +2,7 @@
  * @module FenGenerator
  * A utility class for generating FEN strings for various chess puzzles and scenarios.
  */
+
 export class FenGenerator {
 
     /**
@@ -15,7 +16,7 @@ export class FenGenerator {
      * @returns {string} The complete FEN string.
      * @private
      */
-    #arrayToFen(boardArray, activeColor = 'w', castling = '-', enPassant = '-', halfmoveClock = 0, fullmoveNumber = 1) {
+    arrayToFen(boardArray, activeColor = 'w', castling = '-', enPassant = '-', halfmoveClock = 0, fullmoveNumber = 1) {
         const fenRows = boardArray.map(row => {
             let empty = 0;
             let fenRow = '';
@@ -38,44 +39,18 @@ export class FenGenerator {
         return `${fenRows.join('/')} ${activeColor} ${castling} ${enPassant} ${halfmoveClock} ${fullmoveNumber}`;
     }
 
+// Classe base não implementa métodos específicos de puzzles
+// Para KingEscapeFenGenerator, use import do arquivo KingEscapeFenGenerator.js
+}
+
+
+export class PawnRaceFenGenerator extends FenGenerator {
     /**
-     * Generates a random FEN for the King Escape puzzle.
-     * The puzzle consists of a white king on e1 and a single black knight
-     * placed randomly on ranks 2 through 8.
-     *
-     * @returns {string} A FEN string for the new puzzle.
+     * Gera um FEN para o jogo Pawn Race.
+     * 8 peões brancos na 2ª fileira e 8 peões pretos na 7ª fileira.
+     * @returns {string} FEN para o Pawn Race.
      */
-    generateKingEscapeFen() {
-        const occupied = new Set(["e1"]);
-        const pieces = { n: 1 }; // Black pieces to place
-        const boardArray = Array(8).fill(null).map(() => Array(8).fill(null));
-
-        boardArray[7][4] = 'K'; // White King on e1
-
-        // Place black pieces randomly on ranks 2-8
-        for (const piece in pieces) {
-            let square, rank, file;
-            do {
-                const files = 'abcdefgh';
-                const ranks = '2345678';
-                square = files[Math.floor(Math.random() * files.length)] + ranks[Math.floor(Math.random() * ranks.length)];
-            } while (occupied.has(square));
-
-            occupied.add(square);
-            rank = 8 - parseInt(square[1], 10);
-            file = square.charCodeAt(0) - 'a'.charCodeAt(0);
-            boardArray[rank][file] = piece;
-        }
-
-        return this.#arrayToFen(boardArray, 'w', '-', '-', 0, 1);
-    }
-
-    /**
-     * Generates a FEN for the Pawn Race game.
-     * This game consists of 8 white pawns on the 2nd rank and 8 black pawns on the 7th rank.
-     * @returns {string} A FEN string for the Pawn Race game.
-     */
-    generatePawnRaceFen() {
+    generateFen() {
         return '8/pppppppp/8/8/8/8/PPPPPPPP/8 w - - 0 1';
     }
 }

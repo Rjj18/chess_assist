@@ -4,11 +4,11 @@
  */
 
 import { INPUT_EVENT_TYPE, COLOR } from "../cm-chessboard-master/src/Chessboard.js";
-import { FenGenerator } from "./FenGenerator.js";
+import { KingEscapeFenGenerator } from "./KingEscapeFenGenerator.js";
 import { BaseGameController } from "./BaseGameController.js";
 
 export class KingEscapeGameController extends BaseGameController {
-    #fenGenerator; // Add this line
+    #fenGenerator;
 
     /**
      * @param {Chess} chess - The chess.js instance.
@@ -17,14 +17,14 @@ export class KingEscapeGameController extends BaseGameController {
      */
     constructor(chess, board, movesTableController) {
         super(chess, board, movesTableController);
-        this.#fenGenerator = new FenGenerator(); // Add this line
+        this.#fenGenerator = new KingEscapeFenGenerator();
     }
 
     /**
      * Sets up a new puzzle.
      */
     setupNewGame() {
-        const fen = this.#fenGenerator.generateKingEscapeFen();
+        const fen = this.#fenGenerator.generateFen();
         console.log("Generated FEN for King Escape:", fen);
         
         // First disable any existing move input

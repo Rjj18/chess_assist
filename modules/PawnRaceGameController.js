@@ -1,5 +1,5 @@
 import { INPUT_EVENT_TYPE, COLOR } from "../cm-chessboard-master/src/Chessboard.js";
-import { FenGenerator } from "./FenGenerator.js";
+import { PawnRaceFenGenerator } from "./FenGenerator.js";
 import { BlackPlayerController } from "./BlackPlayerController.js";
 
 export class PawnRaceGameController {
@@ -13,7 +13,7 @@ export class PawnRaceGameController {
         this.#chess = chess;
         this.#board = board;
         this.#movesTableController = movesTableController;
-        this.#fenGenerator = new FenGenerator();
+        this.#fenGenerator = new PawnRaceFenGenerator();
         this.#blackPlayerController = new BlackPlayerController(this.#chess, this.#board);
         this.#blackPlayerController.setOnMoveMade(this.onBlackMoved.bind(this));
     }
@@ -32,7 +32,7 @@ export class PawnRaceGameController {
         if (this.#board && this.#board.disableMoveInput) {
             this.#board.disableMoveInput();
         }
-        const fen = this.#fenGenerator.generatePawnRaceFen();
+        const fen = this.#fenGenerator.generateFen();
         this.#chess.load(fen);
         this.#board.setPosition(this.#chess.fen(), false);
         this.#movesTableController.clearMoves();
