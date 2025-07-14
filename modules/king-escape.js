@@ -35,3 +35,16 @@ const resetBtn = document.getElementById("resetKingGameButton");
 if (resetBtn) {
     resetBtn.addEventListener("click", () => gameController.resetGame());
 }
+
+// Difficulty buttons functionality
+const diffBtns = document.querySelectorAll('.difficulty-btn');
+diffBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const level = btn.getAttribute('data-level');
+        gameController.setDifficulty(level);
+        gameController.resetGame();
+        // Optionally, visually highlight the selected button
+        diffBtns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+    });
+});

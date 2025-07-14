@@ -1,20 +1,18 @@
+
+import { BaseMovesTableController } from "./BaseMovesTableController.js";
 /**
  * King Escape Moves Table Controller
  * Manages the moves table UI for the King Escape game mode.
  * @module KingEscapeMovesTableController
  */
-export class KingEscapeMovesTableController {
-    #tableBody;
+export class KingEscapeMovesTableController extends BaseMovesTableController {
     #moveCounter = 0;
 
     /**
      * @param {string} tableBodyId The ID of the table body element.
      */
     constructor(tableBodyId) {
-        this.#tableBody = document.getElementById(tableBodyId);
-        if (!this.#tableBody) {
-            console.error(`Element with ID "${tableBodyId}" not found.`);
-        }
+        super(tableBodyId);
     }
 
     /**
@@ -23,20 +21,16 @@ export class KingEscapeMovesTableController {
      * @param {boolean} isInCheck - Whether the king is in check after this move.
      */
     addMove(move, isInCheck = false) {
-        if (!this.#tableBody || !move) return;
-
+        if (!this.tableBody || !move) return;
         this.#moveCounter++;
         const row = document.createElement("tr");
         row.id = `king-move-${this.#moveCounter}`;
-        
         let moveDisplay = move.san;
         if (isInCheck) {
-            moveDisplay += ' <span class="illegal-indicator">Check!</span>';
+            moveDisplay += ' <span class=\"illegal-indicator\">Check!</span>';
         }
-        
         row.innerHTML = `<td>${this.#moveCounter}</td><td>${moveDisplay}</td>`;
-        this.#tableBody.appendChild(row);
-
+        this.tableBody.appendChild(row);
         this.#scrollToLastMove();
     }
 
@@ -46,19 +40,15 @@ export class KingEscapeMovesTableController {
      * @param {string} toSquare - The square the king tried to move to.
      */
     addCheckMessage(fromSquare, toSquare) {
-        if (!this.#tableBody) return;
-
+        if (!this.tableBody) return;
         this.#moveCounter++;
         const row = document.createElement("tr");
         row.id = `king-move-${this.#moveCounter}`;
         row.className = "illegal-warning-row";
-        
         const moveAttempt = `${fromSquare}-${toSquare}`;
-        const checkMessage = `<span class="illegal-indicator"> Illegal Move! Cannot move to ${toSquare}</span>`;
-        
+        const checkMessage = `<span class=\"illegal-indicator\"> Illegal Move! Cannot move to ${toSquare}</span>`;
         row.innerHTML = `<td>${this.#moveCounter}</td><td>${checkMessage}</td>`;
-        this.#tableBody.appendChild(row);
-
+        this.tableBody.appendChild(row);
         this.#scrollToLastMove();
     }
 
@@ -66,8 +56,8 @@ export class KingEscapeMovesTableController {
      * Clears all moves from the table.
      */
     clearMoves() {
-        if (this.#tableBody) {
-            this.#tableBody.innerHTML = '';
+        if (this.tableBody) {
+            this.tableBody.innerHTML = '';
         }
         this.#moveCounter = 0;
     }
@@ -77,7 +67,7 @@ export class KingEscapeMovesTableController {
      * @private
      */
     #scrollToLastMove() {
-        const container = this.#tableBody.closest('.moves-table-container');
+        const container = this.tableBody.closest('.moves-table-container');
         if (container) {
             container.scrollTop = container.scrollHeight;
         }

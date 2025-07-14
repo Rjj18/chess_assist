@@ -1,11 +1,9 @@
 import {Chess} from "https://cdn.jsdelivr.net/npm/chess.mjs@1/src/chess.mjs/Chess.js"
-import {GameController} from "./modules/GameController.js"
-import {BoardManager} from "./modules/BoardManager.js"
-import {UIController} from "./modules/UIController.js"
-import {MovesTableController} from "./modules/MovesTableController.js"
-import {ThemeManager} from "./modules/ThemeManager.js"
-
-
+import {GameController} from "./GameController.js"
+import {BoardManager} from "./BoardManager.js"
+import {UIController} from "./UIController.js"
+import {MovesTableController} from "./MovesTableController.js"
+import {ThemeManager} from "./ThemeManager.js"
 
 // Initialize theme manager first for proper visual initialization
 const themeManager = new ThemeManager();

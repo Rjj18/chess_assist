@@ -25,8 +25,8 @@ A standard game of chess where you play as white against an AI opponent playing 
 ### 2. King Escape Mode
 A puzzle mode where the board is set up with a white king on e1 and a few black pieces. The goal is to move the king to any square on the 8th rank without being captured.
 
-### 3. Pawn Race Mode (Under Development)
-A game mode where you race your pawns to the other side of the board. The first player to get a pawn to the opposite end wins.
+### 3. Pawn Race Mode
+A fast-paced mode where you race your pawns to the other side of the board. The first player to get a pawn to the opposite end wins. Now fully implemented!
 
 ## Quick Start
 
@@ -86,29 +86,43 @@ The project includes a GitHub Actions workflow that automatically deploys to Git
 
 ```
 chess-assist/
-├── index.html              # Home page with game mode selection
-├── play.html               # HTML for the standard chess game
-├── escape.html             # HTML for the King Escape puzzle
-├── script.js               # Main script for the standard game
-├── modules/                # ES2024 modules
+├── index.html                  # Home page with game mode selection
+├── play.html                   # Standard chess game
+├── pawn-race.html              # Pawn Race mode
+├── escape.html                 # King Escape puzzle
+├── modules/play.js             # Main script for standard game (was script.js)
+├── styles.css                  # Application styles
+├── demo.gif                    # Demo animation
+├── modules/                    # ES2024 modules (game logic, controllers, etc)
+│   ├── BaseGameController.js
 │   ├── GameController.js
 │   ├── KingEscapeGameController.js
+│   ├── PawnRaceGameController.js
 │   ├── BoardManager.js
 │   ├── UIController.js
 │   ├── MovesTableController.js
+│   ├── BaseMovesTableController.js
+│   ├── PlayerController.js
+│   ├── HumanPlayerController.js
+│   ├── AIPlayerController.js
+│   ├── FenGenerator.js
+│   ├── KingEscapeFenGenerator.js
+│   ├── PawnRaceFenGenerator.js
 │   ├── ...
-├── styles.css              # Application styles
-├── package.json            # Project configuration
-├── .github/workflows/      # GitHub Actions for auto-deployment
+├── package.json                # Project configuration
+├── .github/workflows/          # GitHub Actions for auto-deployment
 │   └── deploy.yml
-└── cm-chessboard-master/   # Chess board library
+└── cm-chessboard-master/       # Chess board library (external)
 ```
+
 
 ## Technical Details
 
 -   **ES2024 Standards**: Uses modern JavaScript features and ES modules.
 -   **No Build Process**: Runs directly in the browser without compilation.
--   **Modular Architecture**: Clean separation of concerns with ES modules for different parts of the application (game logic, UI, etc.).
+-   **Modular & Extensible Architecture**: Clean separation of concerns with ES modules for different parts of the application (game logic, UI, etc.).
+-   **Dependency Injection**: Controllers and logic are injected for flexibility and testability.
+-   **Extensible Game Modes**: Easily add new modes by extending base controllers and generators.
 -   **CDN Dependencies**: Uses chess.mjs from a CDN for chess logic.
 -   **Static Hosting**: Compatible with any static file server.
 

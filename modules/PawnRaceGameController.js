@@ -1,5 +1,5 @@
 import { INPUT_EVENT_TYPE, COLOR } from "../cm-chessboard-master/src/Chessboard.js";
-import { FenGenerator } from "./FenGenerator.js";
+import { PawnRaceFenGenerator } from "./FenGenerator.js";
 import { BlackPlayerController } from "./BlackPlayerController.js";
 
 export class PawnRaceGameController {
@@ -13,7 +13,7 @@ export class PawnRaceGameController {
         this.#chess = chess;
         this.#board = board;
         this.#movesTableController = movesTableController;
-        this.#fenGenerator = new FenGenerator();
+        this.#fenGenerator = new PawnRaceFenGenerator();
         this.#blackPlayerController = new BlackPlayerController(this.#chess, this.#board);
         this.#blackPlayerController.setOnMoveMade(this.onBlackMoved.bind(this));
     }
@@ -32,7 +32,7 @@ export class PawnRaceGameController {
         if (this.#board && this.#board.disableMoveInput) {
             this.#board.disableMoveInput();
         }
-        const fen = this.#fenGenerator.generatePawnRaceFen();
+        const fen = this.#fenGenerator.generateFen();
         this.#chess.load(fen);
         this.#board.setPosition(this.#chess.fen(), false);
         this.#movesTableController.clearMoves();
@@ -56,7 +56,9 @@ export class PawnRaceGameController {
                 const move = this.#chess.move({ from: event.squareFrom, to: event.squareTo, promotion: 'q' });
                 if (move && move.flags.includes('p')) {
                     this.#board.setPosition(this.#chess.fen());
-                    this.#movesTableController.addMove(move, false); // false for white
+        if (move && move.san) {
+            this.#movesTableController.addMove(move.san, 'white');
+        }
                     this.#showWinMessage('White');
                     this.#board.disableMoveInput();
                     return false;
@@ -67,7 +69,9 @@ export class PawnRaceGameController {
                 const move = this.#chess.move({ from: event.squareFrom, to: event.squareTo, promotion: 'q' });
                 if (move && move.flags.includes('p')) {
                     this.#board.setPosition(this.#chess.fen());
-                    this.#movesTableController.addMove(move, true); // true for black
+        if (move && move.san) {
+            this.#movesTableController.addMove(move.san, 'black');
+        }
                     this.#showWinMessage('Black');
                     this.#board.disableMoveInput();
                     return false;
@@ -77,7 +81,9 @@ export class PawnRaceGameController {
             const move = this.#chess.move({ from: event.squareFrom, to: event.squareTo });
             if (move) {
                 this.#board.setPosition(this.#chess.fen());
-                this.#movesTableController.addMove(move, this.#chess.turn() === 'b');
+                if (move && move.san) {
+                    this.#movesTableController.addMove(move.san, move.color === 'b' ? 'black' : 'white');
+                }
                 // End the game if a pawn reaches the last rank without promotion (shouldn't happen, but for safety)
                 if (move.piece === 'p' && ((move.color === 'w' && move.to[1] === '8') || (move.color === 'b' && move.to[1] === '1'))) {
                     this.#showWinMessage(move.color === 'w' ? 'White' : 'Black');
@@ -93,7 +99,9 @@ export class PawnRaceGameController {
     }
 
     onBlackMoved(move) {
-        this.#movesTableController.addMove(move, true);
+        if (move && move.san) {
+            this.#movesTableController.addMove(move.san, 'black');
+        }
         // Debug: log move details for black
         if (move.piece === 'p' && move.color === 'b') {
             console.log('[DEBUG] Black pawn move:', move);
