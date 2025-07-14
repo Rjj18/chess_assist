@@ -21,6 +21,8 @@ export class MovesTableController {
         this.#tableBody = document.getElementById('movesTableBody');
         if (!this.#tableBody) {
             console.error('Element movesTableBody not found');
+        } else {
+            console.log('[MovesTableController] Found table body:', this.#tableBody);
         }
     }
 
@@ -30,21 +32,24 @@ export class MovesTableController {
      * @param {string} color - Player color ("white" or "black")
      */
     addMove(move, color) {
-        if (!this.#tableBody) return;
+        if (!this.#tableBody) {
+            console.error('[MovesTableController] addMove: table body not found');
+            return;
+        }
+        console.log(`[MovesTableController] Adding move: ${move}, color: ${color}`);
 
         // If it's a white move, create a new row
         if (color === 'white') {
             const row = document.createElement('tr');
             row.id = `move-${this.#currentMoveNumber}`;
-            
             row.innerHTML = `
                 <td>${this.#currentMoveNumber}</td>
                 <td class="white-move">${move}</td>
                 <td class="black-move">-</td>
             `;
-            
             this.#tableBody.appendChild(row);
             this.#moves.push({ number: this.#currentMoveNumber, white: move, black: null });
+            console.log(`[MovesTableController] Appended white move row: #move-${this.#currentMoveNumber}`);
         } 
         // If it's a black move, update the existing row
         else if (color === 'black') {
@@ -54,14 +59,15 @@ export class MovesTableController {
                 if (blackCell) {
                     blackCell.textContent = move;
                 }
-                
                 // Update the moves array
                 const moveIndex = this.#moves.findIndex(m => m.number === this.#currentMoveNumber);
                 if (moveIndex !== -1) {
                     this.#moves[moveIndex].black = move;
                 }
+                console.log(`[MovesTableController] Updated black move in row: #move-${this.#currentMoveNumber}`);
+            } else {
+                console.warn(`[MovesTableController] Could not find row for black move: #move-${this.#currentMoveNumber}`);
             }
-            
             this.#currentMoveNumber++;
         }
 

@@ -57,7 +57,7 @@ export class PawnRaceGameController {
                 if (move && move.flags.includes('p')) {
                     this.#board.setPosition(this.#chess.fen());
         if (move && move.san) {
-            this.#movesTableController.addMove(move, false); // false for white
+            this.#movesTableController.addMove(move.san, 'white');
         }
                     this.#showWinMessage('White');
                     this.#board.disableMoveInput();
@@ -70,7 +70,7 @@ export class PawnRaceGameController {
                 if (move && move.flags.includes('p')) {
                     this.#board.setPosition(this.#chess.fen());
         if (move && move.san) {
-            this.#movesTableController.addMove(move, true); // true for black
+            this.#movesTableController.addMove(move.san, 'black');
         }
                     this.#showWinMessage('Black');
                     this.#board.disableMoveInput();
@@ -82,7 +82,7 @@ export class PawnRaceGameController {
             if (move) {
                 this.#board.setPosition(this.#chess.fen());
                 if (move && move.san) {
-                    this.#movesTableController.addMove(move, this.#chess.turn() === 'b');
+                    this.#movesTableController.addMove(move.san, move.color === 'b' ? 'black' : 'white');
                 }
                 // End the game if a pawn reaches the last rank without promotion (shouldn't happen, but for safety)
                 if (move.piece === 'p' && ((move.color === 'w' && move.to[1] === '8') || (move.color === 'b' && move.to[1] === '1'))) {
@@ -100,7 +100,7 @@ export class PawnRaceGameController {
 
     onBlackMoved(move) {
         if (move && move.san) {
-            this.#movesTableController.addMove(move, true);
+            this.#movesTableController.addMove(move.san, 'black');
         }
         // Debug: log move details for black
         if (move.piece === 'p' && move.color === 'b') {
