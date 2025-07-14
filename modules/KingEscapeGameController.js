@@ -9,6 +9,7 @@ import { BaseGameController } from "./BaseGameController.js";
 
 export class KingEscapeGameController extends BaseGameController {
     #fenGenerator;
+    #difficulty = "easy";
 
     /**
      * @param {Chess} chess - The chess.js instance.
@@ -21,11 +22,19 @@ export class KingEscapeGameController extends BaseGameController {
     }
 
     /**
+     * Sets the difficulty for the next puzzle.
+     * @param {"easy"|"medium"|"hard"|"extreme"} level
+     */
+    setDifficulty(level) {
+        this.#difficulty = level;
+    }
+
+    /**
      * Sets up a new puzzle.
      */
     setupNewGame() {
-        const fen = this.#fenGenerator.generateFen();
-        console.log("Generated FEN for King Escape:", fen);
+        const fen = this.#fenGenerator.generateFen(this.#difficulty);
+        console.log("Generated FEN for King Escape (difficulty:", this.#difficulty, "):", fen);
         
         // First disable any existing move input
         try {

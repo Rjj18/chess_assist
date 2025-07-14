@@ -1,3 +1,29 @@
+.difficulty-controls {
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+.difficulty-btn {
+    background: var(--btn-primary-bg);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 6px 16px;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+.difficulty-btn.selected,
+.difficulty-btn:focus {
+    background: var(--btn-secondary-bg);
+    color: #fff;
+    outline: 2px solid var(--accent-primary);
+}
+.difficulty-btn:hover {
+    background: var(--btn-primary-hover);
+}
 /* Chess Assist - Main Styles */
 
 /* CSS Custom Properties for Theming */
