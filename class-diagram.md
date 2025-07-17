@@ -78,6 +78,24 @@ classDiagram
         + getBlackPlayerController()
     }
 
+    class LoneKnightGameController {
+        - #fenGenerator
+        + setupNewGame()
+        + handleInput(event)
+        - #checkWinCondition()
+    }
+
+    class LoneKnightMovesTableController {
+        - #moveCounter
+        + addMove(move, isIllegal)
+        + addIllegalMoveMessage(fromSquare, toSquare)
+        + clearMoves()
+    }
+
+    class LoneKnightFenGenerator {
+        + generateFen(level)
+    }
+
     BlackPlayerController --|> PlayerController
     PawnRaceGameController o-- BoardManager
     PawnRaceGameController o-- MovesTableController
@@ -85,4 +103,9 @@ classDiagram
     PawnRaceGameController o-- BlackPlayerController
     GameController o-- BlackPlayerController
     BlackPlayerController o-- PlayerController
+    LoneKnightGameController --|> BaseGameController
+    LoneKnightGameController o-- LoneKnightMovesTableController
+    LoneKnightGameController o-- LoneKnightFenGenerator
+    LoneKnightMovesTableController --|> BaseMovesTableController
+    LoneKnightFenGenerator --|> FenGenerator
 ```

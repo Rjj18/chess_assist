@@ -28,6 +28,9 @@ A puzzle mode where the board is set up with a white king on e1 and a few black 
 ### 3. Pawn Race Mode
 A fast-paced mode where you race your pawns to the other side of the board. The first player to get a pawn to the opposite end wins. Now fully implemented!
 
+### 4. Lone Knight Mode
+A puzzle mode where you control a single white knight that starts on one of the board's edges (a1-a8, h1, h8). Your goal is to capture all 8 black pawns scattered across the board using only knight moves. The game calculates the optimal number of moves needed and challenges you to match or beat that target.
+
 ## Quick Start
 
 ### Option 1: Play Online (Recommended)
