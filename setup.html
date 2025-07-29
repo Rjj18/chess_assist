@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Position Setup</title>
+    <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
+    <link rel="stylesheet" href="cm-chessboard-master/assets/extensions/markers/markers.css">
+    <link rel="stylesheet" href="cm-chessboard-master/assets/extensions/arrows/arrows.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Set Up Chess Position</h1>
+        <a href="index.html" class="nav-link">← Back to Home</a>
+    </div>
+    <div id="board-container">
+        <div id="chessboard"></div>
+    </div>
+    <div id="piece-palette" style="text-align:center; margin: 1rem auto;">
+        <div id="game-status" style="text-align: center; margin-bottom: 1rem; padding: 0.5rem; background: var(--primary-bg); border-radius: var(--radius-md); border: 1px solid var(--border-light); display: none;">
+            <p id="turn-indicator">White to move</p>
+        </div>
+        <span>Select piece: </span>
+        <button class="piece-btn" data-piece="wk">&#9812;</button>
+        <button class="piece-btn" data-piece="wq">&#9813;</button>
+        <button class="piece-btn" data-piece="wr">&#9814;</button>
+        <button class="piece-btn" data-piece="wb">&#9815;</button>
+        <button class="piece-btn" data-piece="wn">&#9816;</button>
+        <button class="piece-btn" data-piece="wp">&#9817;</button>
+        <button class="piece-btn" data-piece="bk">&#9818;</button>
+        <button class="piece-btn" data-piece="bq">&#9819;</button>
+        <button class="piece-btn" data-piece="br">&#9820;</button>
+        <button class="piece-btn" data-piece="bb">&#9821;</button>
+        <button class="piece-btn" data-piece="bn">&#9822;</button>
+        <button class="piece-btn" data-piece="bp">&#9823;</button>
+        <button class="piece-btn" data-piece="clear-board">🗑️ Clear Board</button>
+    </div>
+    <div id="controls">
+        <button id="start-game">Start Game</button>
+        <button id="clear-arrows">Clear Arrows</button>
+        <button id="clear-markers">Clear Highlights</button>
+    </div>
+    <div id="instructions" style="text-align: center; margin-top: 1rem; font-size: 14px; color: #666;">
+        <p><strong>How to use:</strong></p>
+        <p>• Click pieces above, then click board squares to place them</p>
+        <p>• <strong>Alt + Click</strong> = Green frame highlight</p>
+        <p>• <strong>Shift + Click</strong> = Red dot highlight</p>
+        <p>• <strong>Shift + Alt + Click</strong> = Draw arrows (click start, then end)</p>
+    </div>
+    <script type="module" src="modules/setup-script.js"></script>
+</body>
+</html>
