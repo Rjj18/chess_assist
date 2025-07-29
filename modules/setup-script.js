@@ -41,6 +41,7 @@ setTimeout(() => {
 let selectedPiece = null;
 let arrowStart = null; // Move this outside the function
 let gameChess = null; // Chess instance for move validation
+let selectedColor = 'w'; // Default to white moves first
 
 const pieceBtns = document.querySelectorAll('.piece-btn');
 if (!pieceBtns.length) {
@@ -86,6 +87,22 @@ pieceBtns.forEach(btn => {
 
 // Don't auto-select any button initially - let user choose
 console.debug('[DEBUG] Piece buttons initialized - no initial selection');
+
+// Move selector button functionality
+const moveSelectorBtns = document.querySelectorAll('.move-selector-btn');
+moveSelectorBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        try {
+            selectedColor = btn.dataset.color;
+            document.querySelectorAll('.move-selector-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            console.debug('[DEBUG] Move selector changed:', selectedColor === 'w' ? 'White' : 'Black', 'to move first');
+        } catch (error) {
+            console.error('[DEBUG] Error in move selector click handler:', error);
+        }
+    });
+});
+console.debug('[DEBUG] Move selector buttons initialized - White selected by default');
 
 function attachSvgSquareListeners() {
     console.log('[DEBUG] attachSvgSquareListeners() called');
@@ -358,6 +375,19 @@ document.getElementById('start-game').addEventListener('click', () => {
             const chessFEN = gameChess.fen();
             console.log('[DEBUG] Chess.js FEN:', chessFEN);
             
+            // Set the correct turn based on user selection
+            if (selectedColor === 'b') {
+                // If black should move first, we need to adjust the FEN
+                const fenParts = chessFEN.split(' ');
+                fenParts[1] = 'b'; // Set active color to black
+                const modifiedFEN = fenParts.join(' ');
+                console.log('[DEBUG] Modified FEN for black to move:', modifiedFEN);
+                
+                // Create a new Chess instance with black to move
+                gameChess = new Chess(modifiedFEN);
+                console.log('[DEBUG] Chess instance recreated with black to move');
+            }
+            
         } catch (error) {
             console.error('[DEBUG] Error creating Chess instance:', error);
             alert('Invalid chess position. Please check your setup.');
@@ -467,9 +497,11 @@ document.getElementById('start-game').addEventListener('click', () => {
         const startBtn = document.getElementById('start-game');
         const gameStatus = document.getElementById('game-status');
         const turnIndicator = document.getElementById('turn-indicator');
+        const moveSelector = document.getElementById('move-selector');
         
         startBtn.textContent = 'Setup Mode';
         gameStatus.style.display = 'block';
+        moveSelector.style.display = 'none'; // Hide move selector during game
         turnIndicator.textContent = gameChess.turn() === 'w' ? 'White to move' : 'Black to move';
         
         startBtn.onclick = () => {
@@ -482,6 +514,7 @@ document.getElementById('start-game').addEventListener('click', () => {
             gameChess = null;
             startBtn.textContent = 'Start Game';
             gameStatus.style.display = 'none';
+            moveSelector.style.display = 'block'; // Show move selector again
             startBtn.onclick = null;
             // Re-attach our custom event handlers
             setTimeout(() => {
