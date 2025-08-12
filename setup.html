@@ -14,37 +14,71 @@
         <h1>Set Up Chess Position</h1>
         <a href="index.html" class="nav-link">← Back to Home</a>
     </div>
-    <div id="board-container">
-        <div id="chessboard"></div>
-    </div>
-    <div id="piece-palette" style="text-align:center; margin: 1rem auto;">
-        <div id="game-status" style="text-align: center; margin-bottom: 1rem; padding: 0.5rem; background: var(--primary-bg); border-radius: var(--radius-md); border: 1px solid var(--border-light); display: none;">
-            <p id="turn-indicator">White to move</p>
+    <div class="setup-container">
+        <div class="board-and-pieces">
+            <div id="board-container">
+                <div id="chessboard"></div>
+            </div>
+            <div id="piece-palette">
+                <div id="game-status" style="text-align: center; margin-bottom: 1rem; padding: 0.5rem; background: var(--primary-bg); border-radius: var(--radius-md); border: 1px solid var(--border-light); display: none;">
+                    <p id="turn-indicator">White to move</p>
+                </div>
+                <div id="move-selector" style="text-align: center; margin-bottom: 1rem; padding: 0.5rem; background: var(--secondary-bg); border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+                    <label style="font-weight: var(--font-weight-medium); margin-bottom: var(--spacing-sm); display: block;">Who moves first:</label>
+                    <button id="white-first" class="move-selector-btn selected" data-color="w">White</button>
+                    <button id="black-first" class="move-selector-btn" data-color="b">Black</button>
+                </div>
+                <div class="piece-section">
+                    <h4 style="margin: 0 0 var(--spacing-sm) 0; color: var(--primary-text); font-size: var(--font-size-base);">White Pieces:</h4>
+                    <div class="piece-row">
+                        <button class="piece-btn" data-piece="wk">&#9812;</button>
+                        <button class="piece-btn" data-piece="wq">&#9813;</button>
+                        <button class="piece-btn" data-piece="wr">&#9814;</button>
+                        <button class="piece-btn" data-piece="wb">&#9815;</button>
+                        <button class="piece-btn" data-piece="wn">&#9816;</button>
+                        <button class="piece-btn" data-piece="wp">&#9817;</button>
+                    </div>
+                </div>
+                <div class="piece-section">
+                    <h4 style="margin: var(--spacing-md) 0 var(--spacing-sm) 0; color: var(--primary-text); font-size: var(--font-size-base);">Black Pieces:</h4>
+                    <div class="piece-row">
+                        <button class="piece-btn" data-piece="bk">&#9818;</button>
+                        <button class="piece-btn" data-piece="bq">&#9819;</button>
+                        <button class="piece-btn" data-piece="br">&#9820;</button>
+                        <button class="piece-btn" data-piece="bb">&#9821;</button>
+                        <button class="piece-btn" data-piece="bn">&#9822;</button>
+                        <button class="piece-btn" data-piece="bp">&#9823;</button>
+                    </div>
+                </div>
+                <div class="piece-section">
+                    <button class="piece-btn clear-board-btn" data-piece="clear-board">🗑️ Clear Board</button>
+                </div>
+            </div>
         </div>
-        <div id="move-selector" style="text-align: center; margin-bottom: 1rem; padding: 0.5rem; background: var(--secondary-bg); border-radius: var(--radius-md); border: 1px solid var(--border-light);">
-            <label style="font-weight: var(--font-weight-medium); margin-right: var(--spacing-md);">Who moves first:</label>
-            <button id="white-first" class="move-selector-btn selected" data-color="w">White</button>
-            <button id="black-first" class="move-selector-btn" data-color="b">Black</button>
-        </div>
-        <span>Select piece: </span>
-        <button class="piece-btn" data-piece="wk">&#9812;</button>
-        <button class="piece-btn" data-piece="wq">&#9813;</button>
-        <button class="piece-btn" data-piece="wr">&#9814;</button>
-        <button class="piece-btn" data-piece="wb">&#9815;</button>
-        <button class="piece-btn" data-piece="wn">&#9816;</button>
-        <button class="piece-btn" data-piece="wp">&#9817;</button>
-        <button class="piece-btn" data-piece="bk">&#9818;</button>
-        <button class="piece-btn" data-piece="bq">&#9819;</button>
-        <button class="piece-btn" data-piece="br">&#9820;</button>
-        <button class="piece-btn" data-piece="bb">&#9821;</button>
-        <button class="piece-btn" data-piece="bn">&#9822;</button>
-        <button class="piece-btn" data-piece="bp">&#9823;</button>
-        <button class="piece-btn" data-piece="clear-board">🗑️ Clear Board</button>
     </div>
     <div id="controls">
         <button id="start-game">Start Game</button>
         <button id="clear-arrows">Clear Arrows</button>
         <button id="clear-markers">Clear Highlights</button>
+    </div>
+    <div id="fen-controls" style="text-align: center; margin: 1rem auto; padding: 1rem; background: var(--secondary-bg); border-radius: var(--radius-md); border: 1px solid var(--border-light); max-width: 600px;">
+        <h3 style="margin: 0 0 1rem 0; color: var(--primary-text); font-size: var(--font-size-lg);">FEN Operations</h3>
+        <div style="margin-bottom: 1rem;">
+            <button id="copy-fen" class="fen-btn">📋 Copy FEN</button>
+            <button id="load-fen" class="fen-btn">📁 Load FEN</button>
+        </div>
+        <div id="fen-input-container" style="display: none; margin-top: 1rem;">
+            <input type="text" id="fen-input" placeholder='[FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"] or just the FEN string' style="width: 80%; padding: 0.5rem; border: 1px solid var(--border-medium); border-radius: var(--radius-sm); font-family: var(--font-family-mono); font-size: var(--font-size-sm);">
+            <div style="margin-top: 0.5rem;">
+                <button id="apply-fen" class="fen-btn secondary">✓ Apply</button>
+                <button id="cancel-fen" class="fen-btn">✗ Cancel</button>
+            </div>
+        </div>
+        <div id="current-fen" style="margin-top: 1rem; padding: 0.5rem; background: var(--primary-bg); border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+            <small style="color: var(--secondary-text); font-weight: var(--font-weight-medium);">Current FEN:</small>
+            <div id="fen-display" style="font-family: var(--font-family-mono); font-size: var(--font-size-sm); color: var(--primary-text); word-break: break-all; margin-top: 0.25rem; white-space: pre-line;">[FEN "8/8/8/8/8/8/8/8 w - - 0 1"]
+*</div>
+        </div>
     </div>
     <div id="instructions" style="text-align: center; margin-top: 1rem; font-size: 14px; color: #666;">
         <p><strong>How to use:</strong></p>

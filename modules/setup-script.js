@@ -16,7 +16,10 @@ const board = new Chessboard(boardContainer, {
         { class: Markers }
     ],
     assetsUrl: 'cm-chessboard-master/assets/',
-    style: { aspectRatio: 1 },
+    style: { 
+        aspectRatio: 1,
+        borderType: 'frame'
+    },
     sprite: { url: 'pieces/standard.svg' },
     enableMoveInput: false
 });
@@ -71,6 +74,7 @@ pieceBtns.forEach(btn => {
                 setTimeout(() => {
                     console.log('[DEBUG] Re-attaching event listeners after clear');
                     attachSvgSquareListeners();
+                    updateFENDisplay(); // Update FEN display after clearing
                 }, 100);
                 return;
             }
@@ -96,6 +100,7 @@ moveSelectorBtns.forEach(btn => {
             selectedColor = btn.dataset.color;
             document.querySelectorAll('.move-selector-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
+            updateFENDisplay(); // Update FEN display when color selection changes
             console.debug('[DEBUG] Move selector changed:', selectedColor === 'w' ? 'White' : 'Black', 'to move first');
         } catch (error) {
             console.error('[DEBUG] Error in move selector click handler:', error);
@@ -103,6 +108,169 @@ moveSelectorBtns.forEach(btn => {
     });
 });
 console.debug('[DEBUG] Move selector buttons initialized - White selected by default');
+
+// Update FEN display when board changes
+function updateFENDisplay() {
+    try {
+        const currentFEN = board.getPosition();
+        const fenDisplay = document.getElementById('fen-display');
+        if (fenDisplay) {
+            // Add the selected color to the FEN if it's not already there
+            let displayFEN = currentFEN;
+            const fenParts = currentFEN.split(' ');
+            if (fenParts.length === 1) {
+                // Add the active color, castling, en passant, halfmove, and fullmove
+                displayFEN = `${currentFEN} ${selectedColor} - - 0 1`;
+            } else if (fenParts.length >= 2) {
+                // Update the active color in existing FEN
+                fenParts[1] = selectedColor;
+                displayFEN = fenParts.join(' ');
+            }
+            // Format as [FEN "..."] with line break
+            fenDisplay.textContent = `[FEN "${displayFEN}"]\n*`;
+        }
+    } catch (error) {
+        console.error('[DEBUG] Error updating FEN display:', error);
+    }
+}
+
+// FEN Controls functionality
+document.getElementById('copy-fen').addEventListener('click', () => {
+    try {
+        const currentFEN = board.getPosition();
+        let displayFEN = currentFEN;
+        const fenParts = currentFEN.split(' ');
+        if (fenParts.length === 1) {
+            displayFEN = `${currentFEN} ${selectedColor} - - 0 1`;
+        } else if (fenParts.length >= 2) {
+            fenParts[1] = selectedColor;
+            displayFEN = fenParts.join(' ');
+        }
+        
+        navigator.clipboard.writeText(displayFEN).then(() => {
+            console.log('[DEBUG] FEN copied to clipboard:', displayFEN);
+            // Copy in [FEN "..."] format with line break
+            const formattedFEN = `[FEN "${displayFEN}"]\n*`;
+            navigator.clipboard.writeText(formattedFEN).then(() => {
+                console.log('[DEBUG] Formatted FEN copied to clipboard:', formattedFEN);
+                // Visual feedback
+                const btn = document.getElementById('copy-fen');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.style.background = 'var(--btn-secondary-bg)';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }).catch(err => {
+            console.error('[DEBUG] Failed to copy FEN:', err);
+            alert('Failed to copy FEN to clipboard');
+        });
+    } catch (error) {
+        console.error('[DEBUG] Error copying FEN:', error);
+    }
+});
+
+document.getElementById('load-fen').addEventListener('click', () => {
+    try {
+        const inputContainer = document.getElementById('fen-input-container');
+        const fenInput = document.getElementById('fen-input');
+        inputContainer.style.display = 'block';
+        fenInput.focus();
+        console.log('[DEBUG] Load FEN input shown');
+    } catch (error) {
+        console.error('[DEBUG] Error showing FEN input:', error);
+    }
+});
+
+document.getElementById('apply-fen').addEventListener('click', () => {
+    try {
+        const fenInput = document.getElementById('fen-input');
+        const inputFEN = fenInput.value.trim();
+        
+        if (!inputFEN) {
+            alert('Please enter a FEN string');
+            return;
+        }
+        
+        // Remove [FEN "..."] wrapper if present
+        let cleanFEN = inputFEN;
+        const fenMatch = inputFEN.match(/\[FEN\s+"([^"]+)"\]/);
+        if (fenMatch) {
+            cleanFEN = fenMatch[1];
+        }
+        
+        console.log('[DEBUG] Applying FEN:', cleanFEN);
+        
+        // Parse the FEN to extract the active color
+        const fenParts = cleanFEN.split(' ');
+        if (fenParts.length >= 2) {
+            const activeColor = fenParts[1];
+            if (activeColor === 'w' || activeColor === 'b') {
+                selectedColor = activeColor;
+                // Update move selector buttons
+                document.querySelectorAll('.move-selector-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                    if (btn.dataset.color === selectedColor) {
+                        btn.classList.add('selected');
+                    }
+                });
+                console.log('[DEBUG] Updated selected color from FEN:', selectedColor);
+            }
+        }
+        
+        // Set the position on the board (use just the piece placement part)
+        const positionPart = fenParts[0];
+        board.setPosition(positionPart);
+        
+        // Clear arrows and markers
+        if (typeof board.removeMarkers === 'function') {
+            board.removeMarkers();
+        }
+        if (typeof board.removeArrows === 'function') {
+            board.removeArrows();
+        }
+        
+        // Hide input and clear
+        document.getElementById('fen-input-container').style.display = 'none';
+        fenInput.value = '';
+        
+        // Update FEN display
+        updateFENDisplay();
+        
+        // Re-attach event listeners
+        setTimeout(() => {
+            attachSvgSquareListeners();
+        }, 100);
+        
+        console.log('[DEBUG] FEN applied successfully');
+        
+    } catch (error) {
+        console.error('[DEBUG] Error applying FEN:', error);
+        alert('Invalid FEN string. Please check the format.');
+    }
+});
+
+document.getElementById('cancel-fen').addEventListener('click', () => {
+    try {
+        document.getElementById('fen-input-container').style.display = 'none';
+        document.getElementById('fen-input').value = '';
+        console.log('[DEBUG] FEN input cancelled');
+    } catch (error) {
+        console.error('[DEBUG] Error cancelling FEN input:', error);
+    }
+});
+
+// Update FEN display initially and when pieces change
+updateFENDisplay();
+
+// Override the piece button click handler to update FEN display
+const originalPieceBtnHandler = pieceBtns.forEach;
+// Add a function to update FEN display after piece placement
+function onBoardChange() {
+    setTimeout(updateFENDisplay, 100);
+}
 
 function attachSvgSquareListeners() {
     console.log('[DEBUG] attachSvgSquareListeners() called');
@@ -225,6 +393,9 @@ function attachSvgSquareListeners() {
                 board.setPiece(square, selectedPiece);
                 console.debug('[DEBUG] Placed piece', selectedPiece, 'on', square);
             }
+            
+            // Update FEN display after piece placement
+            onBoardChange();
         } catch (error) {
             console.error('[DEBUG] Error in square click handler:', error);
             // Reset states to prevent getting stuck
