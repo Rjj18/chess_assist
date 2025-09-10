@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Abertura Mágica do Xadrez - Chess Assist</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
+    <style>
+        .presentation-container {
+            background-color: var(--secondary-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            padding: var(--spacing-xl);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s;
+            text-align: left;
+        }
+        .slide.active {
+            display: flex;
+        }
+        .slide h2 {
+            font-size: var(--font-size-xl);
+            color: var(--accent-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+        .slide p {
+            font-size: var(--font-size-lg);
+            line-height: 1.6;
+            color: var(--primary-text);
+            max-width: 700px;
+        }
+        .board-container {
+            margin: var(--spacing-lg) auto;
+            border: 3px solid #8B4513;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-medium);
+            width: 280px;
+            height: 280px;
+        }
+        
+        /* Smaller boards when there are multiple examples */
+        .slide:has(.board-container + .move-display + .board-controls + .board-instructions + .board-container) .board-container {
+            width: 250px;
+            height: 250px;
+        }
+        .board-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+        .board-controls button {
+            background-color: var(--accent-secondary);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            transition: all var(--transition-fast);
+            min-width: 80px;
+        }
+        .board-controls button:hover:not(:disabled) {
+            background-color: var(--accent-primary);
+            transform: translateY(-1px);
+        }
+        .board-controls button:disabled {
+            background-color: var(--border-medium);
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+        .move-display {
+            text-align: center;
+            margin: var(--spacing-sm) 0;
+            font-family: 'Courier New', monospace;
+            font-size: var(--font-size-lg);
+            color: var(--primary-text);
+            font-weight: var(--font-weight-bold);
+            background-color: var(--tertiary-bg);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+        .board-instructions {
+            text-align: center;
+            font-size: var(--font-size-xs);
+            color: var(--secondary-text);
+            margin-top: var(--spacing-xs);
+            font-style: italic;
+        }
+        .chess-example {
+            background-color: var(--tertiary-bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+            text-align: center;
+        }
+        .chess-example h4 {
+            color: var(--accent-secondary);
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: var(--font-size-lg);
+        }
+        .example-moves {
+            font-family: 'Courier New', monospace;
+            background-color: var(--primary-bg);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            margin: var(--spacing-sm) 0;
+            font-size: var(--font-size-sm);
+            color: var(--primary-text);
+        }
+        
+        /* Responsive layout for multiple boards */
+        @media (max-width: 1000px) {
+            .board-container {
+                width: 240px;
+                height: 240px;
+            }
+        }
+        .navigation {
+            margin-top: var(--spacing-lg);
+        }
+        .navigation button {
+            background-color: var(--btn-primary-bg);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin: 0 var(--spacing-sm);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            transition: background-color var(--transition-medium);
+        }
+        .navigation button:hover {
+            background-color: var(--btn-primary-hover);
+        }
+        .navigation button:disabled {
+            background-color: var(--border-medium);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .pgn-code {
+            background-color: var(--tertiary-bg);
+            border: 1px solid var(--border-light);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            text-align: left;
+            border-radius: var(--radius-sm);
+            color: var(--primary-text);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="nav-link">Home</a>
+        <h1>A Abertura Mágica do Xadrez</h1>
+        <div class="theme-toggle">
+            <span class="theme-toggle-label">🌙</span>
+            <button 
+                class="theme-toggle-switch" 
+                id="themeToggle" 
+                aria-label="Toggle between light and dark theme"
+                role="switch"
+                aria-checked="false"
+            >
+            </button>
+            <span class="theme-toggle-label">☀️</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="presentation-container">
+            <div id="slides-container"></div>
+            <div class="navigation">
+                <button id="prev-btn">Voltar</button>
+                <button id="next-btn">Avançar</button>
+            </div>
+        </div>
+    </div>
+
+<!-- chess.js (engine) e chessboard local -->
+<script type="module">
+    import {Chess} from "https://cdn.jsdelivr.net/npm/chess.mjs@1/src/chess.mjs/Chess.js";
+    import { Chessboard } from "./cm-chessboard-master/src/Chessboard.js";
+    import { ThemeManager } from "./modules/ThemeManager.js";
+
+    // Initialize theme manager
+    const themeManager = new ThemeManager();
+
+    // Slides data
+    const slidesData = [
+        {
+            title: "A Abertura: Dando o Pontapé Inicial!",
+            text: "Olá, pessoal! Bem-vindos à nossa aventura no tabuleiro de xadrez. Imaginem que cada partida de xadrez é como uma viagem de carro. A **abertura** é o momento em que a gente liga o carro, arruma o cinto de segurança e decide para onde vamos. É o começo de tudo! Se a gente começa bem, a viagem será mais tranquila."
+        },
+        {
+            title: "1º Princípio: Controle o Centro!",
+            text: "Na abertura, nossa primeira missão é dominar o centro do tabuleiro. Pensem no centro como a parte mais alta de uma montanha russa. Quem chega lá primeiro tem a melhor vista e o melhor controle do brinquedo inteiro! A gente faz isso movendo os peões que estão bem no meio.",
+            examples: [
+                {
+                    name: "Abertura Italiana",
+                    moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+                    description: "As brancas controlam o centro com e4 e desenvolvem o cavalo e bispo rapidamente.",
+                    pgn: "1.e4 e5 2.Nf3 Nc6 3.Bc4"
+                },
+                {
+                    name: "Defesa Francesa",
+                    moves: "1.e4 e6 2.d4 d5",
+                    description: "As pretas respondem ao controle central das brancas com seus próprios peões centrais.",
+                    pgn: "1.e4 e6 2.d4 d5"
+                }
+            ]
+        },
+        {
+            title: "2º Princípio: Desenvolva suas Peças!",
+            text: "Depois de cuidar do centro, é hora de acordar nossos amigos. Os **cavalos** e os **bispos** são como amigos que estavam dormindo. A gente precisa movê-los para que eles ajudem a controlar o tabuleiro. Se a gente deixa eles presos lá atrás, eles não fazem nada!",
+            examples: [
+                {
+                    name: "Abertura Espanhola",
+                    moves: "1.e4 e5 2.Nf3 Nc6 3.Bb5",
+                    description: "Desenvolvimento rápido: cavalo para f3 ataca o peão e5, bispo para b5 pressiona o cavalo.",
+                    pgn: "1.e4 e5 2.Nf3 Nc6 3.Bb5"
+                },
+                {
+                    name: "Gambito da Dama",
+                    moves: "1.d4 d5 2.c4 e6 3.Nc3 Nf6",
+                    description: "Ambos os lados desenvolvem cavalos rapidamente após a luta central.",
+                    pgn: "1.d4 d5 2.c4 e6 3.Nc3 Nf6"
+                }
+            ]
+        },
+        {
+            title: "3º Princípio: Proteja o Rei!",
+            text: "Nosso rei é como o tesouro mais valioso da nossa equipe. A gente precisa protegê-lo para que ele não seja capturado. A melhor maneira de fazer isso na abertura é o **roque**. O roque é como construir um castelo para o nosso rei, movendo-o para um lugar seguro e trazendo uma torre para protegê-lo.",
+            examples: [
+                {
+                    name: "Roque Curto",
+                    moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O",
+                    description: "Ambos os lados fazem roque curto, colocando o rei em segurança.",
+                    pgn: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O"
+                },
+                {
+                    name: "Preparando o Roque",
+                    moves: "1.d4 Nf6 2.c4 e6 3.Nf3 Be7 4.Bg5 O-O",
+                    description: "As pretas desenvolvem o bispo e fazem roque rapidamente para segurança.",
+                    pgn: "1.d4 Nf6 2.c4 e6 3.Nf3 Be7 4.Bg5 O-O"
+                }
+            ]
+        },
+        {
+            title: "Resumo: Os 5 Super Poderes da Abertura!",
+            text: "Agora vocês conhecem os 5 super poderes das aberturas: 1. **Controle o Centro!** 2. **Desenvolva as Peças!** 3. **Proteja o Rei!** 4. **Não Mova a Mesma Peça Duas Vezes!** 5. **Não Saia com a Dama Muito Cedo!** Com esses princípios, vocês vão fazer aberturas incríveis!",
+            examples: [
+                {
+                    name: "Abertura Perfeita - Exemplo 1",
+                    moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O",
+                    description: "Centro controlado, peças desenvolvidas, reis seguros!",
+                    pgn: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O"
+                },
+                {
+                    name: "Abertura Perfeita - Exemplo 2", 
+                    moves: "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Be7 5.e3 O-O",
+                    description: "Todos os princípios aplicados: centro, desenvolvimento e segurança do rei!",
+                    pgn: "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Be7 5.e3 O-O"
+                }
+            ]
+        },
+        {
+            title: "⚠️ Erro Comum: Não Mova a Mesma Peça Duas Vezes!",
+            text: "Na abertura, cada movimento é precioso! Imaginem que vocês têm apenas algumas jogadas para organizar todo o exército. Se ficarem movendo a mesma peça várias vezes, as outras peças ficam dormindo e vocês perdem tempo valioso. O adversário vai desenvolver mais peças e ter vantagem!",
+            examples: [
+                {
+                    name: "❌ Exemplo Ruim - Cavalinho Perdido",
+                    moves: "1.e4 e5 2.Nf3 Nc6 3.Ng5 d6 4.Nf3 Nf6 5.Bc4 Be7",
+                    description: "As brancas moveram o cavalo 3 vezes! Perderam tempo e as pretas se desenvolveram melhor.",
+                    pgn: "1.e4 e5 2.Nf3 Nc6 3.Ng5 d6 4.Nf3 Nf6 5.Bc4 Be7"
+                },
+                {
+                    name: "✅ Exemplo Bom - Desenvolvimento Eficiente",
+                    moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.Nc3 d6 5.d3 Nf6",
+                    description: "Cada movimento desenvolve uma peça nova. Muito mais eficiente!",
+                    pgn: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.Nc3 d6 5.d3 Nf6"
+                }
+            ]
+        },
+        {
+            title: "👑 Erro Comum: Não Saia com a Dama Muito Cedo!",
+            text: "A dama é nossa peça mais poderosa, mas na abertura ela é como uma princesa em perigo! Se ela sair muito cedo, pode ser atacada pelas peças pequenas do adversário e ter que ficar fugindo. Enquanto ela foge, o adversário desenvolve suas peças e ganha tempo. Deixe a dama em casa no início!",
+            examples: [
+                {
+                    name: "❌ Exemplo Ruim - Dama Aventureira",
+                    moves: "1.e4 e5 2.Qh5 Nc6 3.Bc4 Nf6 4.Qf3 d6 5.Qg3 Be7",
+                    description: "A dama saiu cedo e agora está sendo atacada! Tem que fugir e perde tempo.",
+                    pgn: "1.e4 e5 2.Qh5 Nc6 3.Bc4 Nf6 4.Qf3 d6 5.Qg3 Be7"
+                },
+                {
+                    name: "✅ Exemplo Bom - Dama Paciente",
+                    moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 d6 5.Nc3 Nf6",
+                    description: "A dama ficou em casa enquanto as outras peças se desenvolveram. Muito melhor!",
+                    pgn: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 d6 5.Nc3 Nf6"
+                }
+            ]
+        },
+        {
+            title: "🎯 Truques e Armadilhas Famosas!",
+            text: "Agora que vocês conhecem os princípios básicos, vamos ver alguns truques famosos que podem surpreender o adversário! Mas cuidado: se você conhece essas armadilhas, também pode evitá-las quando alguém tentar usar contra você!",
+            examples: [
+                {
+                    name: "Armadilha do Pastor (Scholar's Mate)",
+                    moves: "1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6?? 4.Qxf7#",
+                    description: "Um mate rápido em 4 lances! Funciona apenas contra iniciantes que não protegem o ponto f7.",
+                    pgn: "1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6 4.Qxf7"
+                },
+                {
+                    name: "Armadilha da Dama Legal",
+                    moves: "1.e4 e5 2.Nf3 d6 3.Bc4 Bg4 4.Nc3 g6 5.Nxe5 Bxd1 6.Bxf7+ Ke7 7.Nd5#",
+                    description: "Uma combinação brilhante que sacrifica a dama para dar mate!",
+                    pgn: "1.e4 e5 2.Nf3 d6 3.Bc4 Bg4 4.Nc3 g6 5.Nxe5 Bxd1 6.Bxf7+ Ke7 7.Nd5"
+                }
+            ]
+        },
+        {
+            title: "🕳️ Mais Armadilhas Perigosas!",
+            text: "Continuando com nossas armadilhas, aqui estão mais algumas que todo jogador de xadrez deve conhecer. Lembrem-se: o melhor jeito de não cair em uma armadilha é conhecê-la!",
+            examples: [
+                {
+                    name: "Armadilha de Blackburne",
+                    moves: "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Nbd7 5.cxd5 exd5 6.Nxd5 Nxd5 7.Bxd8 Bb4+ 8.Qd2 Bxd2+ 9.Kxd2 Kxd8",
+                    description: "No Gambito da Dama, as pretas podem trocar damas e ficar com posição igual!",
+                    pgn: "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Nbd7 5.cxd5 exd5 6.Nxd5 Nxd5 7.Bxd8 Bb4+ 8.Qd2 Bxd2+ 9.Kxd2 Kxd8"
+                },
+                {
+                    name: "Armadilha na Defesa Francesa",
+                    moves: "1.e4 e6 2.d4 d5 3.Nc3 Bb4 4.e5 c5 5.a3 Bxc3+ 6.bxc3 Ne7 7.Qg4 Qc7 8.Qxg7 Rg8 9.Qxh7 cxd4",
+                    description: "As brancas ganham peões mas as pretas conseguem contra-jogo no centro!",
+                    pgn: "1.e4 e6 2.d4 d5 3.Nc3 Bb4 4.e5 c5 5.a3 Bxc3+ 6.bxc3 Ne7 7.Qg4 Qc7 8.Qxg7 Rg8 9.Qxh7 cxd4"
+                }
+            ]
+        },
+        {
+            title: "⚡ Último Truque: O Gambito Budapest!",
+            text: "Para terminar nossa aventura, vamos ver uma abertura muito divertida e traiçoeira! O Gambito Budapest pode surpreender jogadores que não a conhecem, mas é uma arma de dois gumes.",
+            examples: [
+                {
+                    name: "Gambito Budapest - Linha Principal",
+                    moves: "1.d4 Nf6 2.c4 e5 3.dxe5 Ng4 4.Bf4 Nc6 5.Nf3 Bb4+ 6.Nbd2 Qe7",
+                    description: "As pretas sacrificam um peão para desenvolvimento rápido e ataque ao rei branco!",
+                    pgn: "1.d4 Nf6 2.c4 e5 3.dxe5 Ng4 4.Bf4 Nc6 5.Nf3 Bb4+ 6.Nbd2 Qe7"
+                },
+                {
+                    name: "Armadilha do Budapest",
+                    moves: "1.d4 Nf6 2.c4 e5 3.dxe5 Ng4 4.e4 Nxe5 5.f4 Ng6 6.Nf3 Bb4+ 7.Nc3 Qe7",
+                    description: "Se as brancas ficam gananciosas, as pretas conseguem compensação com jogo ativo!",
+                    pgn: "1.d4 Nf6 2.c4 e5 3.dxe5 Ng4 4.e4 Nxe5 5.f4 Ng6 6.Nf3 Bb4+ 7.Nc3 Qe7"
+                }
+            ]
+        }
+    ];
+
+    // Initialize slides after DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Initializing presentation...');
+        console.log('Chess available:', typeof Chess !== 'undefined');
+        console.log('Chessboard available:', typeof Chessboard !== 'undefined');
+        
+        let currentSlide = 0;
+        const slidesContainer = document.getElementById('slides-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const boards = {}; // Store board instances by unique ID
+        const gameStates = {}; // Store game states by unique ID
+
+        function createSlideElement(slideData, index) {
+            const slide = document.createElement('div');
+            slide.className = `slide ${index === 0 ? 'active' : ''}`;
+            
+            // convert **bold** markers to <strong> for proper HTML rendering
+            const safeText = (slideData.text || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            slide.innerHTML = `
+                <h2>${slideData.title}</h2>
+                <p>${safeText}</p>
+            `;
+
+            // Add examples if they exist
+            if (slideData.examples && slideData.examples.length > 0) {
+                slideData.examples.forEach((example, exampleIndex) => {
+                    const exampleDiv = document.createElement('div');
+                    exampleDiv.className = 'chess-example';
+                    exampleDiv.innerHTML = `
+                        <h4>${example.name}</h4>
+                        <div class="example-moves">${example.moves}</div>
+                        <p style="font-size: 0.9em; margin: 5px 0;">${example.description}</p>
+                    `;
+                    slide.appendChild(exampleDiv);
+
+                    // Add chessboard for each example that has PGN
+                    if (example.pgn) {
+                        const boardId = `board-${index}-${exampleIndex}`;
+                        const gameStateId = `${index}-${exampleIndex}`;
+                        
+                        const boardContainer = document.createElement('div');
+                        boardContainer.className = 'board-container';
+                        boardContainer.id = boardId;
+                        
+                        // Create move display
+                        const moveDisplay = document.createElement('div');
+                        moveDisplay.className = 'move-display';
+                        moveDisplay.id = `move-display-${gameStateId}`;
+                        moveDisplay.textContent = 'Posição inicial';
+                        
+                        // Create board controls
+                        const boardControls = document.createElement('div');
+                        boardControls.className = 'board-controls';
+                        boardControls.innerHTML = `
+                            <button id="first-move-${gameStateId}">⏮️ Início</button>
+                            <button id="prev-move-${gameStateId}">⬅️ Anterior</button>
+                            <button id="next-move-${gameStateId}">➡️ Próximo</button>
+                            <button id="last-move-${gameStateId}">⏭️ Final</button>
+                        `;
+                        
+                        // Create instructions
+                        const instructions = document.createElement('div');
+                        instructions.className = 'board-instructions';
+                        instructions.textContent = 'Use os botões ou Shift + ← / → para navegar pelos lances';
+                        
+                        slide.appendChild(boardContainer);
+                        slide.appendChild(moveDisplay);
+                        slide.appendChild(boardControls);
+                        slide.appendChild(instructions);
+
+                        try {
+                            const game = new Chess();
+                            // Parse PGN moves more carefully
+                            const pgnMoves = example.pgn
+                                .replace(/\d+\./g, '') // Remove move numbers
+                                .trim()
+                                .split(/\s+/)
+                                .filter(move => move && move !== ''); // Remove empty strings
+                            
+                            // Store all game states
+                            const positions = [game.fen()]; // Start with initial position
+                            const moves = [];
+                            
+                            // Apply moves and store each position
+                            for (const move of pgnMoves) {
+                                try {
+                                    const moveObj = game.move(move);
+                                    moves.push(moveObj);
+                                    positions.push(game.fen());
+                                } catch (e) {
+                                    console.warn(`Invalid move ${move} in slide ${index}, example ${exampleIndex}:`, e.message);
+                                }
+                            }
+                            
+                            // Store game state for this example
+                            gameStates[gameStateId] = {
+                                positions: positions,
+                                moves: moves,
+                                currentMoveIndex: 0,
+                                maxMoves: positions.length - 1
+                            };
+                            
+                            // Create board with cm-chessboard
+                            setTimeout(() => {
+                                const board = new Chessboard(boardContainer, {
+                                    position: positions[0], // Start with initial position
+                                    assetsUrl: "./cm-chessboard-master/assets/",
+                                    style: {
+                                        pieces: { file: "pieces/staunty.svg" },
+                                        showCoordinates: true,
+                                        borderType: "thin"
+                                    },
+                                    responsive: true
+                                });
+                                boards[gameStateId] = board;
+                                
+                                // Setup move navigation
+                                setupMoveNavigation(gameStateId);
+                            }, 100 + (exampleIndex * 50)); // Stagger board creation
+                            
+                        } catch (err) {
+                            console.warn('Failed to create board for slide', index, 'example', exampleIndex, err);
+                            boardContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--secondary-text);">Erro ao carregar tabuleiro</p>';
+                        }
+                    }
+                });
+            }
+            
+            slidesContainer.appendChild(slide);
+        }
+
+        // Create all slides
+        slidesData.forEach(createSlideElement);
+
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // Setup move navigation for a specific game state
+        function setupMoveNavigation(gameStateId) {
+            const gameState = gameStates[gameStateId];
+            if (!gameState) return;
+
+            const firstBtn = document.getElementById(`first-move-${gameStateId}`);
+            const prevBtn = document.getElementById(`prev-move-${gameStateId}`);
+            const nextBtn = document.getElementById(`next-move-${gameStateId}`);
+            const lastBtn = document.getElementById(`last-move-${gameStateId}`);
+            const moveDisplay = document.getElementById(`move-display-${gameStateId}`);
+
+            function updateBoard() {
+                const board = boards[gameStateId];
+                const position = gameState.positions[gameState.currentMoveIndex];
+                if (board && position) {
+                    board.setPosition(position);
+                }
+                updateMoveDisplay();
+                updateMoveButtons();
+            }
+
+            function updateMoveDisplay() {
+                if (gameState.currentMoveIndex === 0) {
+                    moveDisplay.textContent = 'Posição inicial';
+                } else {
+                    const move = gameState.moves[gameState.currentMoveIndex - 1];
+                    const moveNumber = Math.ceil(gameState.currentMoveIndex / 2);
+                    const isWhite = gameState.currentMoveIndex % 2 === 1;
+                    
+                    if (isWhite) {
+                        moveDisplay.textContent = `${moveNumber}. ${move.san}`;
+                    } else {
+                        moveDisplay.textContent = `${moveNumber}... ${move.san}`;
+                    }
+                }
+            }
+
+            function updateMoveButtons() {
+                firstBtn.disabled = gameState.currentMoveIndex === 0;
+                prevBtn.disabled = gameState.currentMoveIndex === 0;
+                nextBtn.disabled = gameState.currentMoveIndex >= gameState.maxMoves;
+                lastBtn.disabled = gameState.currentMoveIndex >= gameState.maxMoves;
+            }
+
+            // Event listeners
+            firstBtn.addEventListener('click', () => {
+                gameState.currentMoveIndex = 0;
+                updateBoard();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (gameState.currentMoveIndex > 0) {
+                    gameState.currentMoveIndex--;
+                    updateBoard();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (gameState.currentMoveIndex < gameState.maxMoves) {
+                    gameState.currentMoveIndex++;
+                    updateBoard();
+                }
+            });
+
+            lastBtn.addEventListener('click', () => {
+                gameState.currentMoveIndex = gameState.maxMoves;
+                updateBoard();
+            });
+
+            // Initial update
+            updateBoard();
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            updateButtons();
+        }
+
+        function updateButtons() {
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        });
+
+        showSlide(currentSlide);
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (event) => {
+            // Only handle keyboard shortcuts when not typing in input fields
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                return;
+            }
+            
+            // Get all game states for the current slide
+            const currentSlideGameStates = Object.keys(gameStates).filter(key => 
+                key.startsWith(currentSlide + '-')
+            );
+            
+            switch (event.key) {
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    if (event.shiftKey && currentSlideGameStates.length > 0) {
+                        // Shift + Left Arrow: previous move in all boards of current slide
+                        currentSlideGameStates.forEach(gameStateId => {
+                            const prevBtn = document.getElementById(`prev-move-${gameStateId}`);
+                            if (prevBtn && !prevBtn.disabled) {
+                                prevBtn.click();
+                            }
+                        });
+                    } else {
+                        // Left Arrow: previous slide
+                        if (currentSlide > 0) {
+                            currentSlide--;
+                            showSlide(currentSlide);
+                        }
+                    }
+                    break;
+                    
+                case 'ArrowRight':
+                    event.preventDefault();
+                    if (event.shiftKey && currentSlideGameStates.length > 0) {
+                        // Shift + Right Arrow: next move in all boards of current slide
+                        currentSlideGameStates.forEach(gameStateId => {
+                            const nextBtn = document.getElementById(`next-move-${gameStateId}`);
+                            if (nextBtn && !nextBtn.disabled) {
+                                nextBtn.click();
+                            }
+                        });
+                    } else {
+                        // Right Arrow: next slide
+                        if (currentSlide < totalSlides - 1) {
+                            currentSlide++;
+                            showSlide(currentSlide);
+                        }
+                    }
+                    break;
+                    
+                case 'Home':
+                    event.preventDefault();
+                    if (currentSlideGameStates.length > 0) {
+                        currentSlideGameStates.forEach(gameStateId => {
+                            const firstBtn = document.getElementById(`first-move-${gameStateId}`);
+                            if (firstBtn) {
+                                firstBtn.click();
+                            }
+                        });
+                    }
+                    break;
+                    
+                case 'End':
+                    event.preventDefault();
+                    if (currentSlideGameStates.length > 0) {
+                        currentSlideGameStates.forEach(gameStateId => {
+                            const lastBtn = document.getElementById(`last-move-${gameStateId}`);
+                            if (lastBtn) {
+                                lastBtn.click();
+                            }
+                        });
+                    }
+                    break;
+            }
+        });
+        
+        console.log('Presentation initialized successfully!');
+        console.log('Atalhos de teclado:');
+        console.log('← / → : Navegação entre slides');
+        console.log('Shift + ← / → : Navegação entre lances');
+        console.log('Home / End : Primeiro / último lance');
+    });
+</script>
+</body>
+</html>
