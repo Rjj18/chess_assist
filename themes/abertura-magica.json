@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "id": "abertura-magica",
+    "title": "A Abertura Mágica do Xadrez",
+    "description": "Aprenda os princípios fundamentais das aberturas de xadrez de forma divertida e interativa",
+    "level": "beginner",
+    "author": "Chess Assist",
+    "version": "1.0.0",
+    "tags": ["abertura", "principios", "desenvolvimento", "centro", "roque"]
+  },
+  "slides": [
+    {
+      "title": "A Abertura: Dando o Pontapé Inicial!",
+      "content": "Olá, pessoal! Bem-vindos à nossa aventura no tabuleiro de xadrez. Imaginem que cada partida de xadrez é como uma viagem de carro. A **abertura** é o momento em que a gente liga o carro, arruma o cinto de segurança e decide para onde vamos. É o começo de tudo! Se a gente começa bem, a viagem será mais tranquila."
+    },
+    {
+      "title": "1º Princípio: Controle o Centro!",
+      "content": "Na abertura, nossa primeira missão é dominar o centro do tabuleiro. Pensem no centro como a parte mais alta de uma montanha russa. Quem chega lá primeiro tem a melhor vista e o melhor controle do brinquedo inteiro! A gente faz isso movendo os peões que estão bem no meio.",
+      "examples": [
+        {
+          "name": "Abertura Italiana",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+          "description": "As brancas controlam o centro com e4 e desenvolvem o cavalo e bispo rapidamente.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+          "difficulty": "easy"
+        },
+        {
+          "name": "Defesa Francesa",
+          "moves": "1.e4 e6 2.d4 d5",
+          "description": "As pretas respondem ao controle central das brancas com seus próprios peões centrais.",
+          "pgn": "1.e4 e6 2.d4 d5",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "title": "2º Princípio: Desenvolva suas Peças!",
+      "content": "Depois de cuidar do centro, é hora de acordar nossos amigos. Os **cavalos** e os **bispos** são como amigos que estavam dormindo. A gente precisa movê-los para que eles ajudem a controlar o tabuleiro. Se a gente deixa eles presos lá atrás, eles não fazem nada!",
+      "examples": [
+        {
+          "name": "Abertura Espanhola",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5",
+          "description": "Desenvolvimento rápido: cavalo para f3 ataca o peão e5, bispo para b5 pressiona o cavalo.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bb5",
+          "difficulty": "easy"
+        },
+        {
+          "name": "Gambito da Dama",
+          "moves": "1.d4 d5 2.c4 e6 3.Nc3 Nf6",
+          "description": "Ambos os lados desenvolvem cavalos rapidamente após a luta central.",
+          "pgn": "1.d4 d5 2.c4 e6 3.Nc3 Nf6",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "title": "3º Princípio: Proteja o Rei!",
+      "content": "Nosso rei é como o tesouro mais valioso da nossa equipe. A gente precisa protegê-lo para que ele não seja capturado. A melhor maneira de fazer isso na abertura é o **roque**. O roque é como construir um castelo para o nosso rei, movendo-o para um lugar seguro e trazendo uma torre para protegê-lo.",
+      "examples": [
+        {
+          "name": "Roque Curto",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O",
+          "description": "Ambos os lados fazem roque curto, colocando o rei em segurança.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O",
+          "difficulty": "easy"
+        },
+        {
+          "name": "Preparando o Roque",
+          "moves": "1.d4 Nf6 2.c4 e6 3.Nf3 Be7 4.Bg5 O-O",
+          "description": "As pretas desenvolvem o bispo e fazem roque rapidamente para segurança.",
+          "pgn": "1.d4 Nf6 2.c4 e6 3.Nf3 Be7 4.Bg5 O-O",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "title": "⚠️ Erro Comum: Não Mova a Mesma Peça Duas Vezes!",
+      "content": "Na abertura, cada movimento é precioso! Imaginem que vocês têm apenas algumas jogadas para organizar todo o exército. Se ficarem movendo a mesma peça várias vezes, as outras peças ficam dormindo e vocês perdem tempo valioso. O adversário vai desenvolver mais peças e ter vantagem!",
+      "examples": [
+        {
+          "name": "❌ Exemplo Ruim - Cavalinho Perdido",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Ng5 d6 4.Nf3 Nf6 5.Bc4 Be7",
+          "description": "As brancas moveram o cavalo 3 vezes! Perderam tempo e as pretas se desenvolveram melhor.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Ng5 d6 4.Nf3 Nf6 5.Bc4 Be7",
+          "difficulty": "easy"
+        },
+        {
+          "name": "✅ Exemplo Bom - Desenvolvimento Eficiente",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.Nc3 d6 5.d3 Nf6",
+          "description": "Cada movimento desenvolve uma peça nova. Muito mais eficiente!",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.Nc3 d6 5.d3 Nf6",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "title": "👑 Erro Comum: Não Saia com a Dama Muito Cedo!",
+      "content": "A dama é nossa peça mais poderosa, mas na abertura ela é como uma princesa em perigo! Se ela sair muito cedo, pode ser atacada pelas peças pequenas do adversário e ter que ficar fugindo. Enquanto ela foge, o adversário desenvolve suas peças e ganha tempo. Deixe a dama em casa no início!",
+      "examples": [
+        {
+          "name": "❌ Exemplo Ruim - Dama Aventureira",
+          "moves": "1.e4 e5 2.Qh5 Nc6 3.Bc4 Nf6 4.Qf3 d6 5.Qg3 Be7",
+          "description": "A dama saiu cedo e agora está sendo atacada! Tem que fugir e perde tempo.",
+          "pgn": "1.e4 e5 2.Qh5 Nc6 3.Bc4 Nf6 4.Qf3 d6 5.Qg3 Be7",
+          "difficulty": "easy"
+        },
+        {
+          "name": "✅ Exemplo Bom - Dama Paciente",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 d6 5.Nc3 Nf6",
+          "description": "A dama ficou em casa enquanto as outras peças se desenvolveram. Muito melhor!",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.d3 d6 5.Nc3 Nf6",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "title": "Resumo: Os 5 Super Poderes da Abertura!",
+      "content": "Agora vocês conhecem os 5 super poderes das aberturas: 1. **Controle o Centro!** 2. **Desenvolva as Peças!** 3. **Proteja o Rei!** 4. **Não Mova a Mesma Peça Duas Vezes!** 5. **Não Saia com a Dama Muito Cedo!** Com esses princípios, vocês vão fazer aberturas incríveis!",
+      "examples": [
+        {
+          "name": "Abertura Perfeita - Exemplo 1",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O",
+          "description": "Centro controlado, peças desenvolvidas, reis seguros!",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.O-O O-O",
+          "difficulty": "easy"
+        },
+        {
+          "name": "Abertura Perfeita - Exemplo 2",
+          "moves": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Be7 5.e3 O-O",
+          "description": "Todos os princípios aplicados: centro, desenvolvimento e segurança do rei!",
+          "pgn": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Be7 5.e3 O-O",
+          "difficulty": "medium"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "autoAdvance": false,
+    "showMoveNumbers": true,
+    "boardTheme": "standard"
+  }
+}

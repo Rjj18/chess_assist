@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Chess Lesson Theme Schema",
+  "description": "Schema for chess lesson theme JSON files",
+  "type": "object",
+  "required": ["metadata", "slides"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["id", "title", "description", "level", "version"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Unique identifier for the theme"
+        },
+        "title": {
+          "type": "string",
+          "description": "Display title of the lesson"
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of what the lesson covers"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"],
+          "description": "Difficulty level"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of the lesson"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Version in semver format"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags for categorization"
+        }
+      }
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["title", "content"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the slide"
+          },
+          "content": {
+            "type": "string",
+            "description": "Main text content (supports **bold** markdown)"
+          },
+          "examples": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "required": ["name", "moves", "description", "pgn"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the chess example"
+                },
+                "moves": {
+                  "type": "string",
+                  "description": "Move notation for display"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Explanation of the example"
+                },
+                "pgn": {
+                  "type": "string",
+                  "description": "PGN notation for the board"
+                },
+                "difficulty": {
+                  "type": "string",
+                  "enum": ["easy", "medium", "hard"],
+                  "description": "Difficulty of this specific example"
+                }
+              }
+            }
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes for instructors"
+          }
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "autoAdvance": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto advance slides after time"
+        },
+        "timePerSlide": {
+          "type": "number",
+          "minimum": 5,
+          "description": "Seconds per slide if auto advance enabled"
+        },
+        "showMoveNumbers": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show move numbers in examples"
+        },
+        "boardTheme": {
+          "type": "string",
+          "enum": ["standard", "wood", "marble"],
+          "default": "standard",
+          "description": "Visual theme for chess boards"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Abertura Mágica do Xadrez - Chess Assist</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
+    <style>
+        .presentation-container {
+            background-color: var(--secondary-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            padding: var(--spacing-xl);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s;
+            text-align: left;
+        }
+        .slide.active {
+            display: flex;
+        }
+        .slide h2 {
+            font-size: var(--font-size-xl);
+            color: var(--accent-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+        .slide p {
+            font-size: var(--font-size-lg);
+            line-height: 1.6;
+            color: var(--primary-text);
+            max-width: 700px;
+        }
+        .board-container {
+            margin: var(--spacing-lg) auto;
+            border: 3px solid #8B4513;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-medium);
+            width: 280px;
+            height: 280px;
+        }
+        
+        /* Smaller boards when there are multiple examples */
+        .slide:has(.board-container + .move-display + .board-controls + .board-instructions + .board-container) .board-container {
+            width: 250px;
+            height: 250px;
+        }
+        .board-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+        .board-controls button {
+            background-color: var(--accent-secondary);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            transition: all var(--transition-fast);
+            min-width: 80px;
+        }
+        .board-controls button:hover:not(:disabled) {
+            background-color: var(--accent-primary);
+            transform: translateY(-1px);
+        }
+        .board-controls button:disabled {
+            background-color: var(--border-medium);
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+        .move-display {
+            text-align: center;
+            margin: var(--spacing-sm) 0;
+            font-family: 'Courier New', monospace;
+            font-size: var(--font-size-lg);
+            color: var(--primary-text);
+            font-weight: var(--font-weight-bold);
+            background-color: var(--tertiary-bg);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+        .board-instructions {
+            text-align: center;
+            font-size: var(--font-size-xs);
+            color: var(--secondary-text);
+            margin-top: var(--spacing-xs);
+            font-style: italic;
+        }
+        .chess-example {
+            background-color: var(--tertiary-bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+            text-align: center;
+        }
+        .chess-example h4 {
+            color: var(--accent-secondary);
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: var(--font-size-lg);
+        }
+        .example-moves {
+            font-family: 'Courier New', monospace;
+            background-color: var(--primary-bg);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            margin: var(--spacing-sm) 0;
+            font-size: var(--font-size-sm);
+            color: var(--primary-text);
+        }
+        .navigation {
+            margin-top: var(--spacing-lg);
+        }
+        .navigation button {
+            background-color: var(--btn-primary-bg);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin: 0 var(--spacing-sm);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            transition: background-color var(--transition-medium);
+        }
+        .navigation button:hover {
+            background-color: var(--btn-primary-hover);
+        }
+        .navigation button:disabled {
+            background-color: var(--border-medium);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        /* Responsive layout for multiple boards */
+        @media (max-width: 1000px) {
+            .board-container {
+                width: 240px;
+                height: 240px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="nav-link">Home</a>
+        <h1>A Abertura Mágica do Xadrez</h1>
+        <div class="theme-toggle">
+            <span class="theme-toggle-label">🌙</span>
+            <button 
+                class="theme-toggle-switch" 
+                id="themeToggle" 
+                aria-label="Toggle between light and dark theme"
+                role="switch"
+                aria-checked="false"
+            >
+            </button>
+            <span class="theme-toggle-label">☀️</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="presentation-container">
+            <div id="slides-container"></div>
+            <div class="navigation">
+                <button id="prev-btn">Voltar</button>
+                <button id="next-btn">Avançar</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+    import { PresentationManager } from './modules/PresentationManager.js';
+    import { openingSlidesData } from './modules/OpeningSlidesData.js';
+
+    // Initialize presentation when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Initializing Chess Opening Presentation...');
+        
+        try {
+            const presentation = new PresentationManager(openingSlidesData);
+            
+            // Export for debugging
+            window.presentation = presentation;
+            
+            console.log('Presentation initialized successfully!');
+            console.log('Atalhos de teclado:');
+            console.log('← / → : Navegação entre slides');
+            console.log('Shift + ← / → : Navegação entre lances (todos os tabuleiros)');
+            console.log('Home / End : Primeiro / último lance (todos os tabuleiros)');
+            
+        } catch (error) {
+            console.error('Failed to initialize presentation:', error);
+        }
+    });
+</script>
+</body>
+</html>

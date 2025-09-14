@@ -1,0 +1,122 @@
+{
+  "metadata": {
+    "id": "ataque-duplo",
+    "title": "Dominando o Ataque Duplo",
+    "description": "Aprenda a usar a tática de ataque duplo para ganhar material e criar ameaças devastadoras",
+    "level": "intermediate",
+    "author": "Chess Assist",
+    "version": "1.0.0",
+    "tags": ["tática", "ataque duplo", "cavalo", "bispo", "peão"]
+  },
+  "slides": [
+    {
+      "title": "O Que é um Ataque Duplo?",
+      "content": "Bem-vindos à aula sobre **ataque duplo**! Imaginem que vocês são detetives e precisam capturar dois bandidos ao mesmo tempo. O ataque duplo no xadrez é exatamente isso: uma peça ataca duas peças inimigas simultaneamente! É impossível defender as duas ao mesmo tempo, então sempre ganhamos material ou posição."
+    },
+    {
+      "title": "O Cavalo: Mestre do Ataque Duplo",
+      "content": "O **cavalo** é o campeão dos ataques duplos! Por se mover em 'L', ele pode atacar casas que outras peças não conseguem. É como ter um super-herói que pode aparecer em lugares inesperados e atacar vários inimigos de uma só vez!",
+      "examples": [
+        {
+          "name": "Garfo Real - Cavalo ataca Rei e Dama",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 f5 4.Ng5 d6 5.Nf7",
+          "description": "O cavalo em f7 ataca simultaneamente o rei em e8 e a torre em h8! As pretas perdem a torre.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 f5 4.Ng5 d6 5.Nf7",
+          "difficulty": "medium"
+        },
+        {
+          "name": "Ataque Duplo Cavalo-Torre",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 d6 8.c3 O-O 9.h3 Na5 10.Bc2 c5 11.d4 Nd7",
+          "description": "Após alguns lances, o cavalo pode saltar para d5 atacando bispo e torre simultaneamente.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 d6 8.c3 O-O 9.h3 Na5 10.Bc2 c5 11.d4 Nd7 12.Nbd2 cxd4 13.cxd4 Nc6 14.Nb3 a5 15.Bd3 a4 16.Nbd2 Bd7 17.Bc2 Na5 18.b3 axb3 19.axb3 Rxa1 20.Qxa1 Qc7 21.Bd3 Nc6 22.Qb1 Na5 23.Qc2 Rc8 24.Qb2 Nc6 25.Ra1 Nb4 26.Be2 Be6 27.Ra8 Rxa8 28.Qxa8+ Kf7 29.Qb7 Qxb7",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "title": "O Bispo: Ataque Duplo nas Diagonais",
+      "content": "O **bispo** também pode fazer ataques duplos devastadores! Ele ataca nas diagonais, então pode ameaçar duas peças que estejam na mesma diagonal. É como um sniper que consegue acertar dois alvos com um só tiro!",
+      "examples": [
+        {
+          "name": "Bispo ataca Cavalo e Torre",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Be7 4.d3 d6 5.Bg5 Nf6 6.Nc3 O-O 7.h3 h6 8.Bh4 Nh5 9.Bxe7 Nxe7 10.g4 Ng3",
+          "description": "O bispo pode se posicionar para atacar simultaneamente o cavalo em c6 e a torre em a8.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Be7 4.d3 d6 5.Bg5 Nf6 6.Nc3 O-O 7.h3 h6 8.Bh4 Nh5 9.Bxe7 Nxe7 10.g4 Ng3",
+          "difficulty": "medium"
+        },
+        {
+          "name": "Ataque Duplo na Grande Diagonal",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 f5 4.d3 fxe4 5.dxe4 Nf6 6.Ng5 d6 7.f3 Be6 8.Nxe6 Qd7 9.Nxc7+ Kf7 10.Nxa8",
+          "description": "O bispo em c4 cria ameaças na diagonal, preparando táticas devastadoras.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 f5 4.d3 fxe4 5.dxe4 Nf6 6.Ng5 d6 7.f3 Be6 8.Nxe6 Qd7 9.Nxc7+ Kf7 10.Nxa8",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "title": "A Torre: Poder nas Fileiras e Colunas",
+      "content": "A **torre** pode fazer ataques duplos quando duas peças inimigas estão na mesma fileira ou coluna. É como um tanque que atira em linha reta e pode atingir múltiplos alvos alinhados!",
+      "examples": [
+        {
+          "name": "Torre na 7ª Fileira",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 d6 8.c3 O-O 9.h3 Bb7 10.d4 Re8 11.Nbd2 Bf8 12.a4 h6 13.Bc2 exd4 14.cxd4 Nb4 15.Bb1 c5 16.d5 Nd7 17.Ra3 f5 18.Rae3 Nf6 19.Nh4 fxe4 20.Nxe4 Nfxd5 21.Rd3 Qc7 22.Nf5 c4 23.Rd2 Rad8 24.Nfd6 Bxd6 25.Nxd6 Rxe1+ 26.Qxe1 Re8 27.Qd1 c3 28.bxc3 Nxc3 29.Qc1 Nxb1 30.Qxb1 Re1+ 31.Qxe1 Nxd2",
+          "description": "A torre pode infiltrar na 7ª fileira e atacar múltiplas peças simultaneamente.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 d6 8.c3 O-O 9.h3 Bb7 10.d4 Re8 11.Nbd2 Bf8 12.a4 h6 13.Bc2 exd4 14.cxd4 Nb4 15.Bb1 c5 16.d5 Nd7 17.Ra3 f5 18.Rae3 Nf6 19.Nh4 fxe4 20.Nxe4 Nfxd5 21.Rd3 Qc7 22.Nf5 c4 23.Rd2 Rad8 24.Nfd6 Bxd6 25.Nxd6 Rxe1+ 26.Qxe1 Re8 27.Qd1 c3 28.bxc3 Nxc3 29.Qc1 Nxb1 30.Qxb1 Re1+ 31.Qxe1 Nxd2",
+          "difficulty": "hard"
+        },
+        {
+          "name": "Ataque Duplo na Coluna",
+          "moves": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.cxd5 exd5 5.Bg5 Be7 6.e3 c6 7.Bd3 Nbd7 8.Qc2 h6 9.Bh4 O-O 10.Nf3 Re8 11.O-O Nf8 12.Rfe1",
+          "description": "A torre pode se posicionar para atacar peças na mesma coluna, criando pressão dupla.",
+          "pgn": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.cxd5 exd5 5.Bg5 Be7 6.e3 c6 7.Bd3 Nbd7 8.Qc2 h6 9.Bh4 O-O 10.Nf3 Re8 11.O-O Nf8 12.Rfe1",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "title": "O Peão: O Herói Improvável",
+      "content": "Até mesmo o humilde **peão** pode fazer ataques duplos! Quando um peão avança, pode atacar duas peças diagonalmente. É como David enfrentando dois Golias ao mesmo tempo! Pequeno, mas poderoso!",
+      "examples": [
+        {
+          "name": "Peão ataca Cavalo e Bispo",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Be7 4.d3 d6 5.O-O Nf6 6.Re1 O-O 7.c3 Re8 8.Nbd2 Bf8 9.Nf1 g6 10.Ng3 Bg7 11.h3 h6 12.Nh4 Kh7 13.f4 exf4 14.Nxf4 Ne5 15.Bb3 c6 16.Qf3 d5 17.exd5 Nxd5 18.Nxd5 cxd5 19.Qf4 Ng4 20.hxg4 Bxg4 21.Nf5 Bxf5 22.Qxf5 Qd6 23.Re5 Rad8 24.Bd2 f6 25.Re3 Qd7 26.Qf4 Qd6 27.Qf3 Qd7 28.Rae1 Rxe3 29.Rxe3 Re8 30.Rxe8 Qxe8 31.c4",
+          "description": "Um peão bem posicionado pode criar ataques duplos contra peças maiores.",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Be7 4.d3 d6 5.O-O Nf6 6.Re1 O-O 7.c3 Re8 8.Nbd2 Bf8 9.Nf1 g6 10.Ng3 Bg7 11.h3 h6 12.Nh4 Kh7 13.f4 exf4 14.Nxf4 Ne5 15.Bb3 c6 16.Qf3 d5 17.exd5 Nxd5 18.Nxd5 cxd5 19.Qf4 Ng4 20.hxg4 Bxg4 21.Nf5 Bxf5 22.Qxf5 Qd6 23.Re5 Rad8 24.Bd2 f6 25.Re3 Qd7 26.Qf4 Qd6 27.Qf3 Qd7 28.Rae1 Rxe3 29.Rxe3 Re8 30.Rxe8 Qxe8 31.c4",
+          "difficulty": "medium"
+        },
+        {
+          "name": "Avanço Tático do Peão",
+          "moves": "1.e4 e5 2.f4 exf4 3.Nf3 g5 4.h4 g4 5.Ng5 h6 6.Nxf7 Kxf7 7.d4 f3 8.gxf3 gxf3 9.Qxf3+ Ke8 10.Bc4 Qe7 11.Qf7+ Qxf7 12.Bxf7+ Kxf7",
+          "description": "Os peões podem avançar em grupo, criando múltiplas ameaças e ataques duplos.",
+          "pgn": "1.e4 e5 2.f4 exf4 3.Nf3 g5 4.h4 g4 5.Ng5 h6 6.Nxf7 Kxf7 7.d4 f3 8.gxf3 gxf3 9.Qxf3+ Ke8 10.Bc4 Qe7 11.Qf7+ Qxf7 12.Bxf7+ Kxf7",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "title": "Como Encontrar Ataques Duplos",
+      "content": "Para dominar os ataques duplos, vocês precisam desenvolver **visão tática**! Sempre procurem por: 1. **Duas peças desprotegidas** próximas 2. **Caminhos livres** para suas peças 3. **Casas centrais** para cavalos 4. **Diagonais abertas** para bispos. Pratiquem muito e logo verão essas oportunidades em toda parte!",
+      "examples": [
+        {
+          "name": "Exercício: Encontre o Ataque Duplo",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.c3 Nf6 5.d4 exd4 6.cxd4 Bb4+ 7.Nc3 Nxe4 8.O-O Bxc3 9.d5 Bf6 10.Re1 Ne7 11.Rxe4 d6 12.Bg5",
+          "description": "As brancas têm várias possibilidades de ataque duplo. Conseguem ver onde?",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.c3 Nf6 5.d4 exd4 6.cxd4 Bb4+ 7.Nc3 Nxe4 8.O-O Bxc3 9.d5 Bf6 10.Re1 Ne7 11.Rxe4 d6 12.Bg5",
+          "difficulty": "medium"
+        },
+        {
+          "name": "Puzzle Tático Avançado",
+          "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 d6 8.c3 O-O 9.h3 Nb8 10.d4 Nbd7 11.c4 c6 12.cxb5 axb5 13.Nc3 Bb7 14.Bg5 b4 15.Nb1 h6 16.Bh4 c5 17.dxe5 Nxe5 18.Nxe5 dxe5 19.Bxf6 Bxf6 20.Nd2 c4 21.Bc2 Qc7 22.Re3",
+          "description": "Uma posição complexa com múltiplas possibilidades táticas. Onde está o melhor ataque duplo?",
+          "pgn": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 d6 8.c3 O-O 9.h3 Nb8 10.d4 Nbd7 11.c4 c6 12.cxb5 axb5 13.Nc3 Bb7 14.Bg5 b4 15.Nb1 h6 16.Bh4 c5 17.dxe5 Nxe5 18.Nxe5 dxe5 19.Bxf6 Bxf6 20.Nd2 c4 21.Bc2 Qc7 22.Re3",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "autoAdvance": false,
+    "showMoveNumbers": true,
+    "boardTheme": "standard"
+  }
+}
