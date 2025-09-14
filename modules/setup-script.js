@@ -4,6 +4,7 @@ import { Chessboard, FEN, INPUT_EVENT_TYPE } from '../cm-chessboard-master/src/C
 import { Arrows, ARROW_TYPE } from '../cm-chessboard-master/src/extensions/arrows/Arrows.js';
 import { Markers, MARKER_TYPE } from '../cm-chessboard-master/src/extensions/markers/Markers.js';
 import { Chess } from "https://cdn.jsdelivr.net/npm/chess.mjs@1/src/chess.mjs/Chess.js";
+import { getChessboardAssetsPath } from "./ChessboardHelper.js";
 
 const boardContainer = document.getElementById('chessboard');
 if (!boardContainer) {
@@ -15,7 +16,7 @@ const board = new Chessboard(boardContainer, {
         { class: Arrows },
         { class: Markers }
     ],
-    assetsUrl: 'cm-chessboard-master/assets/',
+    assetsUrl: getChessboardAssetsPath(),
     style: { 
         aspectRatio: 1,
         borderType: 'frame'

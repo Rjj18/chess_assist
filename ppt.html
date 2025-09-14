@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Abertura Mágica do Xadrez - Chess Assist</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
     <link rel="stylesheet" href="styles/presentation.css">
 </head>
@@ -43,6 +43,9 @@
 
 <script type="module">
     import './modules/PresentationApp.js';
+    import { AccessibilityController } from './modules/AccessibilityController.js';
+    // Inicializar controlador de acessibilidade
+    new AccessibilityController();
 </script>
 </body>
 </html>

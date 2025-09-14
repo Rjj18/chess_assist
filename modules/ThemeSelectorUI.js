@@ -102,19 +102,24 @@ export class ThemeSelectorUI {
             // Show loading state
             this.#setLoadingState(true);
             
+            console.log(`🔄 Switching to theme: ${themeId}`);
+            
             // Switch theme
             await this.#app.switchTheme(themeId);
             
             // Update page title
             const currentTheme = this.#app.getPresentation()?.getCurrentTheme();
             if (currentTheme) {
-                document.getElementById('page-title').textContent = currentTheme.metadata.title;
+                const pageTitle = document.getElementById('page-title');
+                if (pageTitle) {
+                    pageTitle.textContent = currentTheme.metadata.title;
+                }
             }
 
-            console.log(`🔄 Switched to theme: ${themeId}`);
+            console.log(`✅ Successfully switched to theme: ${themeId}`);
 
         } catch (error) {
-            console.error('Failed to switch theme:', error);
+            console.error('❌ Failed to switch theme:', error);
             
             // Reset selector to previous value
             this.#setCurrentTheme();

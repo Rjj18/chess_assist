@@ -168,6 +168,14 @@ body {
     color: var(--accent-primary);
 }
 
+/* Header controls container */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    position: relative;
+}
+
 .theme-toggle {
     display: flex;
     align-items: center;

@@ -166,9 +166,14 @@ export class BoardController {
 
     #createBoard() {
         const container = document.getElementById(this.#containerId);
+        // Detectar se estamos em uma subpasta (como games/)
+        const currentPath = window.location.pathname;
+        const isInSubfolder = currentPath.includes('/games/');
+        const assetsPath = isInSubfolder ? "../cm-chessboard-master/assets/" : "cm-chessboard-master/assets/";
+        
         this.#board = new Chessboard(container, {
             position: this.#gameState.getCurrentPosition(),
-            assetsUrl: "./cm-chessboard-master/assets/",
+            assetsUrl: assetsPath,
             style: {
                 pieces: { file: "pieces/staunty.svg" },
                 showCoordinates: true,
@@ -302,6 +307,7 @@ export class PresentationManager {
     #slidesContainer;
     #navigationControls;
     #currentTheme;
+    #keyboardHandler;
 
     /**
      * Create a new PresentationManager
@@ -317,8 +323,31 @@ export class PresentationManager {
         this.#initialize(themeId);
     }
 
+    #cleanup() {
+        // Clear slides container
+        if (this.#slidesContainer) {
+            this.#slidesContainer.innerHTML = '';
+        }
+        
+        // Clear board controllers
+        this.#boardControllers.clear();
+        
+        // Remove keyboard event listeners (prevent duplicates)
+        if (this.#keyboardHandler) {
+            document.removeEventListener('keydown', this.#keyboardHandler);
+            this.#keyboardHandler = null;
+        }
+        
+        console.log('🧹 Cleaned up previous presentation content');
+    }
+
     async #initialize(themeId) {
         try {
+            // Clear previous content if reinitializing
+            if (this.#slides && this.#slides.length > 0) {
+                this.#cleanup();
+            }
+            
             // Load theme data
             if (themeId) {
                 this.#currentTheme = await this.#themeLoader.loadTheme(themeId);
@@ -335,6 +364,9 @@ export class PresentationManager {
             
             // Update page title with theme title
             document.title = `${this.#currentTheme.metadata.title} - Chess Assist`;
+            
+            // Reset slide index
+            this.#currentSlideIndex = 0;
             
             // Initialize presentation
             this.#createSlides();
@@ -405,12 +437,25 @@ export class PresentationManager {
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
 
-        prevBtn.addEventListener('click', () => this.#previousSlide());
-        nextBtn.addEventListener('click', () => this.#nextSlide());
+        // Remove existing listeners by cloning elements (removes all listeners)
+        const newPrevBtn = prevBtn.cloneNode(true);
+        const newNextBtn = nextBtn.cloneNode(true);
+        prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+        nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+
+        // Add new listeners
+        newPrevBtn.addEventListener('click', () => this.#previousSlide());
+        newNextBtn.addEventListener('click', () => this.#nextSlide());
     }
 
     #setupKeyboardShortcuts() {
-        document.addEventListener('keydown', (event) => {
+        // Remove existing handler if any
+        if (this.#keyboardHandler) {
+            document.removeEventListener('keydown', this.#keyboardHandler);
+        }
+        
+        // Create new handler
+        this.#keyboardHandler = (event) => {
             if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
                 return;
             }
@@ -449,7 +494,10 @@ export class PresentationManager {
                     this.#goToFirstSlide();
                     break;
             }
-        });
+        };
+        
+        // Add the new handler
+        document.addEventListener('keydown', this.#keyboardHandler);
     }
 
     #navigateAllBoards(direction) {

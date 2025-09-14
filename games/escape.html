@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Assist - Lone Knight</title>
-    <meta name="description" content="Chess Assist: Lone Knight Mode. Navigate the knight through pawns!">
-    <meta name="keywords" content="chess, lone knight, puzzle, chess variant, chess assist">
+    <title>Chess Assist - King Escape</title>
+    <meta name="description" content="Chess Assist: King Escape Mode. Help the king reach safety while avoiding enemy pieces!">
+    <meta name="keywords" content="chess, king escape, puzzle, chess variant, chess assist">
     <meta name="author" content="Roger Aparecido Silva">
-    <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../cm-chessboard-master/assets/chessboard.css">
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
     <div class="header">
-        <a href="index.html" class="nav-link">Home</a>
+        <a href="../index.html" class="nav-link">Home</a>
         <h1>Chess Assistant</h1>
         <div class="theme-toggle">
             <span class="theme-toggle-label">🌙</span>
@@ -29,31 +29,35 @@
     </div>
     <div class="game-container fade-in">
         <div class="board-section">
-            <div id="loneKnightChallenge" class="challenge-display">
-                <!-- Challenge info will be populated by JavaScript -->
+            <div class="difficulty-controls controls">
+                <label for="difficultyButtons" style="font-weight:bold;">Difficulty:</label>
+                <button class="difficulty-btn" data-level="easy">Easy</button>
+                <button class="difficulty-btn" data-level="medium">Medium</button>
+                <button class="difficulty-btn" data-level="hard">Hard</button>
+                <button class="difficulty-btn" data-level="extreme">Extreme</button>
             </div>
-            <div id="lone-knight-board"></div>
+            <div id="king-board"></div>
             <div class="controls">
-                <button id="resetLoneKnightButton" class="secondary">Reset Puzzle</button>
+                <button id="resetKingGameButton" class="secondary">Reset Puzzle</button>
             </div>
         </div>
         <div class="moves-section slide-up">
-            <h3>Lone Knight Moves</h3>
+            <h3>King Escape Moves</h3>
             <div class="moves-table-container">
-                <table id="loneKnightMovesTable" class="moves-table" role="grid" aria-label="Lone knight moves">
+                <table id="kingMovesTable" class="moves-table" role="grid" aria-label="King escape moves">
                     <thead>
                         <tr role="row">
                             <th role="columnheader" aria-sort="none">#</th>
                             <th role="columnheader" aria-sort="none">Move</th>
                         </tr>
                     </thead>
-                    <tbody id="loneKnightMovesTableBody" role="rowgroup">
+                    <tbody id="kingMovesTableBody" role="rowgroup">
                         <!-- Moves will be added here dynamically -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <script type="module" src="modules/lone-knight.js"></script>
+    <script type="module" src="../modules/king-escape.js"></script>
 </body>
 </html>

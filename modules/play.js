@@ -15,7 +15,6 @@ const movesTableController = new MovesTableController();
 // Create board manager with custom configuration
 const boardManager = new BoardManager("board", {
     position: chess.fen(),
-    assetsUrl: "./cm-chessboard-master/assets/",
     style: {
         pieces: { file: "pieces/staunty.svg" },
         animationDuration: 300,

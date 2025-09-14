@@ -15,7 +15,6 @@ const fenGenerator = new PawnRaceFenGenerator();
 const fen = fenGenerator.generateFen();
 const boardManager = new BoardManager("pawn-race-board", {
     position: fen, // Set the starting position for the board
-    assetsUrl: "cm-chessboard-master/assets/",
     style: {
         borderType: "thin",
         showCoordinates: true,

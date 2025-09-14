@@ -34,8 +34,14 @@ export class BoardManager {
      * @private
      */
     #mergeConfig(customConfig) {
+        // Detectar se estamos em uma subpasta (como games/)
+        const currentPath = window.location.pathname;
+        const isInSubfolder = currentPath.includes('/games/');
+        const assetsPath = isInSubfolder ? "../cm-chessboard-master/assets/" : "cm-chessboard-master/assets/";
+        
         const defaultConfig = {
             position: "start",
+            assetsUrl: assetsPath,  // Configurar caminho correto dos assets
             style: {
                 borderType: BORDER_TYPE.thin,  // Change: activating coordinates
                 showCoordinates: true,         // Change: showing coordinates

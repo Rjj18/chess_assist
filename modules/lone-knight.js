@@ -14,7 +14,6 @@ const movesTableController = new LoneKnightMovesTableController("loneKnightMoves
 // Create the board manager for the Lone Knight game
 const boardManager = new BoardManager("lone-knight-board", {
     position: "8/8/8/8/8/8/8/8 w - - 0 1", // Empty board initially
-    assetsUrl: "cm-chessboard-master/assets/",
     style: {
         pieces: { file: "pieces/staunty.svg" },
         animationDuration: 300,

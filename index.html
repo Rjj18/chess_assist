@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Assist - Home</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
     <div class="header">
@@ -27,14 +27,19 @@
         <h2>Welcome to Chess Assist!</h2>
         <p>Choose a mode to get started:</p>
         <div class="home-buttons">
-            <a href="play.html" class="button">Play Against AI</a>
-            <a href="setup.html" class="button">Set Up Custom Position</a>
-            <a href="escape.html" class="button">King Escape Mode</a>
-            <a href="pawn-race.html" class="button">Pawn Race</a>
-            <a href="lone-knight.html" class="button">Lone Knight</a>
+            <a href="games/play.html" class="button">Play Against AI</a>
+            <a href="games/setup.html" class="button">Set Up Custom Position</a>
+            <a href="games/escape.html" class="button">King Escape Mode</a>
+            <a href="games/pawn-race.html" class="button">Pawn Race</a>
+            <a href="games/lone-knight.html" class="button">Lone Knight</a>
             <a href="ppt.html" class="button">Chess Opening Tutorial</a>
         </div>
     </div>
     <script type="module" src="modules/home-script.js"></script>
+    <script type="module">
+        import { AccessibilityController } from './modules/AccessibilityController.js';
+        // Inicializar controlador de acessibilidade
+        new AccessibilityController();
+    </script>
 </body>
 </html>

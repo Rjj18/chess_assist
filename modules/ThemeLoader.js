@@ -35,6 +35,14 @@ export class ThemeLoader {
             level: 'intermediate',
             file: 'themes/ataque-duplo.json'
         });
+
+        this.#themeRegistry.set('teste-troca', {
+            id: 'teste-troca',
+            name: 'Teste de Troca de Tema',
+            description: 'Tema simples para testar a troca',
+            level: 'beginner',
+            file: 'themes/teste-troca.json'
+        });
     }
 
     /**

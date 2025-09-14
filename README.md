@@ -1,163 +1,155 @@
-# Chess Assist
+# Chess Assist 🏆
 
-A modern, modular chess assistant web application built with ES2024 standards. It offers a clean, responsive interface for playing chess against an AI and solving a unique "King Escape" puzzle.
+Uma aplicação web completa para aprendizado e prática de xadrez com recursos interativos e acessibilidade.
 
-![Chess Assist Demo](./demo.gif)
-
-🎮 **[Play Online](https://rjj18.github.io/chess_assist)**
-
-## Features
-
-- 🎯 **Interactive Chess Board**: Visual drag-and-drop interface with coordinates.
-- 🤖 **AI Opponent**: Play against an automated black player in a standard chess game.
-- 🧩 **King Escape Mode**: A unique puzzle where you must guide the white king to safety (the 8th rank) while avoiding black's pieces.
-- 📝 **Live Move Notation**: Real-time display of moves in standard algebraic notation for both game modes.
-- 🎨 **Theme Toggle**: Switch between light and dark modes for comfortable viewing.
-- 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices.
-- 🔄 **Game Controls**: Reset the game or puzzle, undo moves (in standard mode), and force the AI to move.
-- ⚡ **Modern Architecture**: Built with modular ES2024 JavaScript, running directly in the browser with no build process required.
-
-## Game Modes
-
-### 1. Play Against AI
-A standard game of chess where you play as white against an AI opponent playing as black.
-
-### 2. King Escape Mode
-A puzzle mode where the board is set up with a white king on e1 and a few black pieces. The goal is to move the king to any square on the 8th rank without being captured.
-
-### 3. Pawn Race Mode
-A fast-paced mode where you race your pawns to the other side of the board. The first player to get a pawn to the opposite end wins. Now fully implemented!
-
-### 4. Lone Knight Mode
-A puzzle mode where you control a single white knight that starts on one of the board's edges (a1-a8, h1, h8). Your goal is to capture all 8 black pawns scattered across the board using only knight moves. The game calculates the optimal number of moves needed and challenges you to match or beat that target.
-
-## Quick Start
-
-### Option 1: Play Online (Recommended)
-Simply visit: [https://rjj18.github.io/chess_assist](https://rjj18.github.io/chess_assist)
-
-### Option 2: Run Locally
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/your-username/chess-assist.git
-    cd chess-assist
-    ```
-
-2.  **Serve the application**
-
-    **With Python (recommended):**
-    ```bash
-    # Python 3
-    python -m http.server 8000
-    # or
-    npm start
-    ```
-
-    **With Node.js:**
-    ```bash
-    npx serve .
-    ```
-
-    **With any other static server:**
-    ```bash
-    # Live Server extension in VS Code
-    # or any static file server
-    ```
-
-3.  **Open your browser**
-    ```
-    http://localhost:8000
-    ```
-
-## GitHub Pages Deployment
-
-This project is ready for GitHub Pages deployment:
-
-1.  **Fork or clone** this repository to your GitHub account.
-2.  **Enable GitHub Pages** in repository settings:
-    -   Go to Settings → Pages
-    -   Source: Deploy from a branch
-    -   Branch: main / (root)
-3.  **Your chess app** will be available at: `https://your-username.github.io/chess-assist/`
-
-### Automatic Deployment
-
-The project includes a GitHub Actions workflow that automatically deploys to GitHub Pages when you push to the main branch.
-
-## Project Structure
+## 📁 Estrutura do Projeto
 
 ```
-chess-assist/
-├── index.html                  # Home page with game mode selection
-├── play.html                   # Standard chess game
-├── pawn-race.html              # Pawn Race mode
-├── escape.html                 # King Escape puzzle
-├── modules/play.js             # Main script for standard game (was script.js)
-├── styles.css                  # Application styles
-├── demo.gif                    # Demo animation
-├── modules/                    # ES2024 modules (game logic, controllers, etc)
-│   ├── BaseGameController.js
-│   ├── GameController.js
-│   ├── KingEscapeGameController.js
-│   ├── PawnRaceGameController.js
-│   ├── BoardManager.js
-│   ├── UIController.js
-│   ├── MovesTableController.js
-│   ├── BaseMovesTableController.js
-│   ├── PlayerController.js
-│   ├── HumanPlayerController.js
-│   ├── AIPlayerController.js
-│   ├── FenGenerator.js
-│   ├── KingEscapeFenGenerator.js
-│   ├── PawnRaceFenGenerator.js
-│   ├── ...
-├── package.json                # Project configuration
-├── .github/workflows/          # GitHub Actions for auto-deployment
-│   └── deploy.yml
-└── cm-chessboard-master/       # Chess board library (external)
+chess_assist/
+├── 📄 index.html                    # Página principal
+├── 📄 ppt.html                      # Sistema de apresentações interativas
+├── 📄 package.json                  # Configurações do projeto
+├── 📄 LICENSE                       # Licença do projeto
+├── 
+├── 📁 docs/                         # Documentação
+│   ├── 📄 README.md                 # Este arquivo
+│   ├── 📄 COMO_CRIAR_AULA.md        # Guia para criar aulas
+│   ├── 📄 THEME_DEVELOPMENT_GUIDE.md # Guia técnico de desenvolvimento
+│   ├── 📄 class-diagram.md          # Diagrama de classes
+│   ├── 📄 IMPROVEMENTS_AND_STOCKFISH_PLAN.md
+│   └── 📄 STOCKFISH_INTEGRATION_GUIDE.md
+│
+├── 📁 games/                        # Jogos e modos específicos
+│   ├── 📄 play.html                 # Jogo contra IA
+│   ├── 📄 setup.html                # Configuração de posições
+│   ├── 📄 escape.html               # Modo King Escape
+│   ├── 📄 pawn-race.html            # Corrida de peões
+│   └── 📄 lone-knight.html          # Cavalo solitário
+│
+├── 📁 modules/                      # Módulos JavaScript (ES2024)
+│   ├── 📄 AccessibilityController.js # Recursos de acessibilidade
+│   ├── 📄 ThemeLoader.js            # Sistema de carregamento de temas
+│   ├── 📄 ThemeSelectorUI.js        # Interface de seleção de temas
+│   ├── 📄 PresentationManager.js    # Gerenciador de apresentações
+│   ├── 📄 PresentationApp.js        # Aplicação principal de apresentações
+│   ├── 📄 BoardManager.js           # Gerenciamento do tabuleiro
+│   ├── 📄 GameController.js         # Controlador principal de jogos
+│   ├── 📄 ThemeManager.js           # Gerenciamento de temas visuais
+│   ├── 📄 UIController.js           # Controle da interface
+│   ├── 📄 home-script.js            # Script da página inicial
+│   └── [outros controladores específicos de jogos...]
+│
+├── 📁 themes/                       # Temas de aulas em JSON
+│   ├── 📄 abertura-magica.json      # Aula sobre aberturas
+│   └── 📄 ataque-duplo.json         # Aula sobre ataques duplos
+│
+├── 📁 styles/                       # Folhas de estilo CSS
+│   ├── 📄 styles.css                # Estilos principais
+│   └── 📄 presentation.css          # Estilos das apresentações
+│
+├── 📁 assets/                       # Recursos visuais
+│   └── 📄 demo.gif                  # Demonstração
+│
+└── 📁 cm-chessboard-master/         # Biblioteca do tabuleiro
+    ├── 📁 src/                      # Código fonte
+    ├── 📁 assets/                   # Recursos visuais
+    └── 📁 test/                     # Testes
 ```
 
+## 🚀 Recursos Principais
 
-## Technical Details
+### 🎯 Modos de Jogo
+- **Play Against AI**: Jogue contra a inteligência artificial
+- **Set Up Custom Position**: Configure posições personalizadas
+- **King Escape Mode**: Modo especial de fuga do rei
+- **Pawn Race**: Corrida estratégica de peões
+- **Lone Knight**: Desafio do cavalo solitário
 
--   **ES2024 Standards**: Uses modern JavaScript features and ES modules.
--   **No Build Process**: Runs directly in the browser without compilation.
--   **Modular & Extensible Architecture**: Clean separation of concerns with ES modules for different parts of the application (game logic, UI, etc.).
--   **Dependency Injection**: Controllers and logic are injected for flexibility and testability.
--   **Extensible Game Modes**: Easily add new modes by extending base controllers and generators.
--   **CDN Dependencies**: Uses chess.mjs from a CDN for chess logic.
--   **Static Hosting**: Compatible with any static file server.
+### 📚 Sistema de Aulas Interativas
+- **Temas JSON**: Sistema modular de aulas carregadas dinamicamente
+- **Apresentações Visuais**: Slides interativos com tabuleiros
+- **Múltiplas Aulas**: Abertura Mágica, Ataque Duplo, e mais
+- **Seletor Dinâmico**: Troca de temas em tempo real
 
-## Browser Compatibility
+### ♿ Recursos de Acessibilidade
+- **🔤 Texto em Caixa Alta**: Converte todo o texto para maiúsculas
+- **🎨 Alto Contraste**: Modo de alto contraste para melhor visibilidade
+- **📏 Ajuste de Fonte**: Controle deslizante para tamanho da fonte (80-150%)
+- **⌨️ Atalhos de Teclado**: Alt + A para abrir painel de acessibilidade
+- **💾 Persistência**: Configurações salvas no localStorage
+- **🔄 Reset Rápido**: Botão para restaurar configurações padrão
 
--   ✅ Chrome 91+
--   ✅ Firefox 89+
--   ✅ Safari 15+
--   ✅ Edge 91+
+### 🎨 Interface Responsiva
+- **Tema Claro/Escuro**: Alternância de temas visuais
+- **Design Responsivo**: Adaptável a diferentes tamanhos de tela
+- **Navegação Intuitiva**: Interface limpa e organizada
 
-## Dependencies
+## 🛠️ Tecnologias Utilizadas
 
--   [cm-chessboard](https://github.com/shaack/cm-chessboard) - Interactive chess board
--   [chess.mjs](https://github.com/jhlywa/chess.js) - Chess game logic (via CDN)
+- **ES2024 Modules**: JavaScript moderno com classes e módulos
+- **cm-chessboard**: Biblioteca para renderização do tabuleiro
+- **CSS Grid/Flexbox**: Layout responsivo moderno
+- **LocalStorage**: Persistência de configurações
+- **JSON Schema**: Validação de temas de aulas
 
-## Contributing
+## ⚡ Como Usar
 
-1.  Fork the repository.
-2.  Create a feature branch: `git checkout -b feature-name`
-3.  Commit your changes: `git commit -am 'Add some feature'`
-4.  Push to the branch: `git push origin feature-name`
-5.  Submit a pull request.
+### Iniciando o Servidor
+```bash
+python -m http.server 8000
+```
 
-## License
+### Acessando a Aplicação
+1. Abra seu navegador
+2. Vá para `http://localhost:8000`
+3. Escolha um modo de jogo ou acesse as aulas interativas
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Recursos de Acessibilidade
+1. Pressione `Alt + A` ou clique no ícone ♿ no canto superior direito
+2. Ative as opções conforme necessário:
+   - ✅ Texto em Caixa Alta
+   - ✅ Alto Contraste  
+   - 🎚️ Ajuste do tamanho da fonte
+3. As configurações são salvas automaticamente
 
-## Acknowledgments
+### Criando Novas Aulas
+Consulte o guia completo em `docs/COMO_CRIAR_AULA.md` para aprender como criar seus próprios temas de aula em formato JSON.
 
--   Chess board UI powered by [cm-chessboard](https://github.com/shaack/cm-chessboard)
--   Chess logic powered by [chess.js](https://github.com/jhlywa/chess.js)
+## 🔧 Arquitetura Técnica
+
+### Padrões de Design
+- **MVC Pattern**: Separação clara de responsabilidades
+- **Module Pattern**: Encapsulamento de funcionalidades
+- **Observer Pattern**: Sistema de eventos e notificações
+- **Strategy Pattern**: Diferentes estratégias de jogo
+
+### Modularização
+- **Controle de Estado**: Gerenciamento centralizado de estado
+- **Event Handling**: Sistema robusto de eventos
+- **Lazy Loading**: Carregamento dinâmico de recursos
+- **Error Handling**: Tratamento adequado de erros
+
+## 🤝 Contribuição
+
+Para contribuir com o projeto:
+
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 🆘 Suporte
+
+Para dúvidas ou problemas:
+- Consulte a documentação em `docs/`
+- Abra uma issue no GitHub
+- Verifique os exemplos de temas em `themes/`
 
 ---
 
-**Enjoy playing chess!** 🎉♟️
+**Chess Assist** - Tornando o aprendizado de xadrez mais acessível e interativo! ♟️✨
