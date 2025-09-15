@@ -27,24 +27,14 @@ export class ThemeLoader {
             level: 'beginner',
             file: 'themes/abertura-magica.json'
         });
-
-        this.#themeRegistry.set('ataque-duplo', {
-            id: 'ataque-duplo',
-            name: 'Dominando o Ataque Duplo',
-            description: 'Tática de ataque duplo e garfos',
-            level: 'intermediate',
-            file: 'themes/ataque-duplo.json'
-        });
-
-        this.#themeRegistry.set('teste-troca', {
-            id: 'teste-troca',
-            name: 'Teste de Troca de Tema',
-            description: 'Tema simples para testar a troca',
-            level: 'beginner',
-            file: 'themes/teste-troca.json'
+        this.#themeRegistry.set('temas-taticos-parte1', {
+           id : "temas-taticos-parte1",
+           name: "Táticas no Xadrez — Parte 1",
+           description: "Descubra os truques secretos do xadrez: o garfo e a magia das peças.",
+           level: "beginner",
+           file: "themes/taticas1.json"
         });
     }
-
     /**
      * Get list of available themes
      * @returns {Array<Object>} Array of theme metadata

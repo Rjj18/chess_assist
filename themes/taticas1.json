@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "id": "temas-taticos-parte1",
+    "title": "Temas Táticos no Xadrez — Parte 1",
+    "description": "Introdução à tática e truques de garfo.",
+    "level": "beginner",
+    "author": "Chess Educador",
+    "version": "1.0.0",
+    "tags": ["tática", "garfo"]
+  },
+  "slides": [
+    {
+      "title": "O Que é Tática no Xadrez?",
+      "content": "No xadrez, **tática** é quando uma peça faz uma jogada surpresa, como um truque de mágica! As peças parecem que ganham poderes, mudando o tabuleiro de repente atacando peças mais fortes, ganhando pontos e vencendo o jogo.",
+      "examples": [
+        {
+          "name": "Bispo Ninja",
+          "moves": "1... Bxe3",
+          "description": "Bispo ninja captura o peão em e3 atacando a dama branca!",
+          "pgn": "[FEN \"r3k2r/pp3p1p/1q2p1pb/3p4/3Q4/P1N1PB2/1PP3P1/1R3RK1 b - - 0 1\"] 1... Bxe3"
+        },
+        {
+          "name": "Rainha Veloz",
+          "moves": "1... Qc6+",
+          "description": "Rainha preta dá xeque e ataca torre branca.",
+          "pgn": "[FEN \"r1bq1rk1/ppp1bppp/2n5/4N3/3P4/2N5/PPP2PPP/R1BQ1RK1 w - - 0 11\"] 1... Qc6+"
+        }
+      ]
+    },
+    {
+      "title": "Garfo de Cavalo",
+      "content": "O **garfo** é um truque em que uma peça ataca duas ao mesmo tempo! O cavalo faz garfos com pulos mágicos.",
+      "examples": [
+        {
+         "name": "Garfo do Cavalo: ChessTempo",
+        "moves": "1.Re1 Cg2+ 2.Rf1 Cxh4",
+        "description": "O rei branco tenta fugir, mas entra na rota do cavalo. O cavalo pula para g2+ e dá um xeque garfo: ataca o rei e a torre ao mesmo tempo! Depois, captura a torre.",
+        "pgn": "[FEN \"8/1pP1Pk2/7p/4K3/R3n3/8/3N3P/8 w - - 0 1\"] 1.Re1 Cg2+ 2.Rf1 Cxh4"
+        },
+        {
+          "name": "Garfo em f3",
+          "moves": "1... Nf3+",
+          "description": "Cavalo preto salta para f3, ameaçando o rei e a dama.",
+          "pgn": "[FEN \"rnbq1rk1/ppp2ppp/5n2/3p4/3P4/5N2/PPP2PPP/RNBQ1RK1 b - - 0 8\"] 1... Nf3+"
+        }
+      ]
+    },
+    {
+      "title": "Garfo de Peão",
+      "content": "Os peões também podem dar garfo, atacando duas peças com um passo corajoso!",
+      "examples": [
+        {
+          "name": "Peão Garfo",
+          "moves": "1. d5",
+          "description": "Peão branco avança para d5, atacando cavalo e bispo pretos.",
+          "pgn": "[FEN \"rnbqkb1r/ppp1pppp/5n2/8/3P4/8/PPP2PPP/RNBQKB1R w KQkq - 0 6\"] 1. d5"
+        },
+        {
+          "name": "Peão Garfo Final",
+          "moves": "1. e5",
+          "description": "Peão branco avança para e5, ameaçando duas peças pretas.",
+          "pgn": "[FEN \"r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 4\"] 1. e5"
+        }
+      ]
+    },
+    {
+      "title": "Garfo de Bispo",
+      "content": "O bispo pode atacar duas peças na diagonal — um truque astuto!",
+      "examples": [
+        {
+          "name": "Bispo Garfo",
+          "moves": "1. Bb5",
+          "description": "Bispo branco vai para b5, ameaçando duas peças pretas.",
+          "pgn": "[FEN \"r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 4\"] 1. Bb5"
+        },
+        {
+          "name": "Bispo Garfo Final",
+          "moves": "1. Bd5+",
+          "description": "Bispo branco, na casa d5, ameaça o rei e a torre pretos.",
+          "pgn": "[FEN \"r3r1k1/5ppp/8/8/8/8/8/4KB2 w - - 0 1\"] 1. Bd5+"
+        }
+      ]
+    }
+  ]
+}

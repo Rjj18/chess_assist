@@ -68,18 +68,33 @@ export class GameState {
 
     initialize(pgn) {
         const game = new Chess();
+        
+        // Extrair FEN se presente
+        const fenMatch = pgn.match(/\[FEN "([^"]+)"\]/);
+        if (fenMatch) {
+            try {
+                game.load(fenMatch[1]);
+            } catch (e) {
+                console.warn('Invalid FEN, using default position:', e.message);
+            }
+            // Remover a parte do FEN do PGN
+            pgn = pgn.replace(/\[FEN "[^"]+"\]\s*/, '');
+        }
+        
         const pgnMoves = this.#parsePgn(pgn);
         
         this.#positions = [game.fen()];
         this.#moves = [];
         
         for (const move of pgnMoves) {
-            try {
-                const moveObj = game.move(move);
-                this.#moves.push(moveObj);
-                this.#positions.push(game.fen());
-            } catch (e) {
-                console.warn(`Invalid move ${move}:`, e.message);
+            if (move) {
+                try {
+                    const moveObj = game.move(move);
+                    this.#moves.push(moveObj);
+                    this.#positions.push(game.fen());
+                } catch (e) {
+                    console.warn(`Invalid move ${move}:`, e.message);
+                }
             }
         }
         
