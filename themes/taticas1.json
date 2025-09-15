@@ -11,37 +11,37 @@
   "slides": [
     {
       "title": "O Que é Tática no Xadrez?",
-      "content": "No xadrez, **tática** é quando uma peça faz uma jogada surpresa, como um truque de mágica! As peças parecem que ganham poderes, mudando o tabuleiro de repente atacando peças mais fortes, ganhando pontos e vencendo o jogo.",
+      "content": "No xadrez, **tática** é quando uma peça faz uma jogada surpresa, como um truque de mágica! As peças parecem que ganham poderes, mudando o tabuleiro de repente atacando peças mais fortes, ganhando pontos e vencendo o jogo. Existem vários temas táticos diferentes. Vejam alguns exemplos:",
       "examples": [
         {
-          "name": "Bispo Ninja",
+          "name": "O Garfo do Bispo Ninja",
           "moves": "1... Bxe3",
-          "description": "Bispo ninja captura o peão em e3 atacando a dama branca!",
+          "description": "Bispo ninja captura o peão em e3 dando xeque no rei, ao mesmo tempo que ataca a dama branca!",
           "pgn": "[FEN \"r3k2r/pp3p1p/1q2p1pb/3p4/3Q4/P1N1PB2/1PP3P1/1R3RK1 b - - 0 1\"] 1... Bxe3"
         },
         {
-          "name": "Rainha Veloz",
-          "moves": "1... Qc6+",
-          "description": "Rainha preta dá xeque e ataca torre branca.",
-          "pgn": "[FEN \"r1bq1rk1/ppp1bppp/2n5/4N3/3P4/2N5/PPP2PPP/R1BQ1RK1 w - - 0 11\"] 1... Qc6+"
+          "name": "O peão poderoso!!!",
+          "moves": "1. dxe5 Bxe5 2. f4 Bd6 3. e5",
+          "description": "As Brancas observam que se pudesse avançar um peão para e5, ele atacaria o Cavalo e o Bispo pretos. Elas então fazem a pequena combinação: Depois de e5 o peão fica poderoso e ameaça cavalo e bispo ao mesmo tempo! preto",
+          "pgn": "[FEN \"r2q1rk1/pppb1ppp/2pb1n2/4p3/3PP3/1BP4P/PP1N1PP1/R1BQ1R1K w Qq - 0 1\"] 1. dxe5 Bxe5 2. f4 Bd6 3. e5"
         }
       ]
     },
     {
-      "title": "Garfo de Cavalo",
-      "content": "O **garfo** é um truque em que uma peça ataca duas ao mesmo tempo! O cavalo faz garfos com pulos mágicos.",
+      "title": "Enxergando o futuro!!!!!",
+      "content": "O grande segredo para saber usar as táticas de maneira correta é tentar **enxergar o futuro**. Isso significa pensar em como o tabuleiro vai ficar depois de algumas jogadas. Assim, você pode planejar seus truques táticos com antecedência e surpreender seu oponente!",
       "examples": [
         {
-         "name": "Garfo do Cavalo: ChessTempo",
+         "name": "A torre traiçoeira",
         "moves": "1.Re1 Cg2+ 2.Rf1 Cxh4",
-        "description": "O rei branco tenta fugir, mas entra na rota do cavalo. O cavalo pula para g2+ e dá um xeque garfo: ataca o rei e a torre ao mesmo tempo! Depois, captura a torre.",
-        "pgn": "[FEN \"8/1pP1Pk2/7p/4K3/R3n3/8/3N3P/8 w - - 0 1\"] 1.Re1 Cg2+ 2.Rf1 Cxh4"
+        "description": "Nesta posição, observamos que o Rei e o Cavalo pretos estão na mesma horizontal. As Brancas podem explorar isso com um garfo:",
+        "pgn": "[FEN \"7r/n2k2pp/5p2/8/8/5NPP/1R3PK1/8 w - - 0 1\"] 1. Rb7+"
         },
         {
-          "name": "Garfo em f3",
-          "moves": "1... Nf3+",
-          "description": "Cavalo preto salta para f3, ameaçando o rei e a dama.",
-          "pgn": "[FEN \"rnbq1rk1/ppp2ppp/5n2/3p4/3P4/5N2/PPP2PPP/RNBQ1RK1 b - - 0 8\"] 1... Nf3+"
+          "name": "Ataque duplo",
+          "moves": "1. Nc6 Rxb7 2. Nd8+ Ke8 3. Nxb7",
+          "description": "nesta posição, mesmo as brancas com desvantagem material, você consegue achar um lance que as brancas fazem a torre sumir?",
+          "pgn": "[FEN \"8/1P3k2/1r5p/N3pp1p/P6P/3K4/5PP1/8 w - - 0 1\"] 1. Nc6 Rxb7 2. Nd8+ Ke8 3. Nxb7"
         }
       ]
     },
