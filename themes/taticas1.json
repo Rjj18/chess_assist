@@ -14,15 +14,15 @@
       "content": "No xadrez, **tática** é quando uma peça faz uma jogada surpresa, como um truque de mágica! As peças parecem que ganham poderes, mudando o tabuleiro de repente atacando peças mais fortes, ganhando pontos e vencendo o jogo. Existem vários temas táticos diferentes. Vejam alguns exemplos:",
       "examples": [
         {
-          "name": "O Garfo do Bispo Ninja",
+          "name": "O ataque duplo do Bispo Ninja",
           "moves": "1... Bxe3",
-          "description": "Bispo ninja captura o peão em e3 dando xeque no rei, ao mesmo tempo que ataca a dama branca!",
+          "description": "Bispo ninja captura o peão em e3 dando xeque no rei, ao mesmo tempo que ataca a dama branca com uma punhalada por trás!",
           "pgn": "[FEN \"r3k2r/pp3p1p/1q2p1pb/3p4/3Q4/P1N1PB2/1PP3P1/1R3RK1 b - - 0 1\"] 1... Bxe3"
         },
         {
           "name": "O peão poderoso!!!",
           "moves": "1. dxe5 Bxe5 2. f4 Bd6 3. e5",
-          "description": "As Brancas observam que se pudesse avançar um peão para e5, ele atacaria o Cavalo e o Bispo pretos. Elas então fazem a pequena combinação: Depois de e5 o peão fica poderoso e ameaça cavalo e bispo ao mesmo tempo! preto",
+          "description": "As Brancas observam que se pudesse avançar um peão para e5, ele atacaria o Cavalo e o Bispo pretos. Elas então fazem a pequena combinação: Depois de e5 o peão fica poderoso e ameaça cavalo e bispo pretos ao mesmo tempo!",
           "pgn": "[FEN \"r2q1rk1/pppb1ppp/2pb1n2/4p3/3PP3/1BP4P/PP1N1PP1/R1BQ1R1K w Qq - 0 1\"] 1. dxe5 Bxe5 2. f4 Bd6 3. e5"
         }
       ]
@@ -46,20 +46,20 @@
       ]
     },
     {
-      "title": "Garfo de Peão",
-      "content": "Os peões também podem dar garfo, atacando duas peças com um passo corajoso!",
+      "title": "Abra sua caixa de ferramentas táticas!",
+      "content": "As táticas são como ferramentas poderosas que você pode usar ao ser favor. São truques que podem virar o jogo a seu favor é só saber usá-los.",
       "examples": [
         {
-          "name": "Peão Garfo",
-          "moves": "1. d5",
-          "description": "Peão branco avança para d5, atacando cavalo e bispo pretos.",
-          "pgn": "[FEN \"rnbqkb1r/ppp1pppp/5n2/8/3P4/8/PPP2PPP/RNBQKB1R w KQkq - 0 6\"] 1. d5"
+          "name": "Cravando para a vitória!!!!",
+          "moves": "1. Bc4 2. Qxc4 3. Rxc4",
+          "description": "A Dama preta ameaça o bispo, porém o bispo branco se move, cravando a Dama preta . A Dama preta não pode se mover, pois o Rei preta está atrás dela. Essa cravada é chamada **Cravada Absoluta**.",
+          "pgn": "[FEN \"6k1/6pp/4q3/8/8/8/4B1PP/2R4K w - - 0 1\"] 1. Bc4 2. Qxc4 3. Rxc4"
         },
         {
-          "name": "Peão Garfo Final",
-          "moves": "1. e5",
-          "description": "Peão branco avança para e5, ameaçando duas peças pretas.",
-          "pgn": "[FEN \"r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 4\"] 1. e5"
+          "name": "O ataque descoberto: O movimento surpresa!",
+          "moves": "1. Bb5+ Qd7 2. Bxd7+",
+          "description": "O ataque descoberto é um golpe de exige trabalho em equipe. Uma peça se move, revelando um ataque de outra peça. Aqui, o bispo branco dá xeque no rei preto, mas na veradade era só um **truque**. Com isso a torre fica liberada para capturar a dama.",
+          "pgn": "[FEN \"r1b1kb1r/ppp2ppp/4pn2/8/3q4/3B4/PPP2PPP/R1BQ1RK1 w Qkq - 0 1\"] 1. Bb5+ Qd7 2. Bxd7+"
         }
       ]
     },
