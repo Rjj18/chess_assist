@@ -1,6 +1,0 @@
-{
-  "name": "Exemplo Completo - Mate em 2",
-  "moves": "1. Qh5+ Kg8 2. Qh7#",
-  "description": "Sequência de mate: rainha dá xeque, força o rei, e depois mate!",
-  "pgn": "[FEN \"rnbqkb1r/pppp1ppp/5n2/4p2Q/4P3/8/PPPP1PPP/RNB1KBNR w KQkq - 0 4\"] 1. Qh5+ Kg8 2. Qh7#"
-}
