@@ -37,11 +37,23 @@
                     <label for="position-input">Adicionar Posição (FEN ou PGN):</label>
                     <textarea 
                         id="position-input" 
-                        placeholder="Cole aqui uma posição FEN ou movimento PGN...
+                        placeholder="Cole aqui uma posição FEN, movimento PGN ou PGN completo...
+
+NOVO! 🎯 Use o botão 'Processar PGN Completo' para:
+• Processar múltiplos jogos automaticamente
+• Extrair posições-chave de partidas
+• Gerar problemas táticos automaticamente
+
 Exemplos:
 • rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 (posição inicial)
-• r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3 (abertura italiana)"
-                        rows="4"
+• r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3 (abertura italiana)
+
+PGN Completo:
+[Event "World Championship"]
+[White "Magnus Carlsen"]
+[Black "Ian Nepomniachtchi"]
+1. e4 e5 2. Nf3 {Partida clássica} Nc6..."
+                        rows="8"
                     ></textarea>
                 </div>
                 
@@ -58,6 +70,7 @@ Exemplos:
                 <div class="button-group">
                     <button id="add-position-btn" class="button">Adicionar Posição</button>
                     <button id="add-examples-btn" class="button secondary">Adicionar Exemplos</button>
+                    <button id="process-full-pgn-btn" class="button featured">🎯 Processar PGN Completo</button>
                     <button id="create-position-btn" class="button">🎨 Criar Posição</button>
                     <button id="create-pgn-btn" class="button">📝 Criar PGN</button>
                     <button id="clear-all-btn" class="button secondary">Limpar Tudo</button>
@@ -73,19 +86,98 @@ Exemplos:
 
             <div class="export-section">
                 <div class="export-options">
-                    <div class="option-group">
-                        <label for="pdf-title">Título do PDF:</label>
-                        <input type="text" id="pdf-title" value="Chess Diagrams" placeholder="Título do documento">
+                    <div class="basic-options">
+                        <h4>Configurações Básicas</h4>
+                        <div class="option-group">
+                            <label for="pdf-title">Título do PDF:</label>
+                            <input type="text" id="pdf-title" value="Chess Diagrams" placeholder="Título do documento">
+                        </div>
+                        
+                        <div class="option-group">
+                            <label for="show-coordinates">Mostrar coordenadas:</label>
+                            <input type="checkbox" id="show-coordinates" checked>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label for="show-move-indicator">Mostrar indicador de quem move:</label>
+                            <input type="checkbox" id="show-move-indicator" checked>
+                        </div>
                     </div>
-                    
-                    <div class="option-group">
-                        <label for="show-coordinates">Mostrar coordenadas:</label>
-                        <input type="checkbox" id="show-coordinates" checked>
-                    </div>
-                    
-                    <div class="option-group">
-                        <label for="show-move-indicator">Mostrar indicador de quem move:</label>
-                        <input type="checkbox" id="show-move-indicator" checked>
+
+                    <div class="advanced-options">
+                        <h4>🎯 Opções Avançadas (Inspirado em pgn2pdf.com)</h4>
+                        
+                        <div class="option-row">
+                            <div class="option-group">
+                                <label for="header-left">Cabeçalho Esquerdo:</label>
+                                <input type="text" id="header-left" placeholder="Chess Study">
+                            </div>
+                            <div class="option-group">
+                                <label for="header-right">Cabeçalho Direito:</label>
+                                <input type="text" id="header-right" placeholder="Data: hoje">
+                            </div>
+                        </div>
+
+                        <div class="option-row">
+                            <div class="option-group">
+                                <label for="footer-left">Rodapé Esquerdo:</label>
+                                <input type="text" id="footer-left" placeholder="Criado com Chess Assist">
+                            </div>
+                            <div class="option-group">
+                                <label for="footer-right">Rodapé Direito:</label>
+                                <input type="text" id="footer-right" placeholder="Página {page}">
+                            </div>
+                        </div>
+
+                        <div class="option-row">
+                            <div class="option-group">
+                                <label for="start-page-number">Numerar páginas a partir de:</label>
+                                <input type="number" id="start-page-number" value="1" min="1" max="999">
+                            </div>
+                            <div class="option-group">
+                                <label for="start-diagram-number">Numerar diagramas a partir de:</label>
+                                <input type="number" id="start-diagram-number" value="1" min="1" max="999">
+                            </div>
+                        </div>
+
+                        <div class="option-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="include-game-info">
+                                Incluir informações do jogo (jogadores, evento, data)
+                            </label>
+                        </div>
+
+                        <div class="option-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="include-solution-space">
+                                Incluir espaço para soluções (linha pontilhada)
+                            </label>
+                        </div>
+
+                        <div class="option-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="generate-solution-pages">
+                                Gerar páginas de soluções automáticas
+                            </label>
+                        </div>
+
+                        <div class="option-group">
+                            <label for="rendering-mode">🎨 Modo de Renderização:</label>
+                            <select id="rendering-mode">
+                                <option value="vectorial">🔥 Vetorial (Qualidade Profissional - Inspirado em LaTeX)</option>
+                                <option value="canvas">Canvas (Compatibilidade)</option>
+                            </select>
+                            <small>Vetorial: SVG puro para qualidade editorial profissional</small>
+                        </div>
+
+                        <div class="option-group">
+                            <label for="diagram-quality">📐 Qualidade dos Diagramas:</label>
+                            <select id="diagram-quality">
+                                <option value="ultra">Ultra (4K - Para impressão profissional)</option>
+                                <option value="high">Alta (2K - Padrão recomendado)</option>
+                                <option value="medium">Média (1K - Para visualização)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 
@@ -257,9 +349,25 @@ Exemplos:
         import { AccessibilityController } from './modules/AccessibilityController.js';
         import { PDFExportController } from './modules/PDFExportController.js';
         
+        // Load and initialize PDF Export Integration
+        const integrationScript = document.createElement('script');
+        integrationScript.type = 'module';
+        integrationScript.src = './modules/PDFExportIntegration.js';
+        document.head.appendChild(integrationScript);
+        
         // Inicializar controladores
         new AccessibilityController();
         window.pdfController = new PDFExportController();
+        
+        // Initialize new PDF integration when available
+        integrationScript.onload = () => {
+            if (window.PDFExportIntegration) {
+                window.PDFExportIntegration.initialize().then(() => {
+                    console.log('🔥 Professional PDF rendering initialized');
+                    window.PDFExportIntegration.updateUI();
+                });
+            }
+        };
     </script>
 </body>
 </html>

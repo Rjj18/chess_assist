@@ -1354,6 +1354,89 @@ button:focus,
     color: var(--primary-text);
 }
 
+.button.featured {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.button.featured:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+}
+
+.button.featured:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+[data-theme="dark"] .button.featured {
+    background: linear-gradient(135deg, #4338ca 0%, #5b21b6 100%);
+    box-shadow: 0 4px 15px rgba(67, 56, 202, 0.4);
+}
+
+[data-theme="dark"] .button.featured:hover {
+    background: linear-gradient(135deg, #3730a3 0%, #4c1d95 100%);
+    box-shadow: 0 6px 20px rgba(67, 56, 202, 0.5);
+}
+
+/* Advanced Options Styling */
+.advanced-options {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    border: 2px solid var(--accent-color);
+}
+
+.advanced-options h4 {
+    margin: 0 0 15px 0;
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.option-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.checkbox-group {
+    margin-bottom: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+    .option-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+[data-theme="dark"] .advanced-options {
+    background: var(--tertiary-bg);
+    border-color: var(--accent-color);
+}
+
 /* Dark theme overrides for PDF export */
 [data-theme="dark"] .input-section,
 [data-theme="dark"] .export-section {

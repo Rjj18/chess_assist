@@ -456,13 +456,13 @@ export class PDFExportController {
                 const x = margin + col * (diagramWidth + 10);
                 const y = margin + 30 + row * (diagramHeight + 10); // +30 for title space
 
-                // Generate diagram SVG
-                const svgData = await this.#generateSimpleBoard(position, diagramWidth, showCoordinates);
+                // Generate ultra-high quality diagram
+                const svgData = await this.#generateSimpleBoard(position, diagramWidth * 2, showCoordinates);
                 
                 if (svgData) {
-                    // Add diagram to PDF with lossless compression
-                    // Using 'FAST' compression to preserve PNG quality without JPEG artifacts
-                    pdf.addImage(svgData, 'PNG', x, y, diagramWidth, diagramWidth * 0.8, undefined, 'FAST');
+                    // Add diagram to PDF with maximum quality preservation
+                    // Using 'NONE' for zero compression to maintain ultra-high quality
+                    pdf.addImage(svgData, 'PNG', x, y, diagramWidth, diagramWidth * 0.8, undefined, 'NONE');
                     
                     // Add move indicator
                     if (showMoveIndicator) {
@@ -763,7 +763,7 @@ export class PDFExportController {
             try {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const scale = 4; // High resolution
+                const scale = 8; // Ultra high resolution (increased from 4)
                 canvas.width = size * scale;
                 canvas.height = size * scale;
 
@@ -774,20 +774,23 @@ export class PDFExportController {
                 // Parse FEN to get piece positions
                 const parsedPosition = this.#parseFEN(fenToUse);
 
-                // Set high quality rendering
+                // Set ultra-high quality rendering
                 ctx.imageSmoothingEnabled = true;
                 ctx.imageSmoothingQuality = 'high';
 
-                // Draw board background
-                ctx.fillStyle = '#f5f5dc'; // Beige background
+                // Draw board background (professional white)
+                ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Draw chessboard squares
+                // Draw chessboard squares with professional colors
                 const squareSize = (size * scale) / 8;
+                const lightSquare = '#f0d9b5'; // Professional light square color
+                const darkSquare = '#b58863';  // Professional dark square color
+                
                 for (let rank = 0; rank < 8; rank++) {
                     for (let file = 0; file < 8; file++) {
                         const isLight = (rank + file) % 2 === 0;
-                        ctx.fillStyle = isLight ? '#f0d9b5' : '#b58863';
+                        ctx.fillStyle = isLight ? lightSquare : darkSquare;
                         
                         const x = file * squareSize;
                         const y = rank * squareSize;
@@ -798,7 +801,7 @@ export class PDFExportController {
                 // Load and cache SVG pieces for maximum quality
                 const svgPieces = await this.#loadSVGPieces();
 
-                // Draw pieces with SVG for perfect quality
+                // Draw pieces with maximum quality and perfect positioning
                 for (let rank = 8; rank >= 1; rank--) {
                     for (let file = 1; file <= 8; file++) {
                         const fileChar = String.fromCharCode(96 + file); // a-h
@@ -808,10 +811,10 @@ export class PDFExportController {
                         if (piece) {
                             const x = (file - 1) * squareSize;
                             const y = (8 - rank) * squareSize;
-                            const pieceSize = squareSize * 0.9; // Slightly smaller than square
-                            const offset = squareSize * 0.05; // Center the piece
+                            const pieceSize = squareSize * 0.85; // Optimal size for clarity
+                            const offset = squareSize * 0.075; // Perfect centering
                             
-                            // Try to draw SVG piece first
+                            // Try to draw SVG piece first for maximum quality
                             if (svgPieces[piece]) {
                                 await this.#drawSVGPiece(ctx, svgPieces[piece], 
                                     x + offset, y + offset, pieceSize);
@@ -824,34 +827,39 @@ export class PDFExportController {
                     }
                 }
 
-                // Add coordinates if requested
+                // Add professional coordinates if requested
                 if (showCoordinates) {
-                    ctx.font = `${squareSize * 0.15}px Arial`;
-                    ctx.fillStyle = '#333333';
+                    const fontSize = squareSize * 0.12;
+                    ctx.font = `bold ${fontSize}px Arial`;
+                    ctx.fillStyle = '#000000';
                     ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
                     
-                    // File letters (a-h)
+                    // File letters (a-h) at bottom
                     for (let file = 1; file <= 8; file++) {
                         const letter = String.fromCharCode(96 + file);
                         const x = (file - 1) * squareSize + squareSize / 2;
-                        ctx.fillText(letter, x, canvas.height - squareSize * 0.1);
+                        const y = canvas.height - squareSize * 0.05;
+                        ctx.fillText(letter, x, y);
                     }
                     
-                    // Rank numbers (1-8)
-                    ctx.textAlign = 'left';
+                    // Rank numbers (1-8) at left
+                    ctx.textAlign = 'center';
                     for (let rank = 1; rank <= 8; rank++) {
-                        const y = (8 - rank) * squareSize + squareSize * 0.2;
-                        ctx.fillText(rank.toString(), squareSize * 0.05, y);
+                        const x = squareSize * 0.05;
+                        const y = (8 - rank) * squareSize + squareSize / 2;
+                        ctx.fillText(rank.toString(), x, y);
                     }
                 }
 
-                // Add clean border
-                ctx.strokeStyle = '#8B4513';
-                ctx.lineWidth = scale * 2;
+                // Add professional border
+                ctx.strokeStyle = '#333333';
+                ctx.lineWidth = scale * 1;
                 ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
+                // Export at maximum quality
                 const dataURL = canvas.toDataURL('image/png', 1.0);
-                console.log('High-quality SVG board generated successfully');
+                console.log('Ultra-high-quality SVG board generated successfully');
                 resolve(dataURL);
 
             } catch (error) {
@@ -930,20 +938,28 @@ export class PDFExportController {
                     return;
                 }
 
-                // Convert SVG to data URL
+                // Convert SVG to high-quality data URL
                 const svgData = new XMLSerializer().serializeToString(svgElement);
-                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                // Ensure SVG has proper dimensions for crisp rendering
+                const enhancedSvg = svgData.replace('<svg', '<svg width="200" height="200"');
+                const svgBlob = new Blob([enhancedSvg], { type: 'image/svg+xml;charset=utf-8' });
                 const url = URL.createObjectURL(svgBlob);
 
-                // Create image and draw to canvas
+                // Create image and draw to canvas with maximum quality
                 const img = new Image();
                 img.onload = () => {
                     try {
-                        // Draw with high quality scaling
+                        // Apply maximum quality settings
                         ctx.save();
                         ctx.imageSmoothingEnabled = true;
                         ctx.imageSmoothingQuality = 'high';
-                        ctx.drawImage(img, x, y, size, size);
+                        
+                        // Use integer coordinates for pixel-perfect rendering
+                        const intX = Math.round(x);
+                        const intY = Math.round(y);
+                        const intSize = Math.round(size);
+                        
+                        ctx.drawImage(img, intX, intY, intSize, intSize);
                         ctx.restore();
                         
                         URL.revokeObjectURL(url);
