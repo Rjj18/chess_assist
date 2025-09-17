@@ -75,7 +75,13 @@ export class PDFExportController {
         });
 
         exportPdfBtn?.addEventListener('click', () => {
-            this.#exportToPDF();
+            const exportFormat = document.getElementById('export-format')?.value;
+            
+            if (exportFormat === 'html') {
+                this.#exportToHTML();
+            } else {
+                this.#exportToPDF();
+            }
         });
 
         // Add position when Enter is pressed in instruction input
@@ -90,6 +96,17 @@ export class PDFExportController {
             e.target.style.height = 'auto';
             e.target.style.height = e.target.scrollHeight + 'px';
         });
+
+        // Update export button text based on format selection
+        const exportFormatSelect = document.getElementById('export-format');
+        exportFormatSelect?.addEventListener('change', (e) => {
+            this.#updateExportButtonText(e.target.value);
+        });
+
+        // Set initial button text
+        if (exportFormatSelect) {
+            this.#updateExportButtonText(exportFormatSelect.value);
+        }
     }
 
     /**
@@ -397,6 +414,22 @@ export class PDFExportController {
     }
 
     /**
+     * Update export button text based on selected format
+     * @private
+     */
+    #updateExportButtonText(format) {
+        const exportBtn = document.getElementById('export-pdf-btn');
+        
+        if (exportBtn) {
+            if (format === 'html') {
+                exportBtn.textContent = '🖨️ Gerar HTML para Impressão';
+            } else {
+                exportBtn.textContent = '📄 Gerar PDF';
+            }
+        }
+    }
+
+    /**
      * Export positions to PDF
      * @private
      */
@@ -492,6 +525,525 @@ export class PDFExportController {
         }
     }
 
+    /**
+     * Export positions to HTML for printing
+     * @private
+     */
+    async #exportToHTML() {
+        if (this.#positions.length === 0) {
+            alert('Nenhuma posição adicionada para exportar');
+            return;
+        }
+
+        try {
+            const pdfTitle = document.getElementById('pdf-title')?.value || 'Chess Diagrams';
+            const showCoordinates = document.getElementById('show-coordinates')?.checked ?? true;
+            const showMoveIndicator = document.getElementById('show-move-indicator')?.checked ?? true;
+
+            // Generate HTML content using existing SVG generation
+            const htmlContent = await this.#generateSimpleHTML(pdfTitle, showCoordinates, showMoveIndicator);
+            
+            // Open in new window for printing
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            // Auto-focus for immediate printing
+            printWindow.focus();
+            
+            alert('✅ Página HTML gerada! Use Ctrl+P para imprimir com qualidade perfeita.');
+
+        } catch (error) {
+            console.error('Error generating HTML:', error);
+            alert('Erro ao gerar HTML: ' + error.message);
+        }
+    }
+
+    /**
+     * Generate simple HTML using existing SVG board generation
+     * @private
+     */
+    async #generateSimpleHTML(title, showCoordinates, showMoveIndicator) {
+        let diagramsHTML = '';
+        
+        // Generate each diagram using the SAME SVG method that works perfectly in browser
+        for (let i = 0; i < this.#positions.length; i++) {
+            const position = this.#positions[i];
+            
+            // Add page break every 6 diagrams
+            if (i > 0 && i % 6 === 0) {
+                diagramsHTML += '<div style="page-break-before: always;"></div>';
+            }
+            
+            try {
+                // Load SVG pieces first
+                const svgPieces = await this.#loadSVGPieces();
+                
+                // Generate HTML for chessboard with proper sizing for simple HTML
+                const svgContent = this.#generateSimpleChessboardHTML(position, showCoordinates, svgPieces);
+                
+                diagramsHTML += `
+                    <div class="diagram-wrapper">
+                        <div class="diagram-border">
+                            ${svgContent}
+                        </div>
+                        ${showMoveIndicator ? `<div class="move-indicator">${position.activeColor === 'white' ? '○ Brancas jogam' : '● Pretas jogam'}</div>` : ''}
+                        ${position.instruction ? `<div class="instruction">${position.instruction}</div>` : ''}
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error generating diagram:', error);
+                diagramsHTML += `
+                    <div class="diagram-wrapper">
+                        <div class="diagram-border" style="width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #f8f8f8;">
+                            Erro ao gerar diagrama
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        const htmlContent = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        /* CSS otimizado para impressão de qualidade */
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        
+        * {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: white;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        @media screen {
+            body { padding: 20px; }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .diagrams-container {
+            text-align: center;
+            line-height: 0;
+        }
+        
+        /* Otimizações críticas para tabuleiro */
+        .diagram-wrapper {
+            display: inline-block;
+            margin: 12px;
+            text-align: center;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            vertical-align: top;
+        }
+        
+        .diagram-border {
+            border: 2px solid #333;
+            background: white;
+            display: inline-block;
+            line-height: 0;
+        }
+        
+        /* CSS específico para o tabuleiro de xadrez */
+        .chessboard {
+            width: 280px;
+            height: 280px;
+            margin: 0;
+            position: relative;
+            background: white;
+            display: block;
+        }
+        
+        .square {
+            width: 35px;
+            height: 35px;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .square.light { 
+            background: #f0d9b5; 
+        }
+        
+        .square.dark { 
+            background: #b58863; 
+        }
+        
+        .piece {
+            width: 32px;
+            height: 32px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .coordinates {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            position: absolute;
+        }
+        
+        .coord-file {
+            bottom: 2px;
+            right: 2px;
+        }
+        
+        .coord-rank {
+            top: 2px;
+            left: 2px;
+        }
+        
+        @media print {
+            .no-print { display: none !important; }
+            
+            .chessboard {
+                width: 280px !important;
+                height: 280px !important;
+            }
+            
+            .square {
+                width: 35px !important;
+                height: 35px !important;
+            }
+            
+            .piece {
+                width: 32px !important;
+                height: 32px !important;
+            }
+        }
+        
+        .move-indicator {
+            margin: 8px 0;
+            font-weight: bold;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+        
+        .instruction {
+            margin: 5px 0;
+            font-size: 11px;
+            max-width: 280px;
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
+        
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .print-button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">🖨️ Imprimir com Qualidade</button>
+    
+    <div class="header">
+        <h1>${title}</h1>
+    </div>
+    
+    <div class="diagrams-container">
+        ${diagramsHTML}
+    </div>
+</body>
+</html>`;
+
+        return htmlContent;
+    }
+
+    /**
+     * Generate HTML content optimized for printing
+     * @private
+     */
+    async #generatePrintHTML(title, showCoordinates, showMoveIndicator) {
+        const svgPieces = await this.#loadSVGPieces();
+        
+        const htmlContent = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        
+        @media print {
+            body { margin: 0; font-family: Arial, sans-serif; }
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        
+        .diagrams-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .diagram-container {
+            text-align: center;
+            break-inside: avoid;
+        }
+        
+        .chessboard {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 10px;
+            border: 2px solid #333;
+            position: relative;
+            background: white;
+        }
+        
+        .square {
+            width: 22.5px;
+            height: 22.5px;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .square.light { background: #f0d9b5; }
+        .square.dark { background: #b58863; }
+        
+        .piece {
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .coordinates {
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+            position: absolute;
+        }
+        
+        .coord-file {
+            bottom: 2px;
+            right: 2px;
+        }
+        
+        .coord-rank {
+            top: 2px;
+            left: 2px;
+        }
+        
+        .move-indicator {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 5px 0;
+            color: #333;
+        }
+        
+        .instruction {
+            font-size: 11px;
+            margin: 5px 0;
+            color: #555;
+            max-width: 180px;
+            word-wrap: break-word;
+        }
+        
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        @media print {
+            .print-button { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">🖨️ Imprimir</button>
+    
+    <div class="header">
+        <h1>${title}</h1>
+    </div>
+    
+    <div class="diagrams-grid">
+        ${await this.#generateDiagramsHTML(showCoordinates, showMoveIndicator, svgPieces)}
+    </div>
+</body>
+</html>`;
+
+        return htmlContent;
+    }
+
+    /**
+     * Generate HTML for all diagrams
+     * @private
+     */
+    async #generateDiagramsHTML(showCoordinates, showMoveIndicator, svgPieces) {
+        let diagramsHTML = '';
+        
+        for (let i = 0; i < this.#positions.length; i++) {
+            const position = this.#positions[i];
+            
+            // Add page break every 6 diagrams
+            if (i > 0 && i % 6 === 0) {
+                diagramsHTML += '<div class="page-break"></div>';
+            }
+            
+            diagramsHTML += `
+                <div class="diagram-container">
+                    ${await this.#generateSingleDiagramHTML(position, showCoordinates, svgPieces)}
+                    ${showMoveIndicator ? `<div class="move-indicator">${position.activeColor === 'white' ? '○ Brancas jogam' : '● Pretas jogam'}</div>` : ''}
+                    ${position.instruction ? `<div class="instruction">${position.instruction}</div>` : ''}
+                </div>
+            `;
+        }
+        
+        return diagramsHTML;
+    }
+
+    /**
+     * Generate HTML for a single diagram
+     * @private
+     */
+    async #generateSingleDiagramHTML(position, showCoordinates, svgPieces) {
+        let boardHTML = '<div class="chessboard">';
+        
+        const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+        
+        for (let rank = 0; rank < 8; rank++) {
+            for (let file = 0; file < 8; file++) {
+                const square = files[file] + ranks[rank];
+                const isLight = (rank + file) % 2 === 0;
+                const piece = position.fen ? this.#getPieceFromFEN(position.fen, square) : null;
+                
+                const x = file * 22.5;
+                const y = rank * 22.5;
+                
+                boardHTML += `
+                    <div class="square ${isLight ? 'light' : 'dark'}" 
+                         style="left: ${x}px; top: ${y}px;">
+                        ${piece ? `<div class="piece" style="background-image: url('${svgPieces[piece]}')"></div>` : ''}
+                        ${showCoordinates && file === 7 ? `<div class="coordinates coord-file">${ranks[rank]}</div>` : ''}
+                        ${showCoordinates && rank === 7 ? `<div class="coordinates coord-rank">${files[file]}</div>` : ''}
+                    </div>
+                `;
+            }
+        }
+        
+        boardHTML += '</div>';
+        return boardHTML;
+    }
+
+    /**
+     * Get piece from FEN at specific square
+     * @private
+     */
+    #getPieceFromFEN(fen, square) {
+        // Convert square to array indices
+        const file = square.charCodeAt(0) - 97; // a=0, b=1, etc.
+        const rank = 8 - parseInt(square[1]); // 8=0, 7=1, etc.
+        
+        const fenPosition = fen.split(' ')[0];
+        const ranks = fenPosition.split('/');
+        
+        if (rank >= 0 && rank < 8 && ranks[rank]) {
+            let currentFile = 0;
+            
+            for (const char of ranks[rank]) {
+                if (char >= '1' && char <= '8') {
+                    currentFile += parseInt(char);
+                } else {
+                    if (currentFile === file) {
+                        return char;
+                    }
+                    currentFile++;
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Load SVG pieces as data URLs
+     * @private
+     */
     /**
      * Generate SVG data for a position
      * @param {object} position - Position object
@@ -1028,6 +1580,45 @@ export class PDFExportController {
                 resolve();
             }
         });
+    }
+
+    /**
+     * Generate simple chessboard HTML for the HTML export
+     * @param {object} position - Position object
+     * @param {boolean} showCoordinates - Show coordinates
+     * @param {object} svgPieces - SVG pieces object
+     * @returns {string} HTML content
+     * @private
+     */
+    #generateSimpleChessboardHTML(position, showCoordinates, svgPieces) {
+        let boardHTML = '<div class="chessboard">';
+        
+        const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+        
+        for (let rank = 0; rank < 8; rank++) {
+            for (let file = 0; file < 8; file++) {
+                const square = files[file] + ranks[rank];
+                const isLight = (rank + file) % 2 === 0;
+                const piece = position.fen ? this.#getPieceFromFEN(position.fen, square) : null;
+                
+                // Use 35px squares to match CSS (280px / 8 = 35px)
+                const x = file * 35;
+                const y = rank * 35;
+                
+                boardHTML += `
+                    <div class="square ${isLight ? 'light' : 'dark'}" 
+                         style="left: ${x}px; top: ${y}px;">
+                        ${piece ? `<div class="piece" style="background-image: url('${svgPieces[piece]}')"></div>` : ''}
+                        ${showCoordinates && file === 7 ? `<div class="coordinates coord-file">${ranks[rank]}</div>` : ''}
+                        ${showCoordinates && rank === 7 ? `<div class="coordinates coord-rank">${files[file]}</div>` : ''}
+                    </div>
+                `;
+            }
+        }
+        
+        boardHTML += '</div>';
+        return boardHTML;
     }
 }
 

@@ -162,6 +162,16 @@ PGN Completo:
                         </div>
 
                         <div class="option-group">
+                            <label for="export-format">📤 Formato de Exportação:</label>
+                            <select id="export-format">
+                                <option value="html">🖨️ HTML para Impressão (Qualidade Perfeita)</option>
+                                <option value="pdf-vectorial">🔥 PDF Vetorial (Qualidade Profissional)</option>
+                                <option value="pdf-canvas">📄 PDF Canvas (Compatibilidade)</option>
+                            </select>
+                            <small>HTML: Mantém SVG vetorial 100% nativo, sem conversões</small>
+                        </div>
+
+                        <div class="option-group">
                             <label for="rendering-mode">🎨 Modo de Renderização:</label>
                             <select id="rendering-mode">
                                 <option value="vectorial">🔥 Vetorial (Qualidade Profissional - Inspirado em LaTeX)</option>
@@ -182,7 +192,7 @@ PGN Completo:
                 </div>
                 
                 <button id="export-pdf-btn" class="button primary" disabled>
-                    📄 Exportar PDF
+                    �️ Gerar para Impressão
                 </button>
             </div>
         </div>
@@ -349,25 +359,11 @@ PGN Completo:
         import { AccessibilityController } from './modules/AccessibilityController.js';
         import { PDFExportController } from './modules/PDFExportController.js';
         
-        // Load and initialize PDF Export Integration
-        const integrationScript = document.createElement('script');
-        integrationScript.type = 'module';
-        integrationScript.src = './modules/PDFExportIntegration.js';
-        document.head.appendChild(integrationScript);
-        
         // Inicializar controladores
         new AccessibilityController();
         window.pdfController = new PDFExportController();
         
-        // Initialize new PDF integration when available
-        integrationScript.onload = () => {
-            if (window.PDFExportIntegration) {
-                window.PDFExportIntegration.initialize().then(() => {
-                    console.log('🔥 Professional PDF rendering initialized');
-                    window.PDFExportIntegration.updateUI();
-                });
-            }
-        };
+        console.log('PDF Export page loaded with HTML/PDF export functionality');
     </script>
 </body>
 </html>
