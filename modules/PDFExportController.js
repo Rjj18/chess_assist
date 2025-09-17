@@ -15,6 +15,7 @@ export class PDFExportController {
     #jsPDF = null;
     #positionCreator = null;
     #pgnCreator = null;
+    svgPiecesCache = null; // Cache for SVG pieces
 
     constructor() {
         this.#initializeJsPDF();
@@ -459,8 +460,9 @@ export class PDFExportController {
                 const svgData = await this.#generateSimpleBoard(position, diagramWidth, showCoordinates);
                 
                 if (svgData) {
-                    // Add diagram to PDF
-                    pdf.addImage(svgData, 'PNG', x, y, diagramWidth, diagramWidth * 0.8);
+                    // Add diagram to PDF with lossless compression
+                    // Using 'FAST' compression to preserve PNG quality without JPEG artifacts
+                    pdf.addImage(svgData, 'PNG', x, y, diagramWidth, diagramWidth * 0.8, undefined, 'FAST');
                     
                     // Add move indicator
                     if (showMoveIndicator) {
@@ -757,7 +759,7 @@ export class PDFExportController {
      * @private
      */
     async #generateSimpleBoard(position, size = 200, showCoordinates = false) {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             try {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -793,12 +795,10 @@ export class PDFExportController {
                     }
                 }
 
-                // Draw pieces with much better quality
-                const fontSize = squareSize * 0.8;
-                ctx.font = `${fontSize}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", serif`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+                // Load and cache SVG pieces for maximum quality
+                const svgPieces = await this.#loadSVGPieces();
 
+                // Draw pieces with SVG for perfect quality
                 for (let rank = 8; rank >= 1; rank--) {
                     for (let file = 1; file <= 8; file++) {
                         const fileChar = String.fromCharCode(96 + file); // a-h
@@ -806,25 +806,20 @@ export class PDFExportController {
                         const piece = parsedPosition[squareName];
                         
                         if (piece) {
-                            const pieceSymbol = this.#getPieceSymbol(piece);
-                            const x = (file - 1) * squareSize + squareSize / 2;
-                            const y = (8 - rank) * squareSize + squareSize / 2;
+                            const x = (file - 1) * squareSize;
+                            const y = (8 - rank) * squareSize;
+                            const pieceSize = squareSize * 0.9; // Slightly smaller than square
+                            const offset = squareSize * 0.05; // Center the piece
                             
-                            // Draw piece with better contrast
-                            const isWhite = piece.startsWith('w');
-                            
-                            // Shadow for depth
-                            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-                            ctx.fillText(pieceSymbol, x + scale, y + scale);
-                            
-                            // Main piece
-                            ctx.fillStyle = isWhite ? '#ffffff' : '#000000';
-                            ctx.fillText(pieceSymbol, x, y);
-                            
-                            // Outline for better definition
-                            ctx.strokeStyle = isWhite ? '#000000' : '#ffffff';
-                            ctx.lineWidth = scale / 2;
-                            ctx.strokeText(pieceSymbol, x, y);
+                            // Try to draw SVG piece first
+                            if (svgPieces[piece]) {
+                                await this.#drawSVGPiece(ctx, svgPieces[piece], 
+                                    x + offset, y + offset, pieceSize);
+                            } else {
+                                // Fallback to Unicode symbols
+                                await this.#drawUnicodePiece(ctx, piece, 
+                                    x + squareSize / 2, y + squareSize / 2, squareSize);
+                            }
                         }
                     }
                 }
@@ -856,12 +851,165 @@ export class PDFExportController {
                 ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
                 const dataURL = canvas.toDataURL('image/png', 1.0);
-                console.log('High-quality board generated successfully');
+                console.log('High-quality SVG board generated successfully');
                 resolve(dataURL);
 
             } catch (error) {
                 console.error('Error generating board:', error);
                 resolve(null);
+            }
+        });
+    }
+
+    /**
+     * Load SVG pieces from the chess assets
+     * @returns {Promise<Object>} Object with piece codes as keys and SVG elements as values
+     * @private
+     */
+    async #loadSVGPieces() {
+        if (!this.svgPiecesCache) {
+            try {
+                // Load the SVG sprite file
+                const svgPath = './cm-chessboard-master/assets/pieces/standard.svg';
+                const response = await fetch(svgPath);
+                const svgText = await response.text();
+                
+                // Parse SVG and extract individual pieces
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                
+                this.svgPiecesCache = {};
+                
+                // Extract each piece by ID
+                const pieceIds = ['wk', 'wq', 'wr', 'wb', 'wn', 'wp', 'bk', 'bq', 'br', 'bb', 'bn', 'bp'];
+                
+                for (const pieceId of pieceIds) {
+                    const pieceGroup = svgDoc.getElementById(pieceId);
+                    if (pieceGroup) {
+                        // Create individual SVG for each piece
+                        const pieceSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        pieceSvg.setAttribute('viewBox', '0 0 40 40');
+                        pieceSvg.setAttribute('width', '40');
+                        pieceSvg.setAttribute('height', '40');
+                        
+                        // Clone the piece group
+                        const clonedGroup = pieceGroup.cloneNode(true);
+                        pieceSvg.appendChild(clonedGroup);
+                        
+                        this.svgPiecesCache[pieceId] = pieceSvg;
+                    }
+                }
+                
+                console.log('SVG pieces loaded successfully:', Object.keys(this.svgPiecesCache));
+                
+            } catch (error) {
+                console.error('Error loading SVG pieces:', error);
+                // Fallback to null - will use Unicode symbols as backup
+                this.svgPiecesCache = {};
+            }
+        }
+        
+        return this.svgPiecesCache;
+    }
+
+    /**
+     * Draw SVG piece on canvas with high quality
+     * @param {CanvasRenderingContext2D} ctx Canvas context
+     * @param {SVGElement} svgElement SVG element to draw
+     * @param {number} x X position
+     * @param {number} y Y position  
+     * @param {number} size Size to draw
+     * @returns {Promise<void>}
+     * @private
+     */
+    async #drawSVGPiece(ctx, svgElement, x, y, size) {
+        return new Promise((resolve) => {
+            try {
+                if (!svgElement) {
+                    resolve();
+                    return;
+                }
+
+                // Convert SVG to data URL
+                const svgData = new XMLSerializer().serializeToString(svgElement);
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+
+                // Create image and draw to canvas
+                const img = new Image();
+                img.onload = () => {
+                    try {
+                        // Draw with high quality scaling
+                        ctx.save();
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, x, y, size, size);
+                        ctx.restore();
+                        
+                        URL.revokeObjectURL(url);
+                        resolve();
+                    } catch (error) {
+                        console.error('Error drawing SVG piece:', error);
+                        URL.revokeObjectURL(url);
+                        resolve();
+                    }
+                };
+                
+                img.onerror = () => {
+                    console.error('Error loading SVG piece image');
+                    URL.revokeObjectURL(url);
+                    resolve();
+                };
+                
+                img.src = url;
+                
+            } catch (error) {
+                console.error('Error in drawSVGPiece:', error);
+                resolve();
+            }
+        });
+    }
+
+    /**
+     * Draw Unicode piece as fallback when SVG is not available
+     * @param {CanvasRenderingContext2D} ctx Canvas context
+     * @param {string} piece Piece code (e.g., 'wk', 'bp')
+     * @param {number} x X position (center)
+     * @param {number} y Y position (center)
+     * @param {number} squareSize Size of the square
+     * @returns {Promise<void>}
+     * @private
+     */
+    async #drawUnicodePiece(ctx, piece, x, y, squareSize) {
+        return new Promise((resolve) => {
+            try {
+                const pieceSymbol = this.#getPieceSymbol(piece);
+                const fontSize = squareSize * 0.8;
+                
+                ctx.font = `${fontSize}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                const isWhite = piece.startsWith('w');
+                const scale = 4; // Same scale as board generation
+                
+                // Shadow for depth
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+                ctx.fillText(pieceSymbol, x + scale, y + scale);
+                
+                // Main piece
+                ctx.fillStyle = isWhite ? '#ffffff' : '#000000';
+                ctx.fillText(pieceSymbol, x, y);
+                
+                // Outline for better definition
+                ctx.strokeStyle = isWhite ? '#000000' : '#ffffff';
+                ctx.lineWidth = scale / 2;
+                ctx.strokeText(pieceSymbol, x, y);
+                
+                resolve();
+            } catch (error) {
+                console.error('Error drawing Unicode piece:', error);
+                resolve();
             }
         });
     }
