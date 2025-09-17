@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Assist - PDF Export</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="cm-chessboard-master/assets/chessboard.css">
+    <link rel="stylesheet" href="cm-chessboard-master/assets/extensions/markers/markers.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="nav-link">Home</a>
+        <h1>Chess Assistant - PDF Export</h1>
+        <div class="theme-toggle">
+            <span class="theme-toggle-label">🌙</span>
+            <button 
+                class="theme-toggle-switch" 
+                id="themeToggle" 
+                aria-label="Toggle between light and dark theme"
+                role="switch"
+                aria-checked="false"
+            >
+            </button>
+            <span class="theme-toggle-label">☀️</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="pdf-export-section">
+            <h2>Exportar Diagramas para PDF</h2>
+            <p>Adicione posições FEN ou notação PGN para criar um PDF com diagramas de xadrez. Máximo de 6 diagramas por página.</p>
+            
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="position-input">Adicionar Posição (FEN ou PGN):</label>
+                    <textarea 
+                        id="position-input" 
+                        placeholder="Cole aqui uma posição FEN ou movimento PGN...
+Exemplos:
+• rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 (posição inicial)
+• r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3 (abertura italiana)"
+                        rows="4"
+                    ></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="instruction-input">Instrução/Comentário:</label>
+                    <input 
+                        type="text" 
+                        id="instruction-input" 
+                        placeholder="Exemplo: White to move and win"
+                        maxlength="100"
+                    >
+                </div>
+                
+                <div class="button-group">
+                    <button id="add-position-btn" class="button">Adicionar Posição</button>
+                    <button id="add-examples-btn" class="button secondary">Adicionar Exemplos</button>
+                    <button id="create-position-btn" class="button">🎨 Criar Posição</button>
+                    <button id="create-pgn-btn" class="button">📝 Criar PGN</button>
+                    <button id="clear-all-btn" class="button secondary">Limpar Tudo</button>
+                </div>
+            </div>
+
+            <div class="positions-preview">
+                <h3>Posições Adicionadas (<span id="position-count">0</span>)</h3>
+                <div id="positions-list" class="positions-grid">
+                    <!-- Posições adicionadas aparecerão aqui -->
+                </div>
+            </div>
+
+            <div class="export-section">
+                <div class="export-options">
+                    <div class="option-group">
+                        <label for="pdf-title">Título do PDF:</label>
+                        <input type="text" id="pdf-title" value="Chess Diagrams" placeholder="Título do documento">
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="show-coordinates">Mostrar coordenadas:</label>
+                        <input type="checkbox" id="show-coordinates" checked>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="show-move-indicator">Mostrar indicador de quem move:</label>
+                        <input type="checkbox" id="show-move-indicator" checked>
+                    </div>
+                </div>
+                
+                <button id="export-pdf-btn" class="button primary" disabled>
+                    📄 Exportar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área oculta para renderizar tabuleiros -->
+    <div id="board-render-area" style="position: absolute; left: -9999px; visibility: hidden;">
+        <!-- Tabuleiros temporários serão criados aqui -->
+    </div>
+
+    <!-- Modal para criar posição personalizada -->
+    <div id="position-creator-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎨 Criar Posição Personalizada</h3>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="board-editor-container">
+                    <div class="board-and-pieces">
+                        <div id="editor-board-container">
+                            <div id="editor-chessboard"></div>
+                        </div>
+                        
+                        <div id="editor-piece-palette">
+                            <div id="editor-move-selector" class="move-selector">
+                                <label>Quem joga primeiro:</label>
+                                <button id="editor-white-first" class="move-selector-btn selected" data-color="w">Brancas</button>
+                                <button id="editor-black-first" class="move-selector-btn" data-color="b">Pretas</button>
+                            </div>
+                            
+                            <div class="piece-section">
+                                <h4>Peças Brancas:</h4>
+                                <div class="piece-row">
+                                    <button class="piece-btn" data-piece="wk">♔</button>
+                                    <button class="piece-btn" data-piece="wq">♕</button>
+                                    <button class="piece-btn" data-piece="wr">♖</button>
+                                    <button class="piece-btn" data-piece="wb">♗</button>
+                                    <button class="piece-btn" data-piece="wn">♘</button>
+                                    <button class="piece-btn" data-piece="wp">♙</button>
+                                </div>
+                            </div>
+                            
+                            <div class="piece-section">
+                                <h4>Peças Pretas:</h4>
+                                <div class="piece-row">
+                                    <button class="piece-btn" data-piece="bk">♚</button>
+                                    <button class="piece-btn" data-piece="bq">♛</button>
+                                    <button class="piece-btn" data-piece="br">♜</button>
+                                    <button class="piece-btn" data-piece="bb">♝</button>
+                                    <button class="piece-btn" data-piece="bn">♞</button>
+                                    <button class="piece-btn" data-piece="bp">♟</button>
+                                </div>
+                            </div>
+                            
+                            <div class="piece-section">
+                                <button class="piece-btn clear-board-btn" data-piece="clear-board">🗑️ Limpar Tabuleiro</button>
+                                <button class="piece-btn" data-piece="initial-position">⚡ Posição Inicial</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-controls">
+                        <div class="input-group">
+                            <label for="custom-instruction">Instrução para esta posição:</label>
+                            <input type="text" id="custom-instruction" placeholder="Ex: Brancas jogam e vencem em 3 lances" maxlength="100">
+                        </div>
+                        
+                        <div class="fen-display">
+                            <label>FEN atual:</label>
+                            <div id="editor-fen-display" class="fen-text">8/8/8/8/8/8/8/8 w - - 0 1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="save-custom-position" class="button primary">✓ Adicionar Posição</button>
+                <button id="cancel-custom-position" class="button secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para criar PGN -->
+    <div id="pgn-creator-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 Criar Sequência PGN</h3>
+                <button class="modal-close" id="close-pgn-modal">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="pgn-creator-container">
+                    <div class="pgn-setup">
+                        <h4>Configuração da Partida</h4>
+                        <div class="pgn-headers">
+                            <div class="input-group">
+                                <label for="pgn-event">Evento:</label>
+                                <input type="text" id="pgn-event" value="Chess Analysis" placeholder="Nome do evento">
+                            </div>
+                            <div class="input-group">
+                                <label for="pgn-white">Jogador Brancas:</label>
+                                <input type="text" id="pgn-white" value="White" placeholder="Nome do jogador brancas">
+                            </div>
+                            <div class="input-group">
+                                <label for="pgn-black">Jogador Pretas:</label>
+                                <input type="text" id="pgn-black" value="Black" placeholder="Nome do jogador pretas">
+                            </div>
+                        </div>
+                        
+                        <div class="starting-position">
+                            <label>
+                                <input type="radio" name="pgn-start" value="standard" checked>
+                                Posição inicial padrão
+                            </label>
+                            <label>
+                                <input type="radio" name="pgn-start" value="custom">
+                                Posição personalizada
+                            </label>
+                            <div id="custom-fen-input" style="display: none;">
+                                <input type="text" id="pgn-starting-fen" placeholder="Cole aqui o FEN da posição inicial">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="moves-input">
+                        <h4>Lances da Partida</h4>
+                        <div class="move-input-area">
+                            <div class="current-moves" id="current-moves-display">
+                                <p class="help-text">Adicione lances usando a notação algébrica (ex: e4, Nf3, O-O)</p>
+                            </div>
+                            
+                            <div class="add-move-section">
+                                <div class="move-input-row">
+                                    <input type="text" id="move-input" placeholder="Ex: e4, Nf3, O-O, Qh5#" maxlength="10">
+                                    <input type="text" id="move-comment" placeholder="Comentário (opcional)" maxlength="50">
+                                    <button id="add-move-btn" class="button">Adicionar Lance</button>
+                                </div>
+                                
+                                <div class="move-actions">
+                                    <button id="undo-move-btn" class="button secondary">↶ Desfazer Último</button>
+                                    <button id="clear-moves-btn" class="button secondary">🗑️ Limpar Lances</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pgn-preview">
+                            <h5>Preview PGN:</h5>
+                            <textarea id="pgn-preview-text" readonly rows="6"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="generate-pgn-positions" class="button primary">✓ Gerar Posições PDF</button>
+                <button id="cancel-pgn-creation" class="button secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { AccessibilityController } from './modules/AccessibilityController.js';
+        import { PDFExportController } from './modules/PDFExportController.js';
+        
+        // Inicializar controladores
+        new AccessibilityController();
+        window.pdfController = new PDFExportController();
+    </script>
+</body>
+</html>
