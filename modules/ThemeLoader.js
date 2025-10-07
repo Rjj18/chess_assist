@@ -20,19 +20,47 @@ export class ThemeLoader {
      * @private
      */
     #initializeThemeRegistry() {
-        this.#themeRegistry.set('abertura-magica', {
-            id: 'abertura-magica',
-            name: 'A Abertura Mágica do Xadrez',
-            description: 'Princípios fundamentais das aberturas',
+        this.#themeRegistry.set('o-garfo-no-xadrez', {
+            id: 'o-garfo-no-xadrez',
+            name: 'Táticas: O Garfo',
+            description: 'Domine o garfo, a forma mais famosa de ataque duplo. Aprenda como qualquer peça pode atacar múltiplas peças de uma só vez.',
             level: 'beginner',
-            file: 'themes/abertura-magica.json'
+            file: 'themes/o-garfo-no-xadrez.json'
         });
-        this.#themeRegistry.set('temas-taticos-parte1', {
-           id : "temas-taticos-parte1",
-           name: "Táticas no Xadrez — Parte 1",
-           description: "Descubra os truques secretos do xadrez: o garfo e a magia das peças.",
-           level: "beginner",
-           file: "themes/taticas1.json"
+        this.#themeRegistry.set('ataque-duplo-geral', {
+            id: 'ataque-duplo-geral',
+            name: 'Táticas: O Ataque Duplo',
+            description: 'Aprenda o princípio geral do ataque duplo, onde uma única peça cria duas ameaças simultâneas no tabuleiro.',
+            level: 'intermediate',
+            file: 'themes/ataque-duplo-geral.json'
+        });
+        this.#themeRegistry.set('ataque-descoberto', {
+            id: 'ataque-descoberto',
+            name: 'Táticas: O Ataque Descoberto',
+            description: 'Aprenda a desvendar o poder do ataque descoberto, uma tática sutil e devastadora onde uma peça sai do caminho para revelar um ataque de outra.',
+            level: 'intermediate',
+            file: 'themes/ataque-descoberto.json'
+        });
+        this.#themeRegistry.set('xeque-duplo', {
+            id: 'xeque-duplo',
+            name: 'Táticas: O Xeque Duplo',
+            description: 'Conheça a tática mais poderosa do xadrez: o xeque duplo. Entenda por que essa ameaça dupla força o Rei a se mover.',
+            level: 'advanced',
+            file: 'themes/xeque-duplo.json'
+        });
+        this.#themeRegistry.set('aprendendo-cravada', {
+            id: 'aprendendo-cravada',
+            name: 'Táticas de Xadrez: A Cravada',
+            description: 'Aprenda a identificar, diferenciar e explorar a cravada, uma das táticas mais comuns no xadrez.',
+            level: 'intermediate',
+            file: 'themes/aprendendo-cravada.json'
+        });
+        this.#themeRegistry.set('aprendendo-raio-x', {
+            id: 'aprendendo-raio-x',
+            name: 'Táticas de Xadrez: O Raio-X',
+            description: 'Descubra a tática do Raio-X (ou espeto), o oposto da cravada, e como usá-la para forçar ganhos materiais.',
+            level: 'intermediate',
+            file: 'themes/aprendendo-raio-x.json'
         });
     }
     /**
@@ -94,7 +122,7 @@ export class ThemeLoader {
      * @param {string} defaultTheme - Default theme ID to use
      * @returns {Promise<Object>} The loaded theme data
      */
-    async loadFromUrlOrDefault(defaultTheme = 'abertura-magica') {
+    async loadFromUrlOrDefault(defaultTheme = 'o-garfo-no-xadrez') {
         const urlParams = new URLSearchParams(window.location.search);
         const themeId = urlParams.get('theme') || defaultTheme;
         
