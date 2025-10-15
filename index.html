@@ -7,34 +7,103 @@
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-    <div class="header">
-        <a href="index.html" class="nav-link">Home</a>
-        <h1>Chess Assistant</h1>
-        <div class="theme-toggle">
-            <span class="theme-toggle-label">🌙</span>
-            <button 
-                class="theme-toggle-switch" 
-                id="themeToggle" 
-                aria-label="Toggle between light and dark theme"
-                role="switch"
-                aria-checked="false"
-            >
-            </button>
-            <span class="theme-toggle-label">☀️</span>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">♟️ Chess Assist</a>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">Training <span class="dropdown-arrow">▼</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="games/escape.html">👑 King Escape</a></li>
+                            <li><a href="games/pawn-race.html">⚡ Pawn Race</a></li>
+                            <li><a href="games/lone-knight.html">🐴 Lone Knight</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">Play <span class="dropdown-arrow">▼</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="games/play.html">🎮 Play Against AI</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ppt.html?theme=abertura-magica" class="nav-link">📚 Learn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="games/setup.html" class="nav-link">⚙️ Setup Position</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="theme-toggle">
+                <span class="theme-toggle-label">🌙</span>
+                <button 
+                    class="theme-toggle-switch" 
+                    id="themeToggle" 
+                    aria-label="Toggle between light and dark theme"
+                    role="switch"
+                    aria-checked="false"
+                >
+                </button>
+                <span class="theme-toggle-label">☀️</span>
+            </div>
         </div>
-    </div>
-    <div class="container">
-        <h2>Welcome to Chess Assist!</h2>
-        <p>Choose a mode to get started:</p>
-        <div class="home-buttons">
-            <a href="games/play.html" class="button">Play Against AI</a>
-            <a href="games/setup.html" class="button">Set Up Custom Position</a>
-            <a href="games/escape.html" class="button">King Escape Mode</a>
-            <a href="games/pawn-race.html" class="button">Pawn Race</a>
-            <a href="games/lone-knight.html" class="button">Lone Knight</a>
-            <a href="ppt.html" class="button">Teaching Chess</a>
-        </div>
-    </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <h1>Welcome to Chess Assist!</h1>
+            <p class="hero-subtitle">Your complete chess learning and practice platform</p>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Training Modes</h3>
+                <p>Practice with specialized puzzles and challenges</p>
+                <ul class="feature-list">
+                    <li>King Escape</li>
+                    <li>Pawn Race</li>
+                    <li>Lone Knight</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <h3>Play & Practice</h3>
+                <p>Test your skills against the AI</p>
+                <ul class="feature-list">
+                    <li>Multiple difficulty levels</li>
+                    <li>Move notation tracking</li>
+                    <li>Interactive board</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3>Learn Chess</h3>
+                <p>Interactive lessons and tutorials</p>
+                <ul class="feature-list">
+                    <li>Opening principles</li>
+                    <li>Step-by-step guides</li>
+                    <li>Interactive examples</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Custom Positions</h3>
+                <p>Set up and analyze any position</p>
+                <ul class="feature-list">
+                    <li>Position editor</li>
+                    <li>FEN support</li>
+                    <li>Analysis tools</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
     <script type="module" src="modules/home-script.js"></script>
     <script type="module">
         import { AccessibilityController } from './modules/AccessibilityController.js';

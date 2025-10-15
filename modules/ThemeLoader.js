@@ -27,13 +27,6 @@ export class ThemeLoader {
             level: 'beginner',
             file: 'themes/abertura-magica.json'
         });
-        this.#themeRegistry.set('temas-taticos-parte1', {
-            id: 'temas-taticos-parte1',
-            name: 'Táticas no Xadrez — Parte 1',
-            description: 'Descubra os truques secretos do xadrez: o garfo e a magia das peças.',
-            level: 'beginner',
-            file: 'themes/taticas1.json'
-        });
     }
     /**
      * Get list of available themes

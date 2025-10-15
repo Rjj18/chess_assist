@@ -1,4 +1,4 @@
-// Home page script - only handles theme management
+// Home page script - handles theme management and navbar interactions
 import { ThemeManager } from "./ThemeManager.js";
 
 // Initialize theme manager for the home page
@@ -20,3 +20,43 @@ window.testTheme = () => {
 
 // Export theme manager to window for debugging
 window.themeManager = themeManager;
+
+// ===== NAVBAR DROPDOWN ENHANCEMENTS =====
+// Handle dropdown menu interactions for better mobile experience
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    dropdowns.forEach(dropdown => {
+        const dropdownLink = dropdown.querySelector('.nav-link');
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+        
+        // On mobile, toggle dropdown on click instead of hover
+        if (dropdownLink) {
+            dropdownLink.addEventListener('click', (e) => {
+                // Check if we're on mobile (touch device)
+                if ('ontouchstart' in window) {
+                    e.preventDefault();
+                    
+                    // Close other dropdowns
+                    dropdowns.forEach(otherDropdown => {
+                        if (otherDropdown !== dropdown) {
+                            otherDropdown.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    dropdown.classList.toggle('active');
+                }
+            });
+        }
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.dropdown')) {
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+        }
+    });
+});
